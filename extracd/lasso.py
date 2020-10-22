@@ -242,13 +242,13 @@ def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
 @ njit
 def _apcg_sparse(
         data, indices, indptr, z, u, tau, Xu, Xz, y, alpha, lc, n_features):
-
     for j in range(n_features):
         Xjs = data[indptr[j]:indptr[j+1]]
         idx_nz = indices[indptr[j]:indptr[j+1]]
         z_j_old = z[j]
         step = 1. / (lc[j] * tau * n_features)
-        z[j] = ST(z[j] - Xjs @ ((tau ** 2 * Xu[idx_nz] + Xz[idx_nz] - y[idx_nz])) * step,
+        z[j] = ST(z[j] - Xjs @ ((tau ** 2 * Xu[idx_nz] + Xz[idx_nz] -
+                                 y[idx_nz])) * step,
                   alpha * step)
         dz = z[j] - z_j_old
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz

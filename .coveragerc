@@ -2,8 +2,8 @@
 
 [run]
 branch = True
-source = iterreg
-include = */iterreg/*
+source = extracd
+include = */extracd/*
 omit = */setup.py
 
 [report]
