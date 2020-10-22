@@ -6,7 +6,7 @@
 extracd
 =======
 
-This is a library to run iterative regularization for convex bias. [1].
+This is a library to run Anderson extrapolated coordinate descent.
 
 Installation
 ------------
