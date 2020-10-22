@@ -133,6 +133,7 @@ Why regularizing the linear system seems to hurt Anderson performance.
 
  .. code-block:: none
 
+    usetex mode requires TeX.
     Dataset: rcv1_train
     Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
     Iteration 0, p_obj::0.5000000000
@@ -1095,7 +1096,7 @@ starts plot
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  16.900 seconds)
+   **Total running time of the script:** ( 0 minutes  5.939 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_influ_reg.py:

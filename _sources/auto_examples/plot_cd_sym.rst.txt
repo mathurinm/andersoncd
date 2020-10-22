@@ -42,6 +42,14 @@ TODO desc
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    usetex mode requires TeX.
+
 
 
 
@@ -353,49 +361,49 @@ TODO desc
     Iteration 980, p_obj::1013.4866129028
     Iteration 990, p_obj::1013.4240034683
     Iteration 0, p_obj::14030.6852288944
-    Iteration 10, p_obj::1467.3783034337
-    Iteration 20, p_obj::1242.5123475940
-    Iteration 30, p_obj::1066.8717214519
-    Iteration 40, p_obj::1025.7922040711
-    Iteration 50, p_obj::1022.7875854841
-    Iteration 60, p_obj::1016.2675565515
-    Iteration 70, p_obj::1015.9446192626
-    Iteration 80, p_obj::1013.0902080988
-    Iteration 90, p_obj::1012.4501331948
-    Iteration 100, p_obj::1012.3414130711
-    Iteration 110, p_obj::1011.9182047284
-    Iteration 120, p_obj::1011.8207090193
-    Iteration 130, p_obj::1011.7956861342
-    Iteration 140, p_obj::1011.7831813393
-    Iteration 150, p_obj::1011.6757309286
-    Iteration 160, p_obj::1011.6739288923
-    Iteration 170, p_obj::1011.6713001482
-    Iteration 180, p_obj::1011.6705184121
-    Iteration 190, p_obj::1011.6658515298
-    Iteration 200, p_obj::1011.6655762364
-    Iteration 210, p_obj::1011.6651094663
-    Iteration 220, p_obj::1011.6650231740
-    Iteration 230, p_obj::1011.6641141511
-    Iteration 240, p_obj::1011.6640702769
-    Iteration 250, p_obj::1011.6640519523
-    Iteration 260, p_obj::1011.6640421556
-    Iteration 270, p_obj::1011.6638925590
-    Iteration 280, p_obj::1011.6638915822
-    Iteration 290, p_obj::1011.6638908808
-    Iteration 300, p_obj::1011.6638906498
-    Iteration 310, p_obj::1011.6638886542
-    Iteration 320, p_obj::1011.6638884713
-    Iteration 330, p_obj::1011.6638884451
-    Iteration 340, p_obj::1011.6638883484
-    Iteration 350, p_obj::1011.6638883325
-    Iteration 360, p_obj::1011.6638882178
-    Iteration 370, p_obj::1011.6638882136
-    Iteration 380, p_obj::1011.6638882022
-    Iteration 390, p_obj::1011.6638881744
-    Iteration 400, p_obj::1011.6638881739
-    Iteration 410, p_obj::1011.6638881724
-    Iteration 420, p_obj::1011.6638881718
-    Iteration 430, p_obj::1011.6638881715
+    Iteration 10, p_obj::1467.3783034545
+    Iteration 20, p_obj::1242.5123475851
+    Iteration 30, p_obj::1066.8717223264
+    Iteration 40, p_obj::1025.7922036263
+    Iteration 50, p_obj::1022.7875851405
+    Iteration 60, p_obj::1016.2675564080
+    Iteration 70, p_obj::1015.9446191801
+    Iteration 80, p_obj::1013.0902084788
+    Iteration 90, p_obj::1012.4501331194
+    Iteration 100, p_obj::1012.3414129949
+    Iteration 110, p_obj::1011.9182049539
+    Iteration 120, p_obj::1011.8207089058
+    Iteration 130, p_obj::1011.7956861202
+    Iteration 140, p_obj::1011.7831816033
+    Iteration 150, p_obj::1011.6757310058
+    Iteration 160, p_obj::1011.6739289327
+    Iteration 170, p_obj::1011.6713001769
+    Iteration 180, p_obj::1011.6705185210
+    Iteration 190, p_obj::1011.6658519389
+    Iteration 200, p_obj::1011.6655764717
+    Iteration 210, p_obj::1011.6651093499
+    Iteration 220, p_obj::1011.6650233332
+    Iteration 230, p_obj::1011.6641162443
+    Iteration 240, p_obj::1011.6640716237
+    Iteration 250, p_obj::1011.6640530658
+    Iteration 260, p_obj::1011.6640432917
+    Iteration 270, p_obj::1011.6638927103
+    Iteration 280, p_obj::1011.6638916504
+    Iteration 290, p_obj::1011.6638909867
+    Iteration 300, p_obj::1011.6638907271
+    Iteration 310, p_obj::1011.6638885714
+    Iteration 320, p_obj::1011.6638885430
+    Iteration 330, p_obj::1011.6638883479
+    Iteration 340, p_obj::1011.6638882687
+    Iteration 350, p_obj::1011.6638882622
+    Iteration 360, p_obj::1011.6638882394
+    Iteration 370, p_obj::1011.6638882295
+    Iteration 380, p_obj::1011.6638882250
+    Iteration 390, p_obj::1011.6638882222
+    Iteration 400, p_obj::1011.6638882196
+    Iteration 410, p_obj::1011.6638881678
+    Iteration 420, p_obj::1011.6638881678
+    Iteration 430, p_obj::1011.6638881678
     Iteration 440, p_obj::1011.6638881678
     Iteration 450, p_obj::1011.6638881678
     Iteration 460, p_obj::1011.6638881678
@@ -503,38 +511,38 @@ TODO desc
     Iteration 480, p_obj::1013.6218600223
     Iteration 490, p_obj::1013.4885938017
     Iteration 0, p_obj::14030.6852288944
-    Iteration 10, p_obj::1286.5475170377
-    Iteration 20, p_obj::1127.4289739815
-    Iteration 30, p_obj::1029.9989753638
-    Iteration 40, p_obj::1014.2970577998
-    Iteration 50, p_obj::1013.5750182754
-    Iteration 60, p_obj::1012.3245497276
-    Iteration 70, p_obj::1012.1992718486
-    Iteration 80, p_obj::1011.7181717524
-    Iteration 90, p_obj::1011.7058716090
-    Iteration 100, p_obj::1011.6813704701
-    Iteration 110, p_obj::1011.6686075503
-    Iteration 120, p_obj::1011.6677047691
-    Iteration 130, p_obj::1011.6656950679
-    Iteration 140, p_obj::1011.6644920667
-    Iteration 150, p_obj::1011.6643745813
-    Iteration 160, p_obj::1011.6641199182
-    Iteration 170, p_obj::1011.6640686974
-    Iteration 180, p_obj::1011.6639410635
-    Iteration 190, p_obj::1011.6639346536
-    Iteration 200, p_obj::1011.6639035742
-    Iteration 210, p_obj::1011.6639011462
-    Iteration 220, p_obj::1011.6638903676
-    Iteration 230, p_obj::1011.6638894599
-    Iteration 240, p_obj::1011.6638892079
-    Iteration 250, p_obj::1011.6638890732
-    Iteration 260, p_obj::1011.6638889655
-    Iteration 270, p_obj::1011.6638881741
-    Iteration 280, p_obj::1011.6638881710
-    Iteration 290, p_obj::1011.6638881699
-    Iteration 300, p_obj::1011.6638881693
-    Iteration 310, p_obj::1011.6638881690
-    Iteration 320, p_obj::1011.6638881688
+    Iteration 10, p_obj::1286.5475170193
+    Iteration 20, p_obj::1127.4289739755
+    Iteration 30, p_obj::1029.9989748286
+    Iteration 40, p_obj::1014.2970575355
+    Iteration 50, p_obj::1013.5750181234
+    Iteration 60, p_obj::1012.3245497300
+    Iteration 70, p_obj::1012.1992719430
+    Iteration 80, p_obj::1011.7181717474
+    Iteration 90, p_obj::1011.7058716021
+    Iteration 100, p_obj::1011.6813705331
+    Iteration 110, p_obj::1011.6686076350
+    Iteration 120, p_obj::1011.6677048351
+    Iteration 130, p_obj::1011.6656951016
+    Iteration 140, p_obj::1011.6644920937
+    Iteration 150, p_obj::1011.6643746067
+    Iteration 160, p_obj::1011.6641199298
+    Iteration 170, p_obj::1011.6640687002
+    Iteration 180, p_obj::1011.6639410591
+    Iteration 190, p_obj::1011.6639346514
+    Iteration 200, p_obj::1011.6639035718
+    Iteration 210, p_obj::1011.6639011471
+    Iteration 220, p_obj::1011.6638903943
+    Iteration 230, p_obj::1011.6638894832
+    Iteration 240, p_obj::1011.6638892320
+    Iteration 250, p_obj::1011.6638891138
+    Iteration 260, p_obj::1011.6638888103
+    Iteration 270, p_obj::1011.6638887295
+    Iteration 280, p_obj::1011.6638881696
+    Iteration 290, p_obj::1011.6638881691
+    Iteration 300, p_obj::1011.6638881685
+    Iteration 310, p_obj::1011.6638881684
+    Iteration 320, p_obj::1011.6638881678
     Iteration 330, p_obj::1011.6638881678
     Iteration 340, p_obj::1011.6638881678
     Iteration 350, p_obj::1011.6638881678
@@ -559,7 +567,7 @@ TODO desc
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  4.096 seconds)
+   **Total running time of the script:** ( 0 minutes  34.644 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_cd_sym.py:
