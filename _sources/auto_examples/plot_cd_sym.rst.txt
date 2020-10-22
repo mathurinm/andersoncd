@@ -1,0 +1,590 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_plot_cd_sym.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_plot_cd_sym.py:
+
+
+Plot convergence of CD, pseudo-symmetric CD, and Anderson versions
+==================================================================
+
+TODO desc
+
+
+.. code-block:: default
+
+    from collections import defaultdict
+
+    import numpy as np
+    import seaborn as sns
+    from scipy import sparse
+    from numpy.linalg import norm
+    import matplotlib.pyplot as plt
+    from scipy.sparse.linalg import cg
+    from scipy.optimize import fmin_l_bfgs_b
+    from sklearn.datasets import fetch_openml
+    from sklearn.preprocessing import label_binarize
+    from celer.datasets import fetch_libsvm
+    from celer.plot_utils import configure_plt
+
+    from extracd.utils import power_method
+    from extracd.lasso import solver_enet, primal_enet
+    from extracd.logreg import solver_logreg, primal_logreg
+
+
+    configure_plt()
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    pb = "logreg"
+    # pb = "lasso"
+
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+    dataset = "rcv1_train"
+    # dataset = "real-sim"
+    # dataset = "leukemia"
+
+
+
+
+
+
+
+
+.. code-block:: default
+
+
+    if dataset == "real-sim":
+        n_features = 2000
+    elif dataset == "rcv1_train":
+        # n_features = 1000
+        n_features = 5000
+    elif dataset == 'leukemia':
+        n_features = 1000
+
+    # load and center data
+    if dataset == "leukemia":
+        data = fetch_openml("leukemia")
+        X = np.asfortranarray(data.data)
+        y = 2 * label_binarize(data.target, classes=np.unique(data.target)) - 1
+        y = y.squeeze().astype(float)
+    else:
+        X, y = fetch_libsvm(dataset)
+
+    X = X[:, :n_features]
+    if not sparse.issparse(X):
+        X -= np.mean(X, axis=0)[None, :]
+        X /= norm(X, axis=0)[None, :]
+    else:
+        X.multiply(1 / sparse.linalg.norm(X, axis=0))
+
+    if pb == 'lasso':
+        y -= y.mean()
+        y /= norm(y)
+
+    if dataset == 'real-sim':
+        max_iter = 1_000
+    else:
+        max_iter = 1_000
+
+    f_gap = 10
+    div_alpha = np.inf  # ols
+    tol = 1e-15
+
+
+    E_optimal = []
+    if pb == "logreg":
+        rho = power_method(X) ** 2 / 100_000  # a bit of enet
+        alpha_max = np.max(np.abs(X.T @ y)) / 2
+        E_optimal.append(np.log(2) * len(y))
+        label_opt = "L-BFGS"
+
+        def callback(x):
+            pobj = primal_logreg(X @ x, y, x, 0, rho)
+            E_optimal.append(pobj)
+
+        def obj(x):
+            return np.log(1 + np.exp(- y * (X @ x))).sum() + rho * x @ x / 2
+
+        def fprime(x):
+            return - X.T @ (y / (1 + np.exp(y * (X @ x)))) + rho * x
+
+        res = fmin_l_bfgs_b(obj, np.zeros(
+            X.shape[1]), fprime=fprime, callback=callback, factr=0.01, pgtol=0,
+            maxiter=max_iter)
+    else:
+        alpha_max = np.max(np.abs(X.T @ y))
+        alpha = alpha_max / div_alpha
+        rho = 0  # no elastic net
+        E_optimal.append(norm(y) ** 2 / 2)
+        label_opt = "conjugate grad."
+
+        def callback(x):
+            pobj = primal_enet(y - X @ x, x, alpha)
+            E_optimal.append(pobj)
+        w_star = cg(
+            X.T @ X, X.T @ y, callback=callback, maxiter=max_iter, tol=1e-32)[0]
+    E_optimal = np.array(E_optimal)
+
+    alpha = alpha_max / div_alpha
+
+
+    all_algos = [
+        ('cd', False, None),
+        ('cd', True, 5),
+        ('cdsym', False, None),
+        ('cdsym', True, 5),
+    ]
+
+
+    dict_coef = defaultdict(lambda: 1)
+    dict_coef['cdsym'] = 2
+
+    dict_Es = {}
+
+
+    for algo in all_algos:
+        if pb == "lasso":
+            w, E, _ = solver_enet(
+                X, y, alpha=alpha, f_gap=f_gap,
+                max_iter=int(max_iter/dict_coef[algo[0]]), tol=tol, algo=algo[0],
+                use_acc=algo[1], K=algo[2])
+        elif pb == "logreg":
+            w, E, _ = solver_logreg(
+                X, y, alpha=alpha, rho=rho, f_gap=f_gap,
+                max_iter=max_iter//dict_coef[algo[0]], tol=tol,
+                algo=algo[0], use_acc=algo[1], K=algo[2])
+        dict_Es[algo] = E
+
+
+    current_palette = sns.color_palette("colorblind")
+    dict_color = {}
+    dict_color["cd"] = current_palette[1]
+    dict_color['cdsym'] = current_palette[2]
+
+    dict_algo_name = {}
+    dict_algo_name[False, "cd"] = "CD"
+    dict_algo_name[False, "cdsym"] = "CD sym"
+    dict_algo_name[True, "cd"] = "CD - Anderson"
+    dict_algo_name[True, "cdsym"] = "CD sym - Anderson"
+
+
+    p_star = E_optimal[-1]
+    for E in dict_Es.values():
+        p_star = min(p_star, min(E))
+
+    plt.close('all')
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for i, algo in enumerate(all_algos):
+        E = dict_Es[algo]
+        use_acc = algo[1]
+        K = algo[2]
+        if use_acc:
+            linestyle = 'dashed'
+        elif algo[0] == 'fista':
+            linestyle = 'dotted'
+        else:
+            linestyle = 'solid'
+
+        ax.semilogy(
+            dict_coef[algo[0]] * f_gap * np.arange(len(E)), E - p_star,
+            label=dict_algo_name[use_acc, algo[0]],
+            color=dict_color[algo[0]], linestyle=linestyle)
+
+    ax.semilogy(
+        np.arange(len(E_optimal)), E_optimal - p_star,
+        label=label_opt, color='black', linestyle='dashdot')
+
+    dict_dataset = {}
+    dict_dataset["rcv1_train"] = "rcv1"
+    dict_dataset["real-sim"] = "real_sim"  # use _ not - for latex
+    dict_dataset["leukemia"] = "leukemia"
+
+    if div_alpha == np.inf:
+        str_info = "%s %i st columns" % (dict_dataset[dataset], n_features)
+        title = "OLS " + str_info if pb == "lasso" else "logreg " + str_info
+    else:
+        title = r'%s, $\lambda = \lambda_{\mathrm{max}} / %s $' % (
+            pb, div_alpha)
+
+    plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
+    plt.xlabel("nb gradient calls")
+    plt.ylim((1e-10, None))
+    plt.tight_layout()
+
+    plt.legend()
+    plt.title(title.replace('_', ' '))
+    plt.show(block=False)
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_cd_sym_001.png
+    :alt: logreg rcv1 5000 st columns
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Dataset: rcv1_train
+    Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
+    Iteration 0, p_obj::14030.6852288944
+    Iteration 10, p_obj::1894.2821980280
+    Iteration 20, p_obj::1598.1977728092
+    Iteration 30, p_obj::1459.9434154298
+    Iteration 40, p_obj::1375.0981212122
+    Iteration 50, p_obj::1316.3124474940
+    Iteration 60, p_obj::1272.6858117650
+    Iteration 70, p_obj::1238.8437684600
+    Iteration 80, p_obj::1211.7615144992
+    Iteration 90, p_obj::1189.5776869795
+    Iteration 100, p_obj::1171.0729877841
+    Iteration 110, p_obj::1155.4099697884
+    Iteration 120, p_obj::1141.9912325857
+    Iteration 130, p_obj::1130.3774611646
+    Iteration 140, p_obj::1120.2376360549
+    Iteration 150, p_obj::1111.3173329175
+    Iteration 160, p_obj::1103.4176870174
+    Iteration 170, p_obj::1096.3809648652
+    Iteration 180, p_obj::1090.0804123662
+    Iteration 190, p_obj::1084.4129660776
+    Iteration 200, p_obj::1079.2939300298
+    Iteration 210, p_obj::1074.6530285938
+    Iteration 220, p_obj::1070.4314387368
+    Iteration 230, p_obj::1066.5795297666
+    Iteration 240, p_obj::1063.0551212282
+    Iteration 250, p_obj::1059.8221252064
+    Iteration 260, p_obj::1056.8494772787
+    Iteration 270, p_obj::1054.1102866858
+    Iteration 280, p_obj::1051.5811547592
+    Iteration 290, p_obj::1049.2416237773
+    Iteration 300, p_obj::1047.0737278630
+    Iteration 310, p_obj::1045.0616244083
+    Iteration 320, p_obj::1043.1912895598
+    Iteration 330, p_obj::1041.4502650546
+    Iteration 340, p_obj::1039.8274465102
+    Iteration 350, p_obj::1038.3129054034
+    Iteration 360, p_obj::1036.8977385986
+    Iteration 370, p_obj::1035.5739405418
+    Iteration 380, p_obj::1034.3342942020
+    Iteration 390, p_obj::1033.1722776064
+    Iteration 400, p_obj::1032.0819834072
+    Iteration 410, p_obj::1031.0580493946
+    Iteration 420, p_obj::1030.0955982421
+    Iteration 430, p_obj::1029.1901850750
+    Iteration 440, p_obj::1028.3377516944
+    Iteration 450, p_obj::1027.5345864851
+    Iteration 460, p_obj::1026.7772891952
+    Iteration 470, p_obj::1026.0627399083
+    Iteration 480, p_obj::1025.3880716333
+    Iteration 490, p_obj::1024.7506460276
+    Iteration 500, p_obj::1024.1480318422
+    Iteration 510, p_obj::1023.5779857384
+    Iteration 520, p_obj::1023.0384351759
+    Iteration 530, p_obj::1022.5274631164
+    Iteration 540, p_obj::1022.0432943210
+    Iteration 550, p_obj::1021.5842830521
+    Iteration 560, p_obj::1021.1489020134
+    Iteration 570, p_obj::1020.7357323864
+    Iteration 580, p_obj::1020.3434548383
+    Iteration 590, p_obj::1019.9708413934
+    Iteration 600, p_obj::1019.6167480721
+    Iteration 610, p_obj::1019.2801082164
+    Iteration 620, p_obj::1018.9599264270
+    Iteration 630, p_obj::1018.6552730488
+    Iteration 640, p_obj::1018.3652791481
+    Iteration 650, p_obj::1018.0891319314
+    Iteration 660, p_obj::1017.8260705619
+    Iteration 670, p_obj::1017.5753823332
+    Iteration 680, p_obj::1017.3363991670
+    Iteration 690, p_obj::1017.1084944026
+    Iteration 700, p_obj::1016.8910798507
+    Iteration 710, p_obj::1016.6836030868
+    Iteration 720, p_obj::1016.4855449622
+    Iteration 730, p_obj::1016.2964173130
+    Iteration 740, p_obj::1016.1157608481
+    Iteration 750, p_obj::1015.9431432018
+    Iteration 760, p_obj::1015.7781571356
+    Iteration 770, p_obj::1015.6204188765
+    Iteration 780, p_obj::1015.4695665800
+    Iteration 790, p_obj::1015.3252589073
+    Iteration 800, p_obj::1015.1871737075
+    Iteration 810, p_obj::1015.0550067946
+    Iteration 820, p_obj::1014.9284708141
+    Iteration 830, p_obj::1014.8072941895
+    Iteration 840, p_obj::1014.6912201431
+    Iteration 850, p_obj::1014.5800057861
+    Iteration 860, p_obj::1014.4734212714
+    Iteration 870, p_obj::1014.3712490040
+    Iteration 880, p_obj::1014.2732829063
+    Iteration 890, p_obj::1014.1793277321
+    Iteration 900, p_obj::1014.0891984268
+    Iteration 910, p_obj::1014.0027195300
+    Iteration 920, p_obj::1013.9197246173
+    Iteration 930, p_obj::1013.8400557786
+    Iteration 940, p_obj::1013.7635631302
+    Iteration 950, p_obj::1013.6901043577
+    Iteration 960, p_obj::1013.6195442888
+    Iteration 970, p_obj::1013.5517544923
+    Iteration 980, p_obj::1013.4866129028
+    Iteration 990, p_obj::1013.4240034683
+    Iteration 0, p_obj::14030.6852288944
+    Iteration 10, p_obj::1467.3783034337
+    Iteration 20, p_obj::1242.5123475940
+    Iteration 30, p_obj::1066.8717214519
+    Iteration 40, p_obj::1025.7922040711
+    Iteration 50, p_obj::1022.7875854841
+    Iteration 60, p_obj::1016.2675565515
+    Iteration 70, p_obj::1015.9446192626
+    Iteration 80, p_obj::1013.0902080988
+    Iteration 90, p_obj::1012.4501331948
+    Iteration 100, p_obj::1012.3414130711
+    Iteration 110, p_obj::1011.9182047284
+    Iteration 120, p_obj::1011.8207090193
+    Iteration 130, p_obj::1011.7956861342
+    Iteration 140, p_obj::1011.7831813393
+    Iteration 150, p_obj::1011.6757309286
+    Iteration 160, p_obj::1011.6739288923
+    Iteration 170, p_obj::1011.6713001482
+    Iteration 180, p_obj::1011.6705184121
+    Iteration 190, p_obj::1011.6658515298
+    Iteration 200, p_obj::1011.6655762364
+    Iteration 210, p_obj::1011.6651094663
+    Iteration 220, p_obj::1011.6650231740
+    Iteration 230, p_obj::1011.6641141511
+    Iteration 240, p_obj::1011.6640702769
+    Iteration 250, p_obj::1011.6640519523
+    Iteration 260, p_obj::1011.6640421556
+    Iteration 270, p_obj::1011.6638925590
+    Iteration 280, p_obj::1011.6638915822
+    Iteration 290, p_obj::1011.6638908808
+    Iteration 300, p_obj::1011.6638906498
+    Iteration 310, p_obj::1011.6638886542
+    Iteration 320, p_obj::1011.6638884713
+    Iteration 330, p_obj::1011.6638884451
+    Iteration 340, p_obj::1011.6638883484
+    Iteration 350, p_obj::1011.6638883325
+    Iteration 360, p_obj::1011.6638882178
+    Iteration 370, p_obj::1011.6638882136
+    Iteration 380, p_obj::1011.6638882022
+    Iteration 390, p_obj::1011.6638881744
+    Iteration 400, p_obj::1011.6638881739
+    Iteration 410, p_obj::1011.6638881724
+    Iteration 420, p_obj::1011.6638881718
+    Iteration 430, p_obj::1011.6638881715
+    Iteration 440, p_obj::1011.6638881678
+    Iteration 450, p_obj::1011.6638881678
+    Iteration 460, p_obj::1011.6638881678
+    Iteration 470, p_obj::1011.6638881678
+    Iteration 480, p_obj::1011.6638881678
+    Iteration 490, p_obj::1011.6638881678
+    Iteration 500, p_obj::1011.6638881678
+    Iteration 510, p_obj::1011.6638881678
+    Iteration 520, p_obj::1011.6638881678
+    Iteration 530, p_obj::1011.6638881678
+    Iteration 540, p_obj::1011.6638881678
+    Iteration 550, p_obj::1011.6638881678
+    Iteration 560, p_obj::1011.6638881678
+    Iteration 570, p_obj::1011.6638881678
+    Iteration 580, p_obj::1011.6638881678
+    Iteration 590, p_obj::1011.6638881678
+    Iteration 600, p_obj::1011.6638881678
+    Iteration 610, p_obj::1011.6638881678
+    Iteration 620, p_obj::1011.6638881678
+    Iteration 630, p_obj::1011.6638881678
+    Iteration 640, p_obj::1011.6638881678
+    Iteration 650, p_obj::1011.6638881678
+    Iteration 660, p_obj::1011.6638881678
+    Iteration 670, p_obj::1011.6638881678
+    Iteration 680, p_obj::1011.6638881678
+    Iteration 690, p_obj::1011.6638881678
+    Iteration 700, p_obj::1011.6638881678
+    Iteration 710, p_obj::1011.6638881678
+    Iteration 720, p_obj::1011.6638881678
+    Iteration 730, p_obj::1011.6638881678
+    Iteration 740, p_obj::1011.6638881678
+    Iteration 750, p_obj::1011.6638881678
+    Iteration 760, p_obj::1011.6638881678
+    Iteration 770, p_obj::1011.6638881678
+    Iteration 780, p_obj::1011.6638881678
+    Iteration 790, p_obj::1011.6638881678
+    Iteration 800, p_obj::1011.6638881678
+    Iteration 810, p_obj::1011.6638881678
+    Iteration 820, p_obj::1011.6638881678
+    Iteration 830, p_obj::1011.6638881678
+    Iteration 840, p_obj::1011.6638881678
+    Iteration 850, p_obj::1011.6638881678
+    Iteration 860, p_obj::1011.6638881678
+    Iteration 870, p_obj::1011.6638881678
+    Iteration 880, p_obj::1011.6638881678
+    Iteration 890, p_obj::1011.6638881678
+    Iteration 900, p_obj::1011.6638881678
+    Iteration 910, p_obj::1011.6638881678
+    Iteration 920, p_obj::1011.6638881678
+    Iteration 930, p_obj::1011.6638881678
+    Iteration 940, p_obj::1011.6638881678
+    Iteration 950, p_obj::1011.6638881678
+    Iteration 960, p_obj::1011.6638881678
+    Iteration 970, p_obj::1011.6638881678
+    Iteration 980, p_obj::1011.6638881678
+    Iteration 990, p_obj::1011.6638881678
+    Iteration 0, p_obj::14030.6852288944
+    Iteration 10, p_obj::1601.4974871701
+    Iteration 20, p_obj::1376.8627050919
+    Iteration 30, p_obj::1273.8341006488
+    Iteration 40, p_obj::1212.5813575483
+    Iteration 50, p_obj::1171.6964883307
+    Iteration 60, p_obj::1142.4851739261
+    Iteration 70, p_obj::1120.6388588489
+    Iteration 80, p_obj::1103.7491891549
+    Iteration 90, p_obj::1090.3579183578
+    Iteration 100, p_obj::1079.5287417236
+    Iteration 110, p_obj::1070.6319219331
+    Iteration 120, p_obj::1063.2276036710
+    Iteration 130, p_obj::1056.9988334509
+    Iteration 140, p_obj::1051.7112013454
+    Iteration 150, p_obj::1047.1874976058
+    Iteration 160, p_obj::1043.2912245124
+    Iteration 170, p_obj::1039.9155367244
+    Iteration 180, p_obj::1036.9756232347
+    Iteration 190, p_obj::1034.4033363499
+    Iteration 200, p_obj::1032.1433262465
+    Iteration 210, p_obj::1030.1502077763
+    Iteration 220, p_obj::1028.3864496994
+    Iteration 230, p_obj::1026.8207789455
+    Iteration 240, p_obj::1025.4269582286
+    Iteration 250, p_obj::1024.1828384432
+    Iteration 260, p_obj::1023.0696161018
+    Iteration 270, p_obj::1022.0712457080
+    Iteration 280, p_obj::1021.1739705571
+    Iteration 290, p_obj::1020.3659450136
+    Iteration 300, p_obj::1019.6369281327
+    Iteration 310, p_obj::1018.9780334207
+    Iteration 320, p_obj::1018.3815231282
+    Iteration 330, p_obj::1017.8406381433
+    Iteration 340, p_obj::1017.3494565406
+    Iteration 350, p_obj::1016.9027753500
+    Iteration 360, p_obj::1016.4960112576
+    Iteration 370, p_obj::1016.1251168298
+    Iteration 380, p_obj::1015.7865095354
+    Iteration 390, p_obj::1015.4770113727
+    Iteration 400, p_obj::1015.1937973268
+    Iteration 410, p_obj::1014.9343512100
+    Iteration 420, p_obj::1014.6964277043
+    Iteration 430, p_obj::1014.4780196338
+    Iteration 440, p_obj::1014.2773296615
+    Iteration 450, p_obj::1014.0927457465
+    Iteration 460, p_obj::1013.9228198040
+    Iteration 470, p_obj::1013.7662491046
+    Iteration 480, p_obj::1013.6218600223
+    Iteration 490, p_obj::1013.4885938017
+    Iteration 0, p_obj::14030.6852288944
+    Iteration 10, p_obj::1286.5475170377
+    Iteration 20, p_obj::1127.4289739815
+    Iteration 30, p_obj::1029.9989753638
+    Iteration 40, p_obj::1014.2970577998
+    Iteration 50, p_obj::1013.5750182754
+    Iteration 60, p_obj::1012.3245497276
+    Iteration 70, p_obj::1012.1992718486
+    Iteration 80, p_obj::1011.7181717524
+    Iteration 90, p_obj::1011.7058716090
+    Iteration 100, p_obj::1011.6813704701
+    Iteration 110, p_obj::1011.6686075503
+    Iteration 120, p_obj::1011.6677047691
+    Iteration 130, p_obj::1011.6656950679
+    Iteration 140, p_obj::1011.6644920667
+    Iteration 150, p_obj::1011.6643745813
+    Iteration 160, p_obj::1011.6641199182
+    Iteration 170, p_obj::1011.6640686974
+    Iteration 180, p_obj::1011.6639410635
+    Iteration 190, p_obj::1011.6639346536
+    Iteration 200, p_obj::1011.6639035742
+    Iteration 210, p_obj::1011.6639011462
+    Iteration 220, p_obj::1011.6638903676
+    Iteration 230, p_obj::1011.6638894599
+    Iteration 240, p_obj::1011.6638892079
+    Iteration 250, p_obj::1011.6638890732
+    Iteration 260, p_obj::1011.6638889655
+    Iteration 270, p_obj::1011.6638881741
+    Iteration 280, p_obj::1011.6638881710
+    Iteration 290, p_obj::1011.6638881699
+    Iteration 300, p_obj::1011.6638881693
+    Iteration 310, p_obj::1011.6638881690
+    Iteration 320, p_obj::1011.6638881688
+    Iteration 330, p_obj::1011.6638881678
+    Iteration 340, p_obj::1011.6638881678
+    Iteration 350, p_obj::1011.6638881678
+    Iteration 360, p_obj::1011.6638881678
+    Iteration 370, p_obj::1011.6638881678
+    Iteration 380, p_obj::1011.6638881678
+    Iteration 390, p_obj::1011.6638881678
+    Iteration 400, p_obj::1011.6638881678
+    Iteration 410, p_obj::1011.6638881678
+    Iteration 420, p_obj::1011.6638881678
+    Iteration 430, p_obj::1011.6638881678
+    Iteration 440, p_obj::1011.6638881678
+    Iteration 450, p_obj::1011.6638881678
+    Iteration 460, p_obj::1011.6638881678
+    Iteration 470, p_obj::1011.6638881678
+    Iteration 480, p_obj::1011.6638881678
+    Iteration 490, p_obj::1011.6638881678
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 1 minutes  4.096 seconds)
+
+
+.. _sphx_glr_download_auto_examples_plot_cd_sym.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_cd_sym.py <plot_cd_sym.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_cd_sym.ipynb <plot_cd_sym.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

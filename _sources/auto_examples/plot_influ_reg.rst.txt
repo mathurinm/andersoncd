@@ -1,0 +1,1126 @@
+.. only:: html
+
+    .. note::
+        :class: sphx-glr-download-link-note
+
+        Click :ref:`here <sphx_glr_download_auto_examples_plot_influ_reg.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_plot_influ_reg.py:
+
+
+Plot influence of linear system regularization
+==============================================
+
+Why regularizing the linear system seems to hurt Anderson performance.
+
+
+.. code-block:: default
+
+    from collections import defaultdict
+
+    import numpy as np
+    import seaborn as sns
+    from scipy import sparse
+    from numpy.linalg import norm
+    import matplotlib.pyplot as plt
+    from scipy.sparse.linalg import cg
+    from celer.datasets import fetch_libsvm
+    from celer.plot_utils import configure_plt
+
+    from extracd.lasso import solver_enet, primal_enet, apcg
+
+
+    configure_plt()
+
+    n_features = 1000
+    corr = 0.5
+    X, y = fetch_libsvm('rcv1_train')
+    X = X[:, :n_features]
+
+    if not sparse.issparse(X):
+        y -= y.mean()
+        X -= np.mean(X, axis=0)[None, :]
+        X /= norm(X, axis=0)[None, :]
+    else:
+        X.multiply(1 / sparse.linalg.norm(X, axis=0))
+        y -= y.mean()
+        y /= norm(y)
+
+    alpha_max = np.max(np.abs(X.T @ y))
+
+    alpha = 0
+    tol = 1e-15
+    E_cg = []
+    E_cg.append(norm(y) ** 2 / 2)
+
+    max_iter = 1500
+
+
+    def my_func(x):
+        pobj = primal_enet(y - X @ x, x, alpha)
+        E_cg.append(pobj)
+
+
+    w_star = cg(X.T @ X, X.T @ y, callback=my_func, maxiter=max_iter, tol=1e-32)[0]
+
+    E_cg = np.array(E_cg)
+
+
+    f_gap = 10
+    return_all = False
+
+
+    all_algos = [
+        ('cd', False, None, None),
+        ('cd', True, 6, 1e-3),
+        ('cd', True, 6, 1e-4),
+        ('cd', True, 6, 1e-5),
+        ('cd', True, 6, 1e-10),
+        ('cd', True, 6, None),
+    ]
+
+    dict_coef = defaultdict(lambda: 1)
+    dict_coef['cdsym'] = 2
+    dict_coef['cd2'] = 2
+
+
+    dict_Es = {}
+
+    for algo in all_algos:
+        if algo[0] == 'apcg':
+            w, E, gaps = apcg(
+                X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap)
+        else:
+            w, E, _ = solver_enet(
+                X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
+                return_all=return_all, algo=algo[0], use_acc=algo[1],
+                K=algo[2], reg_amount=algo[3])
+        dict_Es[algo] = E.copy()
+
+
+    current_palette = sns.color_palette("colorblind")
+    dict_color = {}
+    dict_color["pgd"] = current_palette[0]
+    dict_color["fista"] = current_palette[0]
+    dict_color["cd"] = current_palette[1]
+    dict_color["apcg"] = current_palette[1]
+    dict_color['cdsym'] = current_palette[2]
+    dict_color["cd2"] = current_palette[3]
+
+    dict_algo_name = {}
+    dict_algo_name[False, "pgd"] = "GD"
+    dict_algo_name[False, "cd"] = "CD"
+    dict_algo_name[False, "cdsym"] = "CD SYM"
+    dict_algo_name[True, "pgd"] = "GD - Anderson"
+    dict_algo_name[True, "cd"] = "CD - Anderson"
+    dict_algo_name[True, "cdsym"] = "CD SYM - Anderson"
+    dict_algo_name[False, "fista"] = "GD - inertial"
+    dict_algo_name[False, "apcg"] = "CD - inertial"
+
+
+    p_star = primal_enet(y - X @ w_star, w_star, alpha)
+    for E in dict_Es.values():
+        p_star = min(p_star, min(E))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Dataset: rcv1_train
+    Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
+    Iteration 0, p_obj::0.5000000000
+    Iteration 10, p_obj::0.3131136233
+    Iteration 20, p_obj::0.3131060169
+    Iteration 30, p_obj::0.3131048001
+    Iteration 40, p_obj::0.3131043667
+    Iteration 50, p_obj::0.3131041608
+    Iteration 60, p_obj::0.3131040381
+    Iteration 70, p_obj::0.3131039522
+    Iteration 80, p_obj::0.3131038863
+    Iteration 90, p_obj::0.3131038335
+    Iteration 100, p_obj::0.3131037906
+    Iteration 110, p_obj::0.3131037552
+    Iteration 120, p_obj::0.3131037259
+    Iteration 130, p_obj::0.3131037017
+    Iteration 140, p_obj::0.3131036815
+    Iteration 150, p_obj::0.3131036648
+    Iteration 160, p_obj::0.3131036509
+    Iteration 170, p_obj::0.3131036393
+    Iteration 180, p_obj::0.3131036296
+    Iteration 190, p_obj::0.3131036215
+    Iteration 200, p_obj::0.3131036148
+    Iteration 210, p_obj::0.3131036092
+    Iteration 220, p_obj::0.3131036045
+    Iteration 230, p_obj::0.3131036005
+    Iteration 240, p_obj::0.3131035972
+    Iteration 250, p_obj::0.3131035945
+    Iteration 260, p_obj::0.3131035922
+    Iteration 270, p_obj::0.3131035902
+    Iteration 280, p_obj::0.3131035886
+    Iteration 290, p_obj::0.3131035872
+    Iteration 300, p_obj::0.3131035861
+    Iteration 310, p_obj::0.3131035851
+    Iteration 320, p_obj::0.3131035843
+    Iteration 330, p_obj::0.3131035836
+    Iteration 340, p_obj::0.3131035830
+    Iteration 350, p_obj::0.3131035826
+    Iteration 360, p_obj::0.3131035822
+    Iteration 370, p_obj::0.3131035818
+    Iteration 380, p_obj::0.3131035815
+    Iteration 390, p_obj::0.3131035813
+    Iteration 400, p_obj::0.3131035811
+    Iteration 410, p_obj::0.3131035809
+    Iteration 420, p_obj::0.3131035807
+    Iteration 430, p_obj::0.3131035806
+    Iteration 440, p_obj::0.3131035805
+    Iteration 450, p_obj::0.3131035804
+    Iteration 460, p_obj::0.3131035803
+    Iteration 470, p_obj::0.3131035803
+    Iteration 480, p_obj::0.3131035802
+    Iteration 490, p_obj::0.3131035802
+    Iteration 500, p_obj::0.3131035801
+    Iteration 510, p_obj::0.3131035801
+    Iteration 520, p_obj::0.3131035801
+    Iteration 530, p_obj::0.3131035800
+    Iteration 540, p_obj::0.3131035800
+    Iteration 550, p_obj::0.3131035800
+    Iteration 560, p_obj::0.3131035800
+    Iteration 570, p_obj::0.3131035800
+    Iteration 580, p_obj::0.3131035800
+    Iteration 590, p_obj::0.3131035800
+    Iteration 600, p_obj::0.3131035799
+    Iteration 610, p_obj::0.3131035799
+    Iteration 620, p_obj::0.3131035799
+    Iteration 630, p_obj::0.3131035799
+    Iteration 640, p_obj::0.3131035799
+    Iteration 650, p_obj::0.3131035799
+    Iteration 660, p_obj::0.3131035799
+    Iteration 670, p_obj::0.3131035799
+    Iteration 680, p_obj::0.3131035799
+    Iteration 690, p_obj::0.3131035799
+    Iteration 700, p_obj::0.3131035799
+    Iteration 710, p_obj::0.3131035799
+    Iteration 720, p_obj::0.3131035799
+    Iteration 730, p_obj::0.3131035799
+    Iteration 740, p_obj::0.3131035799
+    Iteration 750, p_obj::0.3131035799
+    Iteration 760, p_obj::0.3131035799
+    Iteration 770, p_obj::0.3131035799
+    Iteration 780, p_obj::0.3131035799
+    Iteration 790, p_obj::0.3131035799
+    Iteration 800, p_obj::0.3131035799
+    Iteration 810, p_obj::0.3131035799
+    Iteration 820, p_obj::0.3131035799
+    Iteration 830, p_obj::0.3131035799
+    Iteration 840, p_obj::0.3131035799
+    Iteration 850, p_obj::0.3131035799
+    Iteration 860, p_obj::0.3131035799
+    Iteration 870, p_obj::0.3131035799
+    Iteration 880, p_obj::0.3131035799
+    Iteration 890, p_obj::0.3131035799
+    Iteration 900, p_obj::0.3131035799
+    Iteration 910, p_obj::0.3131035799
+    Iteration 920, p_obj::0.3131035799
+    Iteration 930, p_obj::0.3131035799
+    Iteration 940, p_obj::0.3131035799
+    Iteration 950, p_obj::0.3131035799
+    Iteration 960, p_obj::0.3131035799
+    Iteration 970, p_obj::0.3131035799
+    Iteration 980, p_obj::0.3131035799
+    Iteration 990, p_obj::0.3131035799
+    Iteration 1000, p_obj::0.3131035799
+    Iteration 1010, p_obj::0.3131035799
+    Iteration 1020, p_obj::0.3131035799
+    Iteration 1030, p_obj::0.3131035799
+    Iteration 1040, p_obj::0.3131035799
+    Iteration 1050, p_obj::0.3131035799
+    Iteration 1060, p_obj::0.3131035799
+    Iteration 1070, p_obj::0.3131035799
+    Iteration 1080, p_obj::0.3131035799
+    Iteration 1090, p_obj::0.3131035799
+    Iteration 1100, p_obj::0.3131035799
+    Iteration 1110, p_obj::0.3131035799
+    Iteration 1120, p_obj::0.3131035799
+    Iteration 1130, p_obj::0.3131035799
+    Iteration 1140, p_obj::0.3131035799
+    Iteration 1150, p_obj::0.3131035799
+    Iteration 1160, p_obj::0.3131035799
+    Iteration 1170, p_obj::0.3131035799
+    Iteration 1180, p_obj::0.3131035799
+    Iteration 1190, p_obj::0.3131035799
+    Iteration 1200, p_obj::0.3131035799
+    Iteration 1210, p_obj::0.3131035799
+    Iteration 1220, p_obj::0.3131035799
+    Iteration 1230, p_obj::0.3131035799
+    Iteration 1240, p_obj::0.3131035799
+    Iteration 1250, p_obj::0.3131035799
+    Iteration 1260, p_obj::0.3131035799
+    Iteration 1270, p_obj::0.3131035799
+    Iteration 1280, p_obj::0.3131035799
+    Iteration 1290, p_obj::0.3131035799
+    Iteration 1300, p_obj::0.3131035799
+    Iteration 1310, p_obj::0.3131035799
+    Iteration 1320, p_obj::0.3131035799
+    Iteration 1330, p_obj::0.3131035799
+    Iteration 1340, p_obj::0.3131035799
+    Iteration 1350, p_obj::0.3131035799
+    Iteration 1360, p_obj::0.3131035799
+    Iteration 1370, p_obj::0.3131035799
+    Iteration 1380, p_obj::0.3131035799
+    Iteration 1390, p_obj::0.3131035799
+    Iteration 1400, p_obj::0.3131035799
+    Iteration 1410, p_obj::0.3131035799
+    Iteration 1420, p_obj::0.3131035799
+    Iteration 1430, p_obj::0.3131035799
+    Iteration 1440, p_obj::0.3131035799
+    Iteration 1450, p_obj::0.3131035799
+    Iteration 1460, p_obj::0.3131035799
+    Iteration 1470, p_obj::0.3131035799
+    Iteration 1480, p_obj::0.3131035799
+    Iteration 1490, p_obj::0.3131035799
+    Iteration 0, p_obj::0.5000000000
+    Iteration 10, p_obj::0.3131130979
+    Iteration 20, p_obj::0.3131054705
+    Iteration 30, p_obj::0.3131045392
+    Iteration 40, p_obj::0.3131040000
+    Iteration 50, p_obj::0.3131038729
+    Iteration 60, p_obj::0.3131037591
+    Iteration 70, p_obj::0.3131037066
+    Iteration 80, p_obj::0.3131036712
+    Iteration 90, p_obj::0.3131036361
+    Iteration 100, p_obj::0.3131036211
+    Iteration 110, p_obj::0.3131036053
+    Iteration 120, p_obj::0.3131035984
+    Iteration 130, p_obj::0.3131035915
+    Iteration 140, p_obj::0.3131035883
+    Iteration 150, p_obj::0.3131035860
+    Iteration 160, p_obj::0.3131035838
+    Iteration 170, p_obj::0.3131035828
+    Iteration 180, p_obj::0.3131035818
+    Iteration 190, p_obj::0.3131035813
+    Iteration 200, p_obj::0.3131035808
+    Iteration 210, p_obj::0.3131035806
+    Iteration 220, p_obj::0.3131035804
+    Iteration 230, p_obj::0.3131035802
+    Iteration 240, p_obj::0.3131035801
+    Iteration 250, p_obj::0.3131035801
+    Iteration 260, p_obj::0.3131035800
+    Iteration 270, p_obj::0.3131035800
+    Iteration 280, p_obj::0.3131035800
+    Iteration 290, p_obj::0.3131035799
+    Iteration 300, p_obj::0.3131035799
+    Iteration 310, p_obj::0.3131035799
+    Iteration 320, p_obj::0.3131035799
+    Iteration 330, p_obj::0.3131035799
+    Iteration 340, p_obj::0.3131035799
+    Iteration 350, p_obj::0.3131035799
+    Iteration 360, p_obj::0.3131035799
+    Iteration 370, p_obj::0.3131035799
+    Iteration 380, p_obj::0.3131035799
+    Iteration 390, p_obj::0.3131035799
+    Iteration 400, p_obj::0.3131035799
+    Iteration 410, p_obj::0.3131035799
+    Iteration 420, p_obj::0.3131035799
+    Iteration 430, p_obj::0.3131035799
+    Iteration 440, p_obj::0.3131035799
+    Iteration 450, p_obj::0.3131035799
+    Iteration 460, p_obj::0.3131035799
+    Iteration 470, p_obj::0.3131035799
+    Iteration 480, p_obj::0.3131035799
+    Iteration 490, p_obj::0.3131035799
+    Iteration 500, p_obj::0.3131035799
+    Iteration 510, p_obj::0.3131035799
+    Iteration 520, p_obj::0.3131035799
+    Iteration 530, p_obj::0.3131035799
+    Iteration 540, p_obj::0.3131035799
+    Iteration 550, p_obj::0.3131035799
+    Iteration 560, p_obj::0.3131035799
+    Iteration 570, p_obj::0.3131035799
+    Iteration 580, p_obj::0.3131035799
+    Iteration 590, p_obj::0.3131035799
+    Iteration 600, p_obj::0.3131035799
+    Iteration 610, p_obj::0.3131035799
+    Iteration 620, p_obj::0.3131035799
+    Iteration 630, p_obj::0.3131035799
+    Iteration 640, p_obj::0.3131035799
+    Iteration 650, p_obj::0.3131035799
+    Iteration 660, p_obj::0.3131035799
+    Iteration 670, p_obj::0.3131035799
+    Iteration 680, p_obj::0.3131035799
+    Iteration 690, p_obj::0.3131035799
+    Iteration 700, p_obj::0.3131035799
+    Iteration 710, p_obj::0.3131035799
+    Iteration 720, p_obj::0.3131035799
+    Iteration 730, p_obj::0.3131035799
+    Iteration 740, p_obj::0.3131035799
+    Iteration 750, p_obj::0.3131035799
+    Iteration 760, p_obj::0.3131035799
+    Iteration 770, p_obj::0.3131035799
+    Iteration 780, p_obj::0.3131035799
+    Iteration 790, p_obj::0.3131035799
+    Iteration 800, p_obj::0.3131035799
+    Iteration 810, p_obj::0.3131035799
+    Iteration 820, p_obj::0.3131035799
+    Iteration 830, p_obj::0.3131035799
+    Iteration 840, p_obj::0.3131035799
+    Iteration 850, p_obj::0.3131035799
+    Iteration 860, p_obj::0.3131035799
+    Iteration 870, p_obj::0.3131035799
+    Iteration 880, p_obj::0.3131035799
+    Iteration 890, p_obj::0.3131035799
+    Iteration 900, p_obj::0.3131035799
+    Iteration 910, p_obj::0.3131035799
+    Iteration 920, p_obj::0.3131035799
+    Iteration 930, p_obj::0.3131035799
+    Iteration 940, p_obj::0.3131035799
+    Iteration 950, p_obj::0.3131035799
+    Iteration 960, p_obj::0.3131035799
+    Iteration 970, p_obj::0.3131035799
+    Iteration 980, p_obj::0.3131035799
+    Iteration 990, p_obj::0.3131035799
+    Iteration 1000, p_obj::0.3131035799
+    Iteration 1010, p_obj::0.3131035799
+    Iteration 1020, p_obj::0.3131035799
+    Iteration 1030, p_obj::0.3131035799
+    Iteration 1040, p_obj::0.3131035799
+    Iteration 1050, p_obj::0.3131035799
+    Iteration 1060, p_obj::0.3131035799
+    Iteration 1070, p_obj::0.3131035799
+    Iteration 1080, p_obj::0.3131035799
+    Iteration 1090, p_obj::0.3131035799
+    Iteration 1100, p_obj::0.3131035799
+    Iteration 1110, p_obj::0.3131035799
+    Iteration 1120, p_obj::0.3131035799
+    Iteration 1130, p_obj::0.3131035799
+    Iteration 1140, p_obj::0.3131035799
+    Iteration 1150, p_obj::0.3131035799
+    Iteration 1160, p_obj::0.3131035799
+    Iteration 1170, p_obj::0.3131035799
+    Iteration 1180, p_obj::0.3131035799
+    Iteration 1190, p_obj::0.3131035799
+    Iteration 1200, p_obj::0.3131035799
+    Iteration 1210, p_obj::0.3131035799
+    Iteration 1220, p_obj::0.3131035799
+    Iteration 1230, p_obj::0.3131035799
+    Iteration 1240, p_obj::0.3131035799
+    Iteration 1250, p_obj::0.3131035799
+    Iteration 1260, p_obj::0.3131035799
+    Iteration 1270, p_obj::0.3131035799
+    Iteration 1280, p_obj::0.3131035799
+    Iteration 1290, p_obj::0.3131035799
+    Iteration 1300, p_obj::0.3131035799
+    Iteration 1310, p_obj::0.3131035799
+    Iteration 1320, p_obj::0.3131035799
+    Iteration 1330, p_obj::0.3131035799
+    Iteration 1340, p_obj::0.3131035799
+    Iteration 1350, p_obj::0.3131035799
+    Iteration 1360, p_obj::0.3131035799
+    Iteration 1370, p_obj::0.3131035799
+    Iteration 1380, p_obj::0.3131035799
+    Iteration 1390, p_obj::0.3131035799
+    Iteration 1400, p_obj::0.3131035799
+    Iteration 1410, p_obj::0.3131035799
+    Iteration 1420, p_obj::0.3131035799
+    Iteration 1430, p_obj::0.3131035799
+    Iteration 1440, p_obj::0.3131035799
+    Iteration 1450, p_obj::0.3131035799
+    Iteration 1460, p_obj::0.3131035799
+    Iteration 1470, p_obj::0.3131035799
+    Iteration 1480, p_obj::0.3131035799
+    Iteration 1490, p_obj::0.3131035799
+    Iteration 0, p_obj::0.5000000000
+    Iteration 10, p_obj::0.3131124992
+    Iteration 20, p_obj::0.3131050583
+    Iteration 30, p_obj::0.3131043564
+    Iteration 40, p_obj::0.3131038485
+    Iteration 50, p_obj::0.3131037460
+    Iteration 60, p_obj::0.3131036628
+    Iteration 70, p_obj::0.3131036346
+    Iteration 80, p_obj::0.3131036182
+    Iteration 90, p_obj::0.3131035871
+    Iteration 100, p_obj::0.3131035853
+    Iteration 110, p_obj::0.3131035843
+    Iteration 120, p_obj::0.3131035835
+    Iteration 130, p_obj::0.3131035802
+    Iteration 140, p_obj::0.3131035801
+    Iteration 150, p_obj::0.3131035800
+    Iteration 160, p_obj::0.3131035800
+    Iteration 170, p_obj::0.3131035799
+    Iteration 180, p_obj::0.3131035799
+    Iteration 190, p_obj::0.3131035799
+    Iteration 200, p_obj::0.3131035799
+    Iteration 210, p_obj::0.3131035799
+    Iteration 220, p_obj::0.3131035799
+    Iteration 230, p_obj::0.3131035799
+    Iteration 240, p_obj::0.3131035799
+    Iteration 250, p_obj::0.3131035799
+    Iteration 260, p_obj::0.3131035799
+    Iteration 270, p_obj::0.3131035799
+    Iteration 280, p_obj::0.3131035799
+    Iteration 290, p_obj::0.3131035799
+    Iteration 300, p_obj::0.3131035799
+    Iteration 310, p_obj::0.3131035799
+    Iteration 320, p_obj::0.3131035799
+    Iteration 330, p_obj::0.3131035799
+    Iteration 340, p_obj::0.3131035799
+    Iteration 350, p_obj::0.3131035799
+    Iteration 360, p_obj::0.3131035799
+    Iteration 370, p_obj::0.3131035799
+    Iteration 380, p_obj::0.3131035799
+    Iteration 390, p_obj::0.3131035799
+    Iteration 400, p_obj::0.3131035799
+    Iteration 410, p_obj::0.3131035799
+    Iteration 420, p_obj::0.3131035799
+    Iteration 430, p_obj::0.3131035799
+    Iteration 440, p_obj::0.3131035799
+    Iteration 450, p_obj::0.3131035799
+    Iteration 460, p_obj::0.3131035799
+    Iteration 470, p_obj::0.3131035799
+    Iteration 480, p_obj::0.3131035799
+    Iteration 490, p_obj::0.3131035799
+    Iteration 500, p_obj::0.3131035799
+    Iteration 510, p_obj::0.3131035799
+    Iteration 520, p_obj::0.3131035799
+    Iteration 530, p_obj::0.3131035799
+    Iteration 540, p_obj::0.3131035799
+    Iteration 550, p_obj::0.3131035799
+    Iteration 560, p_obj::0.3131035799
+    Iteration 570, p_obj::0.3131035799
+    Iteration 580, p_obj::0.3131035799
+    Iteration 590, p_obj::0.3131035799
+    Iteration 600, p_obj::0.3131035799
+    Iteration 610, p_obj::0.3131035799
+    Iteration 620, p_obj::0.3131035799
+    Iteration 630, p_obj::0.3131035799
+    Iteration 640, p_obj::0.3131035799
+    Iteration 650, p_obj::0.3131035799
+    Iteration 660, p_obj::0.3131035799
+    Iteration 670, p_obj::0.3131035799
+    Iteration 680, p_obj::0.3131035799
+    Iteration 690, p_obj::0.3131035799
+    Iteration 700, p_obj::0.3131035799
+    Iteration 710, p_obj::0.3131035799
+    Iteration 720, p_obj::0.3131035799
+    Iteration 730, p_obj::0.3131035799
+    Iteration 740, p_obj::0.3131035799
+    Iteration 750, p_obj::0.3131035799
+    Iteration 760, p_obj::0.3131035799
+    Iteration 770, p_obj::0.3131035799
+    Iteration 780, p_obj::0.3131035799
+    Iteration 790, p_obj::0.3131035799
+    Iteration 800, p_obj::0.3131035799
+    Iteration 810, p_obj::0.3131035799
+    Iteration 820, p_obj::0.3131035799
+    Iteration 830, p_obj::0.3131035799
+    Iteration 840, p_obj::0.3131035799
+    Iteration 850, p_obj::0.3131035799
+    Iteration 860, p_obj::0.3131035799
+    Iteration 870, p_obj::0.3131035799
+    Iteration 880, p_obj::0.3131035799
+    Iteration 890, p_obj::0.3131035799
+    Iteration 900, p_obj::0.3131035799
+    Iteration 910, p_obj::0.3131035799
+    Iteration 920, p_obj::0.3131035799
+    Iteration 930, p_obj::0.3131035799
+    Iteration 940, p_obj::0.3131035799
+    Iteration 950, p_obj::0.3131035799
+    Iteration 960, p_obj::0.3131035799
+    Iteration 970, p_obj::0.3131035799
+    Iteration 980, p_obj::0.3131035799
+    Iteration 990, p_obj::0.3131035799
+    Iteration 1000, p_obj::0.3131035799
+    Iteration 1010, p_obj::0.3131035799
+    Iteration 1020, p_obj::0.3131035799
+    Iteration 1030, p_obj::0.3131035799
+    Iteration 1040, p_obj::0.3131035799
+    Iteration 1050, p_obj::0.3131035799
+    Iteration 1060, p_obj::0.3131035799
+    Iteration 1070, p_obj::0.3131035799
+    Iteration 1080, p_obj::0.3131035799
+    Iteration 1090, p_obj::0.3131035799
+    Iteration 1100, p_obj::0.3131035799
+    Iteration 1110, p_obj::0.3131035799
+    Iteration 1120, p_obj::0.3131035799
+    Iteration 1130, p_obj::0.3131035799
+    Iteration 1140, p_obj::0.3131035799
+    Iteration 1150, p_obj::0.3131035799
+    Iteration 1160, p_obj::0.3131035799
+    Iteration 1170, p_obj::0.3131035799
+    Iteration 1180, p_obj::0.3131035799
+    Iteration 1190, p_obj::0.3131035799
+    Iteration 1200, p_obj::0.3131035799
+    Iteration 1210, p_obj::0.3131035799
+    Iteration 1220, p_obj::0.3131035799
+    Iteration 1230, p_obj::0.3131035799
+    Iteration 1240, p_obj::0.3131035799
+    Iteration 1250, p_obj::0.3131035799
+    Iteration 1260, p_obj::0.3131035799
+    Iteration 1270, p_obj::0.3131035799
+    Iteration 1280, p_obj::0.3131035799
+    Iteration 1290, p_obj::0.3131035799
+    Iteration 1300, p_obj::0.3131035799
+    Iteration 1310, p_obj::0.3131035799
+    Iteration 1320, p_obj::0.3131035799
+    Iteration 1330, p_obj::0.3131035799
+    Iteration 1340, p_obj::0.3131035799
+    Iteration 1350, p_obj::0.3131035799
+    Iteration 1360, p_obj::0.3131035799
+    Iteration 1370, p_obj::0.3131035799
+    Iteration 1380, p_obj::0.3131035799
+    Iteration 1390, p_obj::0.3131035799
+    Iteration 1400, p_obj::0.3131035799
+    Iteration 1410, p_obj::0.3131035799
+    Iteration 1420, p_obj::0.3131035799
+    Iteration 1430, p_obj::0.3131035799
+    Iteration 1440, p_obj::0.3131035799
+    Iteration 1450, p_obj::0.3131035799
+    Iteration 1460, p_obj::0.3131035799
+    Iteration 1470, p_obj::0.3131035799
+    Iteration 1480, p_obj::0.3131035799
+    Iteration 1490, p_obj::0.3131035799
+    Iteration 0, p_obj::0.5000000000
+    Iteration 10, p_obj::0.3131126551
+    Iteration 20, p_obj::0.3131047731
+    Iteration 30, p_obj::0.3131042772
+    Iteration 40, p_obj::0.3131039089
+    Iteration 50, p_obj::0.3131036074
+    Iteration 60, p_obj::0.3131035954
+    Iteration 70, p_obj::0.3131035914
+    Iteration 80, p_obj::0.3131035812
+    Iteration 90, p_obj::0.3131035807
+    Iteration 100, p_obj::0.3131035801
+    Iteration 110, p_obj::0.3131035800
+    Iteration 120, p_obj::0.3131035800
+    Iteration 130, p_obj::0.3131035800
+    Iteration 140, p_obj::0.3131035799
+    Iteration 150, p_obj::0.3131035799
+    Iteration 160, p_obj::0.3131035799
+    Iteration 170, p_obj::0.3131035799
+    Iteration 180, p_obj::0.3131035799
+    Iteration 190, p_obj::0.3131035799
+    Iteration 200, p_obj::0.3131035799
+    Iteration 210, p_obj::0.3131035799
+    Iteration 220, p_obj::0.3131035799
+    Iteration 230, p_obj::0.3131035799
+    Iteration 240, p_obj::0.3131035799
+    Iteration 250, p_obj::0.3131035799
+    Iteration 260, p_obj::0.3131035799
+    Iteration 270, p_obj::0.3131035799
+    Iteration 280, p_obj::0.3131035799
+    Iteration 290, p_obj::0.3131035799
+    Iteration 300, p_obj::0.3131035799
+    Iteration 310, p_obj::0.3131035799
+    Iteration 320, p_obj::0.3131035799
+    Iteration 330, p_obj::0.3131035799
+    Iteration 340, p_obj::0.3131035799
+    Iteration 350, p_obj::0.3131035799
+    Iteration 360, p_obj::0.3131035799
+    Iteration 370, p_obj::0.3131035799
+    Iteration 380, p_obj::0.3131035799
+    Iteration 390, p_obj::0.3131035799
+    Iteration 400, p_obj::0.3131035799
+    Iteration 410, p_obj::0.3131035799
+    Iteration 420, p_obj::0.3131035799
+    Iteration 430, p_obj::0.3131035799
+    Iteration 440, p_obj::0.3131035799
+    Iteration 450, p_obj::0.3131035799
+    Iteration 460, p_obj::0.3131035799
+    Iteration 470, p_obj::0.3131035799
+    Iteration 480, p_obj::0.3131035799
+    Iteration 490, p_obj::0.3131035799
+    Iteration 500, p_obj::0.3131035799
+    Iteration 510, p_obj::0.3131035799
+    Iteration 520, p_obj::0.3131035799
+    Iteration 530, p_obj::0.3131035799
+    Iteration 540, p_obj::0.3131035799
+    Iteration 550, p_obj::0.3131035799
+    Iteration 560, p_obj::0.3131035799
+    Iteration 570, p_obj::0.3131035799
+    Iteration 580, p_obj::0.3131035799
+    Iteration 590, p_obj::0.3131035799
+    Iteration 600, p_obj::0.3131035799
+    Iteration 610, p_obj::0.3131035799
+    Iteration 620, p_obj::0.3131035799
+    Iteration 630, p_obj::0.3131035799
+    Iteration 640, p_obj::0.3131035799
+    Iteration 650, p_obj::0.3131035799
+    Iteration 660, p_obj::0.3131035799
+    Iteration 670, p_obj::0.3131035799
+    Iteration 680, p_obj::0.3131035799
+    Iteration 690, p_obj::0.3131035799
+    Iteration 700, p_obj::0.3131035799
+    Iteration 710, p_obj::0.3131035799
+    Iteration 720, p_obj::0.3131035799
+    Iteration 730, p_obj::0.3131035799
+    Iteration 740, p_obj::0.3131035799
+    Iteration 750, p_obj::0.3131035799
+    Iteration 760, p_obj::0.3131035799
+    Iteration 770, p_obj::0.3131035799
+    Iteration 780, p_obj::0.3131035799
+    Iteration 790, p_obj::0.3131035799
+    Iteration 800, p_obj::0.3131035799
+    Iteration 810, p_obj::0.3131035799
+    Iteration 820, p_obj::0.3131035799
+    Iteration 830, p_obj::0.3131035799
+    Iteration 840, p_obj::0.3131035799
+    Iteration 850, p_obj::0.3131035799
+    Iteration 860, p_obj::0.3131035799
+    Iteration 870, p_obj::0.3131035799
+    Iteration 880, p_obj::0.3131035799
+    Iteration 890, p_obj::0.3131035799
+    Iteration 900, p_obj::0.3131035799
+    Iteration 910, p_obj::0.3131035799
+    Iteration 920, p_obj::0.3131035799
+    Iteration 930, p_obj::0.3131035799
+    Iteration 940, p_obj::0.3131035799
+    Iteration 950, p_obj::0.3131035799
+    Iteration 960, p_obj::0.3131035799
+    Iteration 970, p_obj::0.3131035799
+    Iteration 980, p_obj::0.3131035799
+    Iteration 990, p_obj::0.3131035799
+    Iteration 1000, p_obj::0.3131035799
+    Iteration 1010, p_obj::0.3131035799
+    Iteration 1020, p_obj::0.3131035799
+    Iteration 1030, p_obj::0.3131035799
+    Iteration 1040, p_obj::0.3131035799
+    Iteration 1050, p_obj::0.3131035799
+    Iteration 1060, p_obj::0.3131035799
+    Iteration 1070, p_obj::0.3131035799
+    Iteration 1080, p_obj::0.3131035799
+    Iteration 1090, p_obj::0.3131035799
+    Iteration 1100, p_obj::0.3131035799
+    Iteration 1110, p_obj::0.3131035799
+    Iteration 1120, p_obj::0.3131035799
+    Iteration 1130, p_obj::0.3131035799
+    Iteration 1140, p_obj::0.3131035799
+    Iteration 1150, p_obj::0.3131035799
+    Iteration 1160, p_obj::0.3131035799
+    Iteration 1170, p_obj::0.3131035799
+    Iteration 1180, p_obj::0.3131035799
+    Iteration 1190, p_obj::0.3131035799
+    Iteration 1200, p_obj::0.3131035799
+    Iteration 1210, p_obj::0.3131035799
+    Iteration 1220, p_obj::0.3131035799
+    Iteration 1230, p_obj::0.3131035799
+    Iteration 1240, p_obj::0.3131035799
+    Iteration 1250, p_obj::0.3131035799
+    Iteration 1260, p_obj::0.3131035799
+    Iteration 1270, p_obj::0.3131035799
+    Iteration 1280, p_obj::0.3131035799
+    Iteration 1290, p_obj::0.3131035799
+    Iteration 1300, p_obj::0.3131035799
+    Iteration 1310, p_obj::0.3131035799
+    Iteration 1320, p_obj::0.3131035799
+    Iteration 1330, p_obj::0.3131035799
+    Iteration 1340, p_obj::0.3131035799
+    Iteration 1350, p_obj::0.3131035799
+    Iteration 1360, p_obj::0.3131035799
+    Iteration 1370, p_obj::0.3131035799
+    Iteration 1380, p_obj::0.3131035799
+    Iteration 1390, p_obj::0.3131035799
+    Iteration 1400, p_obj::0.3131035799
+    Iteration 1410, p_obj::0.3131035799
+    Iteration 1420, p_obj::0.3131035799
+    Iteration 1430, p_obj::0.3131035799
+    Iteration 1440, p_obj::0.3131035799
+    Iteration 1450, p_obj::0.3131035799
+    Iteration 1460, p_obj::0.3131035799
+    Iteration 1470, p_obj::0.3131035799
+    Iteration 1480, p_obj::0.3131035799
+    Iteration 1490, p_obj::0.3131035799
+    Iteration 0, p_obj::0.5000000000
+    Iteration 10, p_obj::0.3131108582
+    Iteration 20, p_obj::0.3131043171
+    Iteration 30, p_obj::0.3131039143
+    Iteration 40, p_obj::0.3131037957
+    Iteration 50, p_obj::0.3131037238
+    Iteration 60, p_obj::0.3131035825
+    Iteration 70, p_obj::0.3131035809
+    Iteration 80, p_obj::0.3131035799
+    Iteration 90, p_obj::0.3131035799
+    Iteration 100, p_obj::0.3131035799
+    Iteration 110, p_obj::0.3131035799
+    Iteration 120, p_obj::0.3131035799
+    Iteration 130, p_obj::0.3131035799
+    Iteration 140, p_obj::0.3131035799
+    Iteration 150, p_obj::0.3131035799
+    Iteration 160, p_obj::0.3131035799
+    Iteration 170, p_obj::0.3131035799
+    Iteration 180, p_obj::0.3131035799
+    Iteration 190, p_obj::0.3131035799
+    Iteration 200, p_obj::0.3131035799
+    Iteration 210, p_obj::0.3131035799
+    Iteration 220, p_obj::0.3131035799
+    Iteration 230, p_obj::0.3131035799
+    Iteration 240, p_obj::0.3131035799
+    Iteration 250, p_obj::0.3131035799
+    Iteration 260, p_obj::0.3131035799
+    Iteration 270, p_obj::0.3131035799
+    Iteration 280, p_obj::0.3131035799
+    Iteration 290, p_obj::0.3131035799
+    Iteration 300, p_obj::0.3131035799
+    Iteration 310, p_obj::0.3131035799
+    Iteration 320, p_obj::0.3131035799
+    Iteration 330, p_obj::0.3131035799
+    Iteration 340, p_obj::0.3131035799
+    Iteration 350, p_obj::0.3131035799
+    Iteration 360, p_obj::0.3131035799
+    Iteration 370, p_obj::0.3131035799
+    Iteration 380, p_obj::0.3131035799
+    Iteration 390, p_obj::0.3131035799
+    Iteration 400, p_obj::0.3131035799
+    Iteration 410, p_obj::0.3131035799
+    Iteration 420, p_obj::0.3131035799
+    Iteration 430, p_obj::0.3131035799
+    Iteration 440, p_obj::0.3131035799
+    Iteration 450, p_obj::0.3131035799
+    Iteration 460, p_obj::0.3131035799
+    Iteration 470, p_obj::0.3131035799
+    Iteration 480, p_obj::0.3131035799
+    Iteration 490, p_obj::0.3131035799
+    Iteration 500, p_obj::0.3131035799
+    Iteration 510, p_obj::0.3131035799
+    Iteration 520, p_obj::0.3131035799
+    Iteration 530, p_obj::0.3131035799
+    Iteration 540, p_obj::0.3131035799
+    Iteration 550, p_obj::0.3131035799
+    Iteration 560, p_obj::0.3131035799
+    Iteration 570, p_obj::0.3131035799
+    Iteration 580, p_obj::0.3131035799
+    Iteration 590, p_obj::0.3131035799
+    Iteration 600, p_obj::0.3131035799
+    Iteration 610, p_obj::0.3131035799
+    Iteration 620, p_obj::0.3131035799
+    Iteration 630, p_obj::0.3131035799
+    Iteration 640, p_obj::0.3131035799
+    Iteration 650, p_obj::0.3131035799
+    Iteration 660, p_obj::0.3131035799
+    Iteration 670, p_obj::0.3131035799
+    Iteration 680, p_obj::0.3131035799
+    Iteration 690, p_obj::0.3131035799
+    Iteration 700, p_obj::0.3131035799
+    Iteration 710, p_obj::0.3131035799
+    Iteration 720, p_obj::0.3131035799
+    Iteration 730, p_obj::0.3131035799
+    Iteration 740, p_obj::0.3131035799
+    Iteration 750, p_obj::0.3131035799
+    Iteration 760, p_obj::0.3131035799
+    Iteration 770, p_obj::0.3131035799
+    Iteration 780, p_obj::0.3131035799
+    Iteration 790, p_obj::0.3131035799
+    Iteration 800, p_obj::0.3131035799
+    Iteration 810, p_obj::0.3131035799
+    Iteration 820, p_obj::0.3131035799
+    Iteration 830, p_obj::0.3131035799
+    Iteration 840, p_obj::0.3131035799
+    Iteration 850, p_obj::0.3131035799
+    Iteration 860, p_obj::0.3131035799
+    Iteration 870, p_obj::0.3131035799
+    Iteration 880, p_obj::0.3131035799
+    Iteration 890, p_obj::0.3131035799
+    Iteration 900, p_obj::0.3131035799
+    Iteration 910, p_obj::0.3131035799
+    Iteration 920, p_obj::0.3131035799
+    Iteration 930, p_obj::0.3131035799
+    Iteration 940, p_obj::0.3131035799
+    Iteration 950, p_obj::0.3131035799
+    Iteration 960, p_obj::0.3131035799
+    Iteration 970, p_obj::0.3131035799
+    Iteration 980, p_obj::0.3131035799
+    Iteration 990, p_obj::0.3131035799
+    Iteration 1000, p_obj::0.3131035799
+    Iteration 1010, p_obj::0.3131035799
+    Iteration 1020, p_obj::0.3131035799
+    Iteration 1030, p_obj::0.3131035799
+    Iteration 1040, p_obj::0.3131035799
+    Iteration 1050, p_obj::0.3131035799
+    Iteration 1060, p_obj::0.3131035799
+    Iteration 1070, p_obj::0.3131035799
+    Iteration 1080, p_obj::0.3131035799
+    Iteration 1090, p_obj::0.3131035799
+    Iteration 1100, p_obj::0.3131035799
+    Iteration 1110, p_obj::0.3131035799
+    Iteration 1120, p_obj::0.3131035799
+    Iteration 1130, p_obj::0.3131035799
+    Iteration 1140, p_obj::0.3131035799
+    Iteration 1150, p_obj::0.3131035799
+    Iteration 1160, p_obj::0.3131035799
+    Iteration 1170, p_obj::0.3131035799
+    Iteration 1180, p_obj::0.3131035799
+    Iteration 1190, p_obj::0.3131035799
+    Iteration 1200, p_obj::0.3131035799
+    Iteration 1210, p_obj::0.3131035799
+    Iteration 1220, p_obj::0.3131035799
+    Iteration 1230, p_obj::0.3131035799
+    Iteration 1240, p_obj::0.3131035799
+    Iteration 1250, p_obj::0.3131035799
+    Iteration 1260, p_obj::0.3131035799
+    Iteration 1270, p_obj::0.3131035799
+    Iteration 1280, p_obj::0.3131035799
+    Iteration 1290, p_obj::0.3131035799
+    Iteration 1300, p_obj::0.3131035799
+    Iteration 1310, p_obj::0.3131035799
+    Iteration 1320, p_obj::0.3131035799
+    Iteration 1330, p_obj::0.3131035799
+    Iteration 1340, p_obj::0.3131035799
+    Iteration 1350, p_obj::0.3131035799
+    Iteration 1360, p_obj::0.3131035799
+    Iteration 1370, p_obj::0.3131035799
+    Iteration 1380, p_obj::0.3131035799
+    Iteration 1390, p_obj::0.3131035799
+    Iteration 1400, p_obj::0.3131035799
+    Iteration 1410, p_obj::0.3131035799
+    Iteration 1420, p_obj::0.3131035799
+    Iteration 1430, p_obj::0.3131035799
+    Iteration 1440, p_obj::0.3131035799
+    Iteration 1450, p_obj::0.3131035799
+    Iteration 1460, p_obj::0.3131035799
+    Iteration 1470, p_obj::0.3131035799
+    Iteration 1480, p_obj::0.3131035799
+    Iteration 1490, p_obj::0.3131035799
+    Iteration 0, p_obj::0.5000000000
+    Iteration 10, p_obj::0.3131108581
+    Iteration 20, p_obj::0.3131043169
+    Iteration 30, p_obj::0.3131039130
+    Iteration 40, p_obj::0.3131037832
+    Iteration 50, p_obj::0.3131035830
+    Iteration 60, p_obj::0.3131035812
+    Iteration 70, p_obj::0.3131035808
+    Iteration 80, p_obj::0.3131035799
+    Iteration 90, p_obj::0.3131035799
+    Iteration 100, p_obj::0.3131035799
+    Iteration 110, p_obj::0.3131035799
+    Iteration 120, p_obj::0.3131035799
+    Iteration 130, p_obj::0.3131035799
+    Iteration 140, p_obj::0.3131035799
+    Iteration 150, p_obj::0.3131035799
+    Iteration 160, p_obj::0.3131035799
+    Iteration 170, p_obj::0.3131035799
+    Iteration 180, p_obj::0.3131035799
+    Iteration 190, p_obj::0.3131035799
+    Iteration 200, p_obj::0.3131035799
+    Iteration 210, p_obj::0.3131035799
+    Iteration 220, p_obj::0.3131035799
+    Iteration 230, p_obj::0.3131035799
+    Iteration 240, p_obj::0.3131035799
+    Iteration 250, p_obj::0.3131035799
+    Iteration 260, p_obj::0.3131035799
+    Iteration 270, p_obj::0.3131035799
+    Iteration 280, p_obj::0.3131035799
+    Iteration 290, p_obj::0.3131035799
+    Iteration 300, p_obj::0.3131035799
+    Iteration 310, p_obj::0.3131035799
+    Iteration 320, p_obj::0.3131035799
+    Iteration 330, p_obj::0.3131035799
+    Iteration 340, p_obj::0.3131035799
+    Iteration 350, p_obj::0.3131035799
+    Iteration 360, p_obj::0.3131035799
+    Iteration 370, p_obj::0.3131035799
+    Iteration 380, p_obj::0.3131035799
+    Iteration 390, p_obj::0.3131035799
+    Iteration 400, p_obj::0.3131035799
+    Iteration 410, p_obj::0.3131035799
+    Iteration 420, p_obj::0.3131035799
+    Iteration 430, p_obj::0.3131035799
+    Iteration 440, p_obj::0.3131035799
+    Iteration 450, p_obj::0.3131035799
+    Iteration 460, p_obj::0.3131035799
+    Iteration 470, p_obj::0.3131035799
+    Iteration 480, p_obj::0.3131035799
+    Iteration 490, p_obj::0.3131035799
+    Iteration 500, p_obj::0.3131035799
+    Iteration 510, p_obj::0.3131035799
+    Iteration 520, p_obj::0.3131035799
+    Iteration 530, p_obj::0.3131035799
+    Iteration 540, p_obj::0.3131035799
+    Iteration 550, p_obj::0.3131035799
+    Iteration 560, p_obj::0.3131035799
+    Iteration 570, p_obj::0.3131035799
+    Iteration 580, p_obj::0.3131035799
+    Iteration 590, p_obj::0.3131035799
+    Iteration 600, p_obj::0.3131035799
+    Iteration 610, p_obj::0.3131035799
+    Iteration 620, p_obj::0.3131035799
+    Iteration 630, p_obj::0.3131035799
+    Iteration 640, p_obj::0.3131035799
+    Iteration 650, p_obj::0.3131035799
+    Iteration 660, p_obj::0.3131035799
+    Iteration 670, p_obj::0.3131035799
+    Iteration 680, p_obj::0.3131035799
+    Iteration 690, p_obj::0.3131035799
+    Iteration 700, p_obj::0.3131035799
+    Iteration 710, p_obj::0.3131035799
+    Iteration 720, p_obj::0.3131035799
+    Iteration 730, p_obj::0.3131035799
+    Iteration 740, p_obj::0.3131035799
+    Iteration 750, p_obj::0.3131035799
+    Iteration 760, p_obj::0.3131035799
+    Iteration 770, p_obj::0.3131035799
+    Iteration 780, p_obj::0.3131035799
+    Iteration 790, p_obj::0.3131035799
+    Iteration 800, p_obj::0.3131035799
+    Iteration 810, p_obj::0.3131035799
+    Iteration 820, p_obj::0.3131035799
+    Iteration 830, p_obj::0.3131035799
+    Iteration 840, p_obj::0.3131035799
+    Iteration 850, p_obj::0.3131035799
+    Iteration 860, p_obj::0.3131035799
+    Iteration 870, p_obj::0.3131035799
+    Iteration 880, p_obj::0.3131035799
+    Iteration 890, p_obj::0.3131035799
+    Iteration 900, p_obj::0.3131035799
+    Iteration 910, p_obj::0.3131035799
+    Iteration 920, p_obj::0.3131035799
+    Iteration 930, p_obj::0.3131035799
+    Iteration 940, p_obj::0.3131035799
+    Iteration 950, p_obj::0.3131035799
+    Iteration 960, p_obj::0.3131035799
+    Iteration 970, p_obj::0.3131035799
+    Iteration 980, p_obj::0.3131035799
+    Iteration 990, p_obj::0.3131035799
+    Iteration 1000, p_obj::0.3131035799
+    Iteration 1010, p_obj::0.3131035799
+    Iteration 1020, p_obj::0.3131035799
+    Iteration 1030, p_obj::0.3131035799
+    Iteration 1040, p_obj::0.3131035799
+    Iteration 1050, p_obj::0.3131035799
+    Iteration 1060, p_obj::0.3131035799
+    Iteration 1070, p_obj::0.3131035799
+    Iteration 1080, p_obj::0.3131035799
+    Iteration 1090, p_obj::0.3131035799
+    Iteration 1100, p_obj::0.3131035799
+    Iteration 1110, p_obj::0.3131035799
+    Iteration 1120, p_obj::0.3131035799
+    Iteration 1130, p_obj::0.3131035799
+    Iteration 1140, p_obj::0.3131035799
+    Iteration 1150, p_obj::0.3131035799
+    Iteration 1160, p_obj::0.3131035799
+    Iteration 1170, p_obj::0.3131035799
+    Iteration 1180, p_obj::0.3131035799
+    Iteration 1190, p_obj::0.3131035799
+    Iteration 1200, p_obj::0.3131035799
+    Iteration 1210, p_obj::0.3131035799
+    Iteration 1220, p_obj::0.3131035799
+    Iteration 1230, p_obj::0.3131035799
+    Iteration 1240, p_obj::0.3131035799
+    Iteration 1250, p_obj::0.3131035799
+    Iteration 1260, p_obj::0.3131035799
+    Iteration 1270, p_obj::0.3131035799
+    Iteration 1280, p_obj::0.3131035799
+    Iteration 1290, p_obj::0.3131035799
+    Iteration 1300, p_obj::0.3131035799
+    Iteration 1310, p_obj::0.3131035799
+    Iteration 1320, p_obj::0.3131035799
+    Iteration 1330, p_obj::0.3131035799
+    Iteration 1340, p_obj::0.3131035799
+    Iteration 1350, p_obj::0.3131035799
+    Iteration 1360, p_obj::0.3131035799
+    Iteration 1370, p_obj::0.3131035799
+    Iteration 1380, p_obj::0.3131035799
+    Iteration 1390, p_obj::0.3131035799
+    Iteration 1400, p_obj::0.3131035799
+    Iteration 1410, p_obj::0.3131035799
+    Iteration 1420, p_obj::0.3131035799
+    Iteration 1430, p_obj::0.3131035799
+    Iteration 1440, p_obj::0.3131035799
+    Iteration 1450, p_obj::0.3131035799
+    Iteration 1460, p_obj::0.3131035799
+    Iteration 1470, p_obj::0.3131035799
+    Iteration 1480, p_obj::0.3131035799
+    Iteration 1490, p_obj::0.3131035799
+
+
+
+
+starts plot
+
+
+.. code-block:: default
+
+    current_palette = sns.color_palette("colorblind")
+
+    plt.close('all')
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    for i, algo in enumerate(all_algos):
+        E = dict_Es[algo]
+        use_acc = algo[1]
+        K = algo[2]
+        if use_acc:
+            linestyle = 'dashed'
+        elif algo[0].startswith(('fista', 'apcg')):
+            linestyle = 'dotted'
+        else:
+            linestyle = 'solid'
+
+        if not use_acc:
+            label = "CD, no acc"
+            color = current_palette[1]
+        else:
+            if algo[3] is None:
+                label = r"$\lambda_{\mathrm{reg}} = 0$"
+                color = current_palette[1]
+            else:
+                label = r"$\lambda_{\mathrm{reg}} = 10^{%d}$" % np.log10(algo[3])
+                color = plt.cm.viridis((i + 1) / len(all_algos))
+        ax.semilogy(
+            dict_coef[algo[0]] * f_gap * np.arange(len(E)), E - p_star,
+            label=label, color=color, linestyle=linestyle)
+
+
+    ax.set_yticks((1e-15, 1e-10, 1e-5, 1))
+    plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
+    plt.xlabel(r"iteration $k$")
+    plt.tight_layout()
+    plt.legend()
+    plt.show(block=False)
+
+
+
+.. image:: /auto_examples/images/sphx_glr_plot_influ_reg_001.png
+    :alt: plot influ reg
+    :class: sphx-glr-single-img
+
+
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  16.900 seconds)
+
+
+.. _sphx_glr_download_auto_examples_plot_influ_reg.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+     :download:`Download Python source code: plot_influ_reg.py <plot_influ_reg.py>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: plot_influ_reg.ipynb <plot_influ_reg.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

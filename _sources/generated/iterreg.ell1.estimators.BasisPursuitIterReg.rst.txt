@@ -1,0 +1,27 @@
+﻿iterreg.ell1.estimators.BasisPursuitIterReg
+===========================================
+
+.. currentmodule:: iterreg.ell1.estimators
+
+.. autoclass:: BasisPursuitIterReg
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BasisPursuitIterReg.__init__
+      ~BasisPursuitIterReg.debias
+      ~BasisPursuitIterReg.fit
+      ~BasisPursuitIterReg.get_params
+      ~BasisPursuitIterReg.predict
+      ~BasisPursuitIterReg.set_params
+   
+   
+
+   
+   
+   

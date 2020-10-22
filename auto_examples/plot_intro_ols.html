@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comparison of CD, GD, inertial and Anderson acceleration &#8212; extracd 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          extracd</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="index.html">Examples</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="https://github.com/LCSL/extracd">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Comparison of CD, GD, inertial and Anderson acceleration</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/auto_examples/plot_intro_ols.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-intro-ols-py"><span class="std std-ref">here</span></a>     to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="comparison-of-cd-gd-inertial-and-anderson-acceleration">
+<span id="sphx-glr-auto-examples-plot-intro-ols-py"></span><h1>Comparison of CD, GD, inertial and Anderson acceleration<a class="headerlink" href="#comparison-of-cd-gd-inertial-and-anderson-acceleration" title="Permalink to this headline">¶</a></h1>
+<p>CD outperforms GD, and Anderson acceleration outperforms inertial acceleration.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class"><span class="n">defaultdict</span></a>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html#numpy.linalg.norm" title="numpy.linalg.norm" class="sphx-glr-backref-module-numpy-linalg sphx-glr-backref-type-py-function"><span class="n">norm</span></a>
+<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="scipy.sparse.linalg.cg" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">cg</span></a>
+<span class="kn">from</span> <span class="nn">celer.datasets</span> <span class="kn">import</span> <span class="n">fetch_libsvm</span>
+<span class="kn">from</span> <span class="nn">celer.plot_utils</span> <span class="kn">import</span> <span class="n">configure_plt</span>
+
+<span class="kn">from</span> <span class="nn">extracd.lasso</span> <span class="kn">import</span> <span class="n">solver_enet</span><span class="p">,</span> <span class="n">primal_enet</span><span class="p">,</span> <span class="n">apcg</span>
+
+
+<a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot_all_algos</span></a> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">configure_plt</span><span class="p">()</span>
+
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_features</span></a> <span class="o">=</span> <span class="mi">1000</span>
+<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="n">fetch_libsvm</span><span class="p">(</span><span class="s1">&#39;rcv1_train&#39;</span><span class="p">)</span>
+<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">[:,</span> <span class="p">:</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_features</span></a><span class="p">]</span>
+
+<span class="k">if</span> <span class="ow">not</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.issparse.html#scipy.sparse.issparse" title="scipy.sparse.issparse" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-function"><span class="n">sparse</span><span class="o">.</span><span class="n">issparse</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">):</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">-=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">-=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">/=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html#numpy.linalg.norm" title="numpy.linalg.norm" class="sphx-glr-backref-module-numpy-linalg sphx-glr-backref-type-py-function"><span class="n">norm</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+<span class="k">else</span><span class="p">:</span>
+    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.multiply.html#scipy.sparse.csc_matrix.multiply" title="scipy.sparse.csc_matrix.multiply" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-method"><span class="n">X</span><span class="o">.</span><span class="n">multiply</span></a><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.norm.html#scipy.sparse.linalg.norm" title="scipy.sparse.linalg.norm" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">-=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">/=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html#numpy.linalg.norm" title="numpy.linalg.norm" class="sphx-glr-backref-module-numpy-linalg sphx-glr-backref-type-py-function"><span class="n">norm</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">)</span>
+
+<span class="n">alpha_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">))</span>
+
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a> <span class="o">=</span> <span class="mi">0</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tol</span></a> <span class="o">=</span> <span class="mf">1e-15</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span></a> <span class="o">=</span> <span class="p">[]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span><span class="o">.</span><span class="n">append</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html#numpy.linalg.norm" title="numpy.linalg.norm" class="sphx-glr-backref-module-numpy-linalg sphx-glr-backref-type-py-function"><span class="n">norm</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">max_iter</span></a> <span class="o">=</span> <span class="mi">2000</span>
+
+
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">pobj</span> <span class="o">=</span> <span class="n">primal_enet</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">-</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="p">)</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span><span class="o">.</span><span class="n">append</span></a><span class="p">(</span><span class="n">pobj</span><span class="p">)</span>
+
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">w_star</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="scipy.sparse.linalg.cg" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">cg</span></a><span class="p">(</span>
+    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">max_iter</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tol</span></a><span class="o">=</span><span class="mf">1e-32</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span></a><span class="p">)</span>
+
+
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">f_gap</span></a> <span class="o">=</span> <span class="mi">10</span>
+<a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">return_all</span></a> <span class="o">=</span> <span class="kc">False</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">all_algos</span></a> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;pgd&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;pgd&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;fista&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;apcg&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_coef</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class"><span class="n">defaultdict</span></a><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_coef</span></a><span class="p">[</span><span class="s1">&#39;cdsym&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_coef</span></a><span class="p">[</span><span class="s1">&#39;cd2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_Es</span></a> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">all_algos</span></a><span class="p">:</span>
+    <span class="k">if</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;apcg&#39;</span><span class="p">:</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">w</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gaps</span></a> <span class="o">=</span> <span class="n">apcg</span><span class="p">(</span>
+            <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">max_iter</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">max_iter</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tol</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tol</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">f_gap</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">f_gap</span></a><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">w</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <span class="n">solver_enet</span><span class="p">(</span>
+            <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">f_gap</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">f_gap</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">max_iter</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">max_iter</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tol</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tol</span></a><span class="p">,</span>
+            <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">return_all</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">return_all</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">use_acc</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">K</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_Es</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+
+<span class="n">current_palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;colorblind&quot;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a> <span class="o">=</span> <span class="p">{}</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><span class="s2">&quot;pgd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_palette</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><span class="s2">&quot;fista&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_palette</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><span class="s2">&quot;cd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_palette</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><span class="s2">&quot;apcg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_palette</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><span class="s1">&#39;cdsym&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_palette</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><span class="s2">&quot;cd2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_palette</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a> <span class="o">=</span> <span class="p">{}</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;pgd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GD&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;cd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CD&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;cdsym&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CD SYM&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;pgd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GD - Anderson&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;cd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CD - Anderson&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;cdsym&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CD SYM - Anderson&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;fista&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;GD - inertial&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;apcg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CD - inertial&quot;</span>
+
+
+<span class="n">p_star</span> <span class="o">=</span> <span class="n">primal_enet</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">-</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">w_star</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">w_star</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha</span></a><span class="p">)</span>
+<span class="k">for</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_Es</span></a><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="n">p_star</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">p_star</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset: rcv1_train
+Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
+Iteration 0, p_obj::0.5000000000
+Iteration 10, p_obj::0.3176485536
+Iteration 20, p_obj::0.3138019846
+Iteration 30, p_obj::0.3133109051
+Iteration 40, p_obj::0.3131971688
+Iteration 50, p_obj::0.3131583664
+Iteration 60, p_obj::0.3131404595
+Iteration 70, p_obj::0.3131302449
+Iteration 80, p_obj::0.3131236379
+Iteration 90, p_obj::0.3131190637
+Iteration 100, p_obj::0.3131157774
+Iteration 110, p_obj::0.3131133635
+Iteration 120, p_obj::0.3131115630
+Iteration 130, p_obj::0.3131102036
+Iteration 140, p_obj::0.3131091663
+Iteration 150, p_obj::0.3131083666
+Iteration 160, p_obj::0.3131077439
+Iteration 170, p_obj::0.3131072540
+Iteration 180, p_obj::0.3131068647
+Iteration 190, p_obj::0.3131065520
+Iteration 200, p_obj::0.3131062983
+Iteration 210, p_obj::0.3131060901
+Iteration 220, p_obj::0.3131059174
+Iteration 230, p_obj::0.3131057727
+Iteration 240, p_obj::0.3131056500
+Iteration 250, p_obj::0.3131055451
+Iteration 260, p_obj::0.3131054542
+Iteration 270, p_obj::0.3131053749
+Iteration 280, p_obj::0.3131053050
+Iteration 290, p_obj::0.3131052429
+Iteration 300, p_obj::0.3131051871
+Iteration 310, p_obj::0.3131051367
+Iteration 320, p_obj::0.3131050909
+Iteration 330, p_obj::0.3131050488
+Iteration 340, p_obj::0.3131050101
+Iteration 350, p_obj::0.3131049742
+Iteration 360, p_obj::0.3131049407
+Iteration 370, p_obj::0.3131049093
+Iteration 380, p_obj::0.3131048798
+Iteration 390, p_obj::0.3131048520
+Iteration 400, p_obj::0.3131048255
+Iteration 410, p_obj::0.3131048004
+Iteration 420, p_obj::0.3131047765
+Iteration 430, p_obj::0.3131047536
+Iteration 440, p_obj::0.3131047316
+Iteration 450, p_obj::0.3131047105
+Iteration 460, p_obj::0.3131046901
+Iteration 470, p_obj::0.3131046705
+Iteration 480, p_obj::0.3131046515
+Iteration 490, p_obj::0.3131046331
+Iteration 500, p_obj::0.3131046153
+Iteration 510, p_obj::0.3131045980
+Iteration 520, p_obj::0.3131045811
+Iteration 530, p_obj::0.3131045647
+Iteration 540, p_obj::0.3131045487
+Iteration 550, p_obj::0.3131045332
+Iteration 560, p_obj::0.3131045179
+Iteration 570, p_obj::0.3131045031
+Iteration 580, p_obj::0.3131044886
+Iteration 590, p_obj::0.3131044743
+Iteration 600, p_obj::0.3131044604
+Iteration 610, p_obj::0.3131044468
+Iteration 620, p_obj::0.3131044334
+Iteration 630, p_obj::0.3131044203
+Iteration 640, p_obj::0.3131044075
+Iteration 650, p_obj::0.3131043949
+Iteration 660, p_obj::0.3131043825
+Iteration 670, p_obj::0.3131043704
+Iteration 680, p_obj::0.3131043585
+Iteration 690, p_obj::0.3131043468
+Iteration 700, p_obj::0.3131043353
+Iteration 710, p_obj::0.3131043240
+Iteration 720, p_obj::0.3131043128
+Iteration 730, p_obj::0.3131043019
+Iteration 740, p_obj::0.3131042912
+Iteration 750, p_obj::0.3131042806
+Iteration 760, p_obj::0.3131042702
+Iteration 770, p_obj::0.3131042600
+Iteration 780, p_obj::0.3131042499
+Iteration 790, p_obj::0.3131042401
+Iteration 800, p_obj::0.3131042303
+Iteration 810, p_obj::0.3131042207
+Iteration 820, p_obj::0.3131042113
+Iteration 830, p_obj::0.3131042020
+Iteration 840, p_obj::0.3131041929
+Iteration 850, p_obj::0.3131041839
+Iteration 860, p_obj::0.3131041750
+Iteration 870, p_obj::0.3131041663
+Iteration 880, p_obj::0.3131041577
+Iteration 890, p_obj::0.3131041493
+Iteration 900, p_obj::0.3131041410
+Iteration 910, p_obj::0.3131041328
+Iteration 920, p_obj::0.3131041247
+Iteration 930, p_obj::0.3131041168
+Iteration 940, p_obj::0.3131041089
+Iteration 950, p_obj::0.3131041012
+Iteration 960, p_obj::0.3131040937
+Iteration 970, p_obj::0.3131040862
+Iteration 980, p_obj::0.3131040788
+Iteration 990, p_obj::0.3131040716
+Iteration 1000, p_obj::0.3131040644
+Iteration 1010, p_obj::0.3131040574
+Iteration 1020, p_obj::0.3131040505
+Iteration 1030, p_obj::0.3131040436
+Iteration 1040, p_obj::0.3131040369
+Iteration 1050, p_obj::0.3131040303
+Iteration 1060, p_obj::0.3131040238
+Iteration 1070, p_obj::0.3131040173
+Iteration 1080, p_obj::0.3131040110
+Iteration 1090, p_obj::0.3131040048
+Iteration 1100, p_obj::0.3131039986
+Iteration 1110, p_obj::0.3131039926
+Iteration 1120, p_obj::0.3131039866
+Iteration 1130, p_obj::0.3131039807
+Iteration 1140, p_obj::0.3131039750
+Iteration 1150, p_obj::0.3131039693
+Iteration 1160, p_obj::0.3131039636
+Iteration 1170, p_obj::0.3131039581
+Iteration 1180, p_obj::0.3131039526
+Iteration 1190, p_obj::0.3131039473
+Iteration 1200, p_obj::0.3131039420
+Iteration 1210, p_obj::0.3131039368
+Iteration 1220, p_obj::0.3131039316
+Iteration 1230, p_obj::0.3131039266
+Iteration 1240, p_obj::0.3131039216
+Iteration 1250, p_obj::0.3131039167
+Iteration 1260, p_obj::0.3131039118
+Iteration 1270, p_obj::0.3131039070
+Iteration 1280, p_obj::0.3131039023
+Iteration 1290, p_obj::0.3131038977
+Iteration 1300, p_obj::0.3131038931
+Iteration 1310, p_obj::0.3131038886
+Iteration 1320, p_obj::0.3131038842
+Iteration 1330, p_obj::0.3131038798
+Iteration 1340, p_obj::0.3131038755
+Iteration 1350, p_obj::0.3131038713
+Iteration 1360, p_obj::0.3131038671
+Iteration 1370, p_obj::0.3131038630
+Iteration 1380, p_obj::0.3131038589
+Iteration 1390, p_obj::0.3131038549
+Iteration 1400, p_obj::0.3131038510
+Iteration 1410, p_obj::0.3131038471
+Iteration 1420, p_obj::0.3131038433
+Iteration 1430, p_obj::0.3131038395
+Iteration 1440, p_obj::0.3131038358
+Iteration 1450, p_obj::0.3131038321
+Iteration 1460, p_obj::0.3131038285
+Iteration 1470, p_obj::0.3131038250
+Iteration 1480, p_obj::0.3131038215
+Iteration 1490, p_obj::0.3131038180
+Iteration 1500, p_obj::0.3131038146
+Iteration 1510, p_obj::0.3131038113
+Iteration 1520, p_obj::0.3131038079
+Iteration 1530, p_obj::0.3131038047
+Iteration 1540, p_obj::0.3131038015
+Iteration 1550, p_obj::0.3131037983
+Iteration 1560, p_obj::0.3131037952
+Iteration 1570, p_obj::0.3131037921
+Iteration 1580, p_obj::0.3131037891
+Iteration 1590, p_obj::0.3131037861
+Iteration 1600, p_obj::0.3131037832
+Iteration 1610, p_obj::0.3131037803
+Iteration 1620, p_obj::0.3131037774
+Iteration 1630, p_obj::0.3131037746
+Iteration 1640, p_obj::0.3131037718
+Iteration 1650, p_obj::0.3131037691
+Iteration 1660, p_obj::0.3131037664
+Iteration 1670, p_obj::0.3131037637
+Iteration 1680, p_obj::0.3131037611
+Iteration 1690, p_obj::0.3131037585
+Iteration 1700, p_obj::0.3131037560
+Iteration 1710, p_obj::0.3131037535
+Iteration 1720, p_obj::0.3131037510
+Iteration 1730, p_obj::0.3131037486
+Iteration 1740, p_obj::0.3131037462
+Iteration 1750, p_obj::0.3131037438
+Iteration 1760, p_obj::0.3131037415
+Iteration 1770, p_obj::0.3131037392
+Iteration 1780, p_obj::0.3131037369
+Iteration 1790, p_obj::0.3131037347
+Iteration 1800, p_obj::0.3131037325
+Iteration 1810, p_obj::0.3131037303
+Iteration 1820, p_obj::0.3131037282
+Iteration 1830, p_obj::0.3131037261
+Iteration 1840, p_obj::0.3131037240
+Iteration 1850, p_obj::0.3131037220
+Iteration 1860, p_obj::0.3131037199
+Iteration 1870, p_obj::0.3131037179
+Iteration 1880, p_obj::0.3131037160
+Iteration 1890, p_obj::0.3131037141
+Iteration 1900, p_obj::0.3131037122
+Iteration 1910, p_obj::0.3131037103
+Iteration 1920, p_obj::0.3131037084
+Iteration 1930, p_obj::0.3131037066
+Iteration 1940, p_obj::0.3131037048
+Iteration 1950, p_obj::0.3131037030
+Iteration 1960, p_obj::0.3131037013
+Iteration 1970, p_obj::0.3131036996
+Iteration 1980, p_obj::0.3131036979
+Iteration 1990, p_obj::0.3131036962
+Iteration 0, p_obj::0.5000000000
+Iteration 10, p_obj::0.3135274383
+Iteration 20, p_obj::0.3131481441
+Iteration 30, p_obj::0.3131188616
+Iteration 40, p_obj::0.3131056978
+Iteration 50, p_obj::0.3131053935
+Iteration 60, p_obj::0.3131047504
+Iteration 70, p_obj::0.3131046014
+Iteration 80, p_obj::0.3131039819
+Iteration 90, p_obj::0.3131039449
+Iteration 100, p_obj::0.3131038436
+Iteration 110, p_obj::0.3131038292
+Iteration 120, p_obj::0.3131036658
+Iteration 130, p_obj::0.3131036467
+Iteration 140, p_obj::0.3131036412
+Iteration 150, p_obj::0.3131036016
+Iteration 160, p_obj::0.3131035991
+Iteration 170, p_obj::0.3131035943
+Iteration 180, p_obj::0.3131035933
+Iteration 190, p_obj::0.3131035821
+Iteration 200, p_obj::0.3131035817
+Iteration 210, p_obj::0.3131035813
+Iteration 220, p_obj::0.3131035812
+Iteration 230, p_obj::0.3131035811
+Iteration 240, p_obj::0.3131035799
+Iteration 250, p_obj::0.3131035799
+Iteration 260, p_obj::0.3131035799
+Iteration 270, p_obj::0.3131035799
+Iteration 280, p_obj::0.3131035799
+Iteration 290, p_obj::0.3131035799
+Iteration 300, p_obj::0.3131035799
+Iteration 310, p_obj::0.3131035799
+Iteration 320, p_obj::0.3131035799
+Iteration 330, p_obj::0.3131035799
+Iteration 340, p_obj::0.3131035799
+Iteration 350, p_obj::0.3131035799
+Iteration 360, p_obj::0.3131035799
+Iteration 370, p_obj::0.3131035799
+Iteration 380, p_obj::0.3131035799
+Iteration 390, p_obj::0.3131035799
+Iteration 400, p_obj::0.3131035799
+Iteration 410, p_obj::0.3131035799
+Iteration 420, p_obj::0.3131035799
+Iteration 430, p_obj::0.3131035799
+Iteration 440, p_obj::0.3131035799
+Iteration 450, p_obj::0.3131035799
+Iteration 460, p_obj::0.3131035799
+Iteration 470, p_obj::0.3131035799
+Iteration 480, p_obj::0.3131035799
+Iteration 490, p_obj::0.3131035799
+Iteration 500, p_obj::0.3131035799
+Iteration 510, p_obj::0.3131035799
+Iteration 520, p_obj::0.3131035799
+Iteration 530, p_obj::0.3131035799
+Iteration 540, p_obj::0.3131035799
+Iteration 550, p_obj::0.3131035799
+Iteration 560, p_obj::0.3131035799
+Iteration 570, p_obj::0.3131035799
+Iteration 580, p_obj::0.3131035799
+Iteration 590, p_obj::0.3131035799
+Iteration 600, p_obj::0.3131035799
+Iteration 610, p_obj::0.3131035799
+Iteration 620, p_obj::0.3131035799
+Iteration 630, p_obj::0.3131035799
+Iteration 640, p_obj::0.3131035799
+Iteration 650, p_obj::0.3131035799
+Iteration 660, p_obj::0.3131035799
+Iteration 670, p_obj::0.3131035799
+Iteration 680, p_obj::0.3131035799
+Iteration 690, p_obj::0.3131035799
+Iteration 700, p_obj::0.3131035799
+Iteration 710, p_obj::0.3131035799
+Iteration 720, p_obj::0.3131035799
+Iteration 730, p_obj::0.3131035799
+Iteration 740, p_obj::0.3131035799
+Iteration 750, p_obj::0.3131035799
+Iteration 760, p_obj::0.3131035799
+Iteration 770, p_obj::0.3131035799
+Iteration 780, p_obj::0.3131035799
+Iteration 790, p_obj::0.3131035799
+Iteration 800, p_obj::0.3131035799
+Iteration 810, p_obj::0.3131035799
+Iteration 820, p_obj::0.3131035799
+Iteration 830, p_obj::0.3131035799
+Iteration 840, p_obj::0.3131035799
+Iteration 850, p_obj::0.3131035799
+Iteration 860, p_obj::0.3131035799
+Iteration 870, p_obj::0.3131035799
+Iteration 880, p_obj::0.3131035799
+Iteration 890, p_obj::0.3131035799
+Iteration 900, p_obj::0.3131035799
+Iteration 910, p_obj::0.3131035799
+Iteration 920, p_obj::0.3131035799
+Iteration 930, p_obj::0.3131035799
+Iteration 940, p_obj::0.3131035799
+Iteration 950, p_obj::0.3131035799
+Iteration 960, p_obj::0.3131035799
+Iteration 970, p_obj::0.3131035799
+Iteration 980, p_obj::0.3131035799
+Iteration 990, p_obj::0.3131035799
+Iteration 1000, p_obj::0.3131035799
+Iteration 1010, p_obj::0.3131035799
+Iteration 1020, p_obj::0.3131035799
+Iteration 1030, p_obj::0.3131035799
+Iteration 1040, p_obj::0.3131035799
+Iteration 1050, p_obj::0.3131035799
+Iteration 1060, p_obj::0.3131035799
+Iteration 1070, p_obj::0.3131035799
+Iteration 1080, p_obj::0.3131035799
+Iteration 1090, p_obj::0.3131035799
+Iteration 1100, p_obj::0.3131035799
+Iteration 1110, p_obj::0.3131035799
+Iteration 1120, p_obj::0.3131035799
+Iteration 1130, p_obj::0.3131035799
+Iteration 1140, p_obj::0.3131035799
+Iteration 1150, p_obj::0.3131035799
+Iteration 1160, p_obj::0.3131035799
+Iteration 1170, p_obj::0.3131035799
+Iteration 1180, p_obj::0.3131035799
+Iteration 1190, p_obj::0.3131035799
+Iteration 1200, p_obj::0.3131035799
+Iteration 1210, p_obj::0.3131035799
+Iteration 1220, p_obj::0.3131035799
+Iteration 1230, p_obj::0.3131035799
+Iteration 1240, p_obj::0.3131035799
+Iteration 1250, p_obj::0.3131035799
+Iteration 1260, p_obj::0.3131035799
+Iteration 1270, p_obj::0.3131035799
+Iteration 1280, p_obj::0.3131035799
+Iteration 1290, p_obj::0.3131035799
+Iteration 1300, p_obj::0.3131035799
+Iteration 1310, p_obj::0.3131035799
+Iteration 1320, p_obj::0.3131035799
+Iteration 1330, p_obj::0.3131035799
+Iteration 1340, p_obj::0.3131035799
+Iteration 1350, p_obj::0.3131035799
+Iteration 1360, p_obj::0.3131035799
+Iteration 1370, p_obj::0.3131035799
+Iteration 1380, p_obj::0.3131035799
+Iteration 1390, p_obj::0.3131035799
+Iteration 1400, p_obj::0.3131035799
+Iteration 1410, p_obj::0.3131035799
+Iteration 1420, p_obj::0.3131035799
+Iteration 1430, p_obj::0.3131035799
+Iteration 1440, p_obj::0.3131035799
+Iteration 1450, p_obj::0.3131035799
+Iteration 1460, p_obj::0.3131035799
+Iteration 1470, p_obj::0.3131035799
+Iteration 1480, p_obj::0.3131035799
+Iteration 1490, p_obj::0.3131035799
+Iteration 1500, p_obj::0.3131035799
+Iteration 1510, p_obj::0.3131035799
+Iteration 1520, p_obj::0.3131035799
+Iteration 1530, p_obj::0.3131035799
+Iteration 1540, p_obj::0.3131035799
+Iteration 1550, p_obj::0.3131035799
+Iteration 1560, p_obj::0.3131035799
+Iteration 1570, p_obj::0.3131035799
+Iteration 1580, p_obj::0.3131035799
+Iteration 1590, p_obj::0.3131035799
+Iteration 1600, p_obj::0.3131035799
+Iteration 1610, p_obj::0.3131035799
+Iteration 1620, p_obj::0.3131035799
+Iteration 1630, p_obj::0.3131035799
+Iteration 1640, p_obj::0.3131035799
+Iteration 1650, p_obj::0.3131035799
+Iteration 1660, p_obj::0.3131035799
+Iteration 1670, p_obj::0.3131035799
+Iteration 1680, p_obj::0.3131035799
+Iteration 1690, p_obj::0.3131035799
+Iteration 1700, p_obj::0.3131035799
+Iteration 1710, p_obj::0.3131035799
+Iteration 1720, p_obj::0.3131035799
+Iteration 1730, p_obj::0.3131035799
+Iteration 1740, p_obj::0.3131035799
+Iteration 1750, p_obj::0.3131035799
+Iteration 1760, p_obj::0.3131035799
+Iteration 1770, p_obj::0.3131035799
+Iteration 1780, p_obj::0.3131035799
+Iteration 1790, p_obj::0.3131035799
+Iteration 1800, p_obj::0.3131035799
+Iteration 1810, p_obj::0.3131035799
+Iteration 1820, p_obj::0.3131035799
+Iteration 1830, p_obj::0.3131035799
+Iteration 1840, p_obj::0.3131035799
+Iteration 1850, p_obj::0.3131035799
+Iteration 1860, p_obj::0.3131035799
+Iteration 1870, p_obj::0.3131035799
+Iteration 1880, p_obj::0.3131035799
+Iteration 1890, p_obj::0.3131035799
+Iteration 1900, p_obj::0.3131035799
+Iteration 1910, p_obj::0.3131035799
+Iteration 1920, p_obj::0.3131035799
+Iteration 1930, p_obj::0.3131035799
+Iteration 1940, p_obj::0.3131035799
+Iteration 1950, p_obj::0.3131035799
+Iteration 1960, p_obj::0.3131035799
+Iteration 1970, p_obj::0.3131035799
+Iteration 1980, p_obj::0.3131035799
+Iteration 1990, p_obj::0.3131035799
+Iteration 0, p_obj::0.5000000000
+Iteration 10, p_obj::0.3136067926
+Iteration 20, p_obj::0.3131527374
+Iteration 30, p_obj::0.3131102671
+Iteration 40, p_obj::0.3131072275
+Iteration 50, p_obj::0.3131054945
+Iteration 60, p_obj::0.3131048258
+Iteration 70, p_obj::0.3131045454
+Iteration 80, p_obj::0.3131041670
+Iteration 90, p_obj::0.3131039533
+Iteration 100, p_obj::0.3131038133
+Iteration 110, p_obj::0.3131037059
+Iteration 120, p_obj::0.3131036444
+Iteration 130, p_obj::0.3131036011
+Iteration 140, p_obj::0.3131035926
+Iteration 150, p_obj::0.3131035946
+Iteration 160, p_obj::0.3131035984
+Iteration 170, p_obj::0.3131036074
+Iteration 180, p_obj::0.3131036119
+Iteration 190, p_obj::0.3131036128
+Iteration 200, p_obj::0.3131036105
+Iteration 210, p_obj::0.3131036038
+Iteration 220, p_obj::0.3131035969
+Iteration 230, p_obj::0.3131035898
+Iteration 240, p_obj::0.3131035848
+Iteration 250, p_obj::0.3131035822
+Iteration 260, p_obj::0.3131035812
+Iteration 270, p_obj::0.3131035820
+Iteration 280, p_obj::0.3131035836
+Iteration 290, p_obj::0.3131035853
+Iteration 300, p_obj::0.3131035865
+Iteration 310, p_obj::0.3131035865
+Iteration 320, p_obj::0.3131035860
+Iteration 330, p_obj::0.3131035849
+Iteration 340, p_obj::0.3131035834
+Iteration 350, p_obj::0.3131035819
+Iteration 360, p_obj::0.3131035809
+Iteration 370, p_obj::0.3131035805
+Iteration 380, p_obj::0.3131035804
+Iteration 390, p_obj::0.3131035808
+Iteration 400, p_obj::0.3131035813
+Iteration 410, p_obj::0.3131035819
+Iteration 420, p_obj::0.3131035822
+Iteration 430, p_obj::0.3131035822
+Iteration 440, p_obj::0.3131035819
+Iteration 450, p_obj::0.3131035815
+Iteration 460, p_obj::0.3131035809
+Iteration 470, p_obj::0.3131035804
+Iteration 480, p_obj::0.3131035801
+Iteration 490, p_obj::0.3131035801
+Iteration 500, p_obj::0.3131035802
+Iteration 510, p_obj::0.3131035804
+Iteration 520, p_obj::0.3131035807
+Iteration 530, p_obj::0.3131035809
+Iteration 540, p_obj::0.3131035810
+Iteration 550, p_obj::0.3131035809
+Iteration 560, p_obj::0.3131035808
+Iteration 570, p_obj::0.3131035805
+Iteration 580, p_obj::0.3131035803
+Iteration 590, p_obj::0.3131035801
+Iteration 600, p_obj::0.3131035800
+Iteration 610, p_obj::0.3131035800
+Iteration 620, p_obj::0.3131035801
+Iteration 630, p_obj::0.3131035802
+Iteration 640, p_obj::0.3131035803
+Iteration 650, p_obj::0.3131035805
+Iteration 660, p_obj::0.3131035805
+Iteration 670, p_obj::0.3131035804
+Iteration 680, p_obj::0.3131035803
+Iteration 690, p_obj::0.3131035802
+Iteration 700, p_obj::0.3131035800
+Iteration 710, p_obj::0.3131035799
+Iteration 720, p_obj::0.3131035799
+Iteration 730, p_obj::0.3131035799
+Iteration 740, p_obj::0.3131035800
+Iteration 750, p_obj::0.3131035801
+Iteration 760, p_obj::0.3131035802
+Iteration 770, p_obj::0.3131035802
+Iteration 780, p_obj::0.3131035802
+Iteration 790, p_obj::0.3131035802
+Iteration 800, p_obj::0.3131035801
+Iteration 810, p_obj::0.3131035800
+Iteration 820, p_obj::0.3131035800
+Iteration 830, p_obj::0.3131035799
+Iteration 840, p_obj::0.3131035799
+Iteration 850, p_obj::0.3131035799
+Iteration 860, p_obj::0.3131035800
+Iteration 870, p_obj::0.3131035800
+Iteration 880, p_obj::0.3131035801
+Iteration 890, p_obj::0.3131035801
+Iteration 900, p_obj::0.3131035801
+Iteration 910, p_obj::0.3131035801
+Iteration 920, p_obj::0.3131035800
+Iteration 930, p_obj::0.3131035800
+Iteration 940, p_obj::0.3131035799
+Iteration 950, p_obj::0.3131035799
+Iteration 960, p_obj::0.3131035799
+Iteration 970, p_obj::0.3131035799
+Iteration 980, p_obj::0.3131035800
+Iteration 990, p_obj::0.3131035800
+Iteration 1000, p_obj::0.3131035800
+Iteration 1010, p_obj::0.3131035800
+Iteration 1020, p_obj::0.3131035800
+Iteration 1030, p_obj::0.3131035800
+Iteration 1040, p_obj::0.3131035800
+Iteration 1050, p_obj::0.3131035799
+Iteration 1060, p_obj::0.3131035799
+Iteration 1070, p_obj::0.3131035799
+Iteration 1080, p_obj::0.3131035799
+Iteration 1090, p_obj::0.3131035799
+Iteration 1100, p_obj::0.3131035799
+Iteration 1110, p_obj::0.3131035800
+Iteration 1120, p_obj::0.3131035800
+Iteration 1130, p_obj::0.3131035800
+Iteration 1140, p_obj::0.3131035800
+Iteration 1150, p_obj::0.3131035800
+Iteration 1160, p_obj::0.3131035799
+Iteration 1170, p_obj::0.3131035799
+Iteration 1180, p_obj::0.3131035799
+Iteration 1190, p_obj::0.3131035799
+Iteration 1200, p_obj::0.3131035799
+Iteration 1210, p_obj::0.3131035799
+Iteration 1220, p_obj::0.3131035799
+Iteration 1230, p_obj::0.3131035799
+Iteration 1240, p_obj::0.3131035800
+Iteration 1250, p_obj::0.3131035799
+Iteration 1260, p_obj::0.3131035799
+Iteration 1270, p_obj::0.3131035799
+Iteration 1280, p_obj::0.3131035799
+Iteration 1290, p_obj::0.3131035799
+Iteration 1300, p_obj::0.3131035799
+Iteration 1310, p_obj::0.3131035799
+Iteration 1320, p_obj::0.3131035799
+Iteration 1330, p_obj::0.3131035799
+Iteration 1340, p_obj::0.3131035799
+Iteration 1350, p_obj::0.3131035799
+Iteration 1360, p_obj::0.3131035799
+Iteration 1370, p_obj::0.3131035799
+Iteration 1380, p_obj::0.3131035799
+Iteration 1390, p_obj::0.3131035799
+Iteration 1400, p_obj::0.3131035799
+Iteration 1410, p_obj::0.3131035799
+Iteration 1420, p_obj::0.3131035799
+Iteration 1430, p_obj::0.3131035799
+Iteration 1440, p_obj::0.3131035799
+Iteration 1450, p_obj::0.3131035799
+Iteration 1460, p_obj::0.3131035799
+Iteration 1470, p_obj::0.3131035799
+Iteration 1480, p_obj::0.3131035799
+Iteration 1490, p_obj::0.3131035799
+Iteration 1500, p_obj::0.3131035799
+Iteration 1510, p_obj::0.3131035799
+Iteration 1520, p_obj::0.3131035799
+Iteration 1530, p_obj::0.3131035799
+Iteration 1540, p_obj::0.3131035799
+Iteration 1550, p_obj::0.3131035799
+Iteration 1560, p_obj::0.3131035799
+Iteration 1570, p_obj::0.3131035799
+Iteration 1580, p_obj::0.3131035799
+Iteration 1590, p_obj::0.3131035799
+Iteration 1600, p_obj::0.3131035799
+Iteration 1610, p_obj::0.3131035799
+Iteration 1620, p_obj::0.3131035799
+Iteration 1630, p_obj::0.3131035799
+Iteration 1640, p_obj::0.3131035799
+Iteration 1650, p_obj::0.3131035799
+Iteration 1660, p_obj::0.3131035799
+Iteration 1670, p_obj::0.3131035799
+Iteration 1680, p_obj::0.3131035799
+Iteration 1690, p_obj::0.3131035799
+Iteration 1700, p_obj::0.3131035799
+Iteration 1710, p_obj::0.3131035799
+Iteration 1720, p_obj::0.3131035799
+Iteration 1730, p_obj::0.3131035799
+Iteration 1740, p_obj::0.3131035799
+Iteration 1750, p_obj::0.3131035799
+Iteration 1760, p_obj::0.3131035799
+Iteration 1770, p_obj::0.3131035799
+Iteration 1780, p_obj::0.3131035799
+Iteration 1790, p_obj::0.3131035799
+Iteration 1800, p_obj::0.3131035799
+Iteration 1810, p_obj::0.3131035799
+Iteration 1820, p_obj::0.3131035799
+Iteration 1830, p_obj::0.3131035799
+Iteration 1840, p_obj::0.3131035799
+Iteration 1850, p_obj::0.3131035799
+Iteration 1860, p_obj::0.3131035799
+Iteration 1870, p_obj::0.3131035799
+Iteration 1880, p_obj::0.3131035799
+Iteration 1890, p_obj::0.3131035799
+Iteration 1900, p_obj::0.3131035799
+Iteration 1910, p_obj::0.3131035799
+Iteration 1920, p_obj::0.3131035799
+Iteration 1930, p_obj::0.3131035799
+Iteration 1940, p_obj::0.3131035799
+Iteration 1950, p_obj::0.3131035799
+Iteration 1960, p_obj::0.3131035799
+Iteration 1970, p_obj::0.3131035799
+Iteration 1980, p_obj::0.3131035799
+Iteration 1990, p_obj::0.3131035799
+Iteration 0, p_obj::0.5000000000
+Iteration 10, p_obj::0.3131136233
+Iteration 20, p_obj::0.3131060169
+Iteration 30, p_obj::0.3131048001
+Iteration 40, p_obj::0.3131043667
+Iteration 50, p_obj::0.3131041608
+Iteration 60, p_obj::0.3131040381
+Iteration 70, p_obj::0.3131039522
+Iteration 80, p_obj::0.3131038863
+Iteration 90, p_obj::0.3131038335
+Iteration 100, p_obj::0.3131037906
+Iteration 110, p_obj::0.3131037552
+Iteration 120, p_obj::0.3131037259
+Iteration 130, p_obj::0.3131037017
+Iteration 140, p_obj::0.3131036815
+Iteration 150, p_obj::0.3131036648
+Iteration 160, p_obj::0.3131036509
+Iteration 170, p_obj::0.3131036393
+Iteration 180, p_obj::0.3131036296
+Iteration 190, p_obj::0.3131036215
+Iteration 200, p_obj::0.3131036148
+Iteration 210, p_obj::0.3131036092
+Iteration 220, p_obj::0.3131036045
+Iteration 230, p_obj::0.3131036005
+Iteration 240, p_obj::0.3131035972
+Iteration 250, p_obj::0.3131035945
+Iteration 260, p_obj::0.3131035922
+Iteration 270, p_obj::0.3131035902
+Iteration 280, p_obj::0.3131035886
+Iteration 290, p_obj::0.3131035872
+Iteration 300, p_obj::0.3131035861
+Iteration 310, p_obj::0.3131035851
+Iteration 320, p_obj::0.3131035843
+Iteration 330, p_obj::0.3131035836
+Iteration 340, p_obj::0.3131035830
+Iteration 350, p_obj::0.3131035826
+Iteration 360, p_obj::0.3131035822
+Iteration 370, p_obj::0.3131035818
+Iteration 380, p_obj::0.3131035815
+Iteration 390, p_obj::0.3131035813
+Iteration 400, p_obj::0.3131035811
+Iteration 410, p_obj::0.3131035809
+Iteration 420, p_obj::0.3131035807
+Iteration 430, p_obj::0.3131035806
+Iteration 440, p_obj::0.3131035805
+Iteration 450, p_obj::0.3131035804
+Iteration 460, p_obj::0.3131035803
+Iteration 470, p_obj::0.3131035803
+Iteration 480, p_obj::0.3131035802
+Iteration 490, p_obj::0.3131035802
+Iteration 500, p_obj::0.3131035801
+Iteration 510, p_obj::0.3131035801
+Iteration 520, p_obj::0.3131035801
+Iteration 530, p_obj::0.3131035800
+Iteration 540, p_obj::0.3131035800
+Iteration 550, p_obj::0.3131035800
+Iteration 560, p_obj::0.3131035800
+Iteration 570, p_obj::0.3131035800
+Iteration 580, p_obj::0.3131035800
+Iteration 590, p_obj::0.3131035800
+Iteration 600, p_obj::0.3131035799
+Iteration 610, p_obj::0.3131035799
+Iteration 620, p_obj::0.3131035799
+Iteration 630, p_obj::0.3131035799
+Iteration 640, p_obj::0.3131035799
+Iteration 650, p_obj::0.3131035799
+Iteration 660, p_obj::0.3131035799
+Iteration 670, p_obj::0.3131035799
+Iteration 680, p_obj::0.3131035799
+Iteration 690, p_obj::0.3131035799
+Iteration 700, p_obj::0.3131035799
+Iteration 710, p_obj::0.3131035799
+Iteration 720, p_obj::0.3131035799
+Iteration 730, p_obj::0.3131035799
+Iteration 740, p_obj::0.3131035799
+Iteration 750, p_obj::0.3131035799
+Iteration 760, p_obj::0.3131035799
+Iteration 770, p_obj::0.3131035799
+Iteration 780, p_obj::0.3131035799
+Iteration 790, p_obj::0.3131035799
+Iteration 800, p_obj::0.3131035799
+Iteration 810, p_obj::0.3131035799
+Iteration 820, p_obj::0.3131035799
+Iteration 830, p_obj::0.3131035799
+Iteration 840, p_obj::0.3131035799
+Iteration 850, p_obj::0.3131035799
+Iteration 860, p_obj::0.3131035799
+Iteration 870, p_obj::0.3131035799
+Iteration 880, p_obj::0.3131035799
+Iteration 890, p_obj::0.3131035799
+Iteration 900, p_obj::0.3131035799
+Iteration 910, p_obj::0.3131035799
+Iteration 920, p_obj::0.3131035799
+Iteration 930, p_obj::0.3131035799
+Iteration 940, p_obj::0.3131035799
+Iteration 950, p_obj::0.3131035799
+Iteration 960, p_obj::0.3131035799
+Iteration 970, p_obj::0.3131035799
+Iteration 980, p_obj::0.3131035799
+Iteration 990, p_obj::0.3131035799
+Iteration 1000, p_obj::0.3131035799
+Iteration 1010, p_obj::0.3131035799
+Iteration 1020, p_obj::0.3131035799
+Iteration 1030, p_obj::0.3131035799
+Iteration 1040, p_obj::0.3131035799
+Iteration 1050, p_obj::0.3131035799
+Iteration 1060, p_obj::0.3131035799
+Iteration 1070, p_obj::0.3131035799
+Iteration 1080, p_obj::0.3131035799
+Iteration 1090, p_obj::0.3131035799
+Iteration 1100, p_obj::0.3131035799
+Iteration 1110, p_obj::0.3131035799
+Iteration 1120, p_obj::0.3131035799
+Iteration 1130, p_obj::0.3131035799
+Iteration 1140, p_obj::0.3131035799
+Iteration 1150, p_obj::0.3131035799
+Iteration 1160, p_obj::0.3131035799
+Iteration 1170, p_obj::0.3131035799
+Iteration 1180, p_obj::0.3131035799
+Iteration 1190, p_obj::0.3131035799
+Iteration 1200, p_obj::0.3131035799
+Iteration 1210, p_obj::0.3131035799
+Iteration 1220, p_obj::0.3131035799
+Iteration 1230, p_obj::0.3131035799
+Iteration 1240, p_obj::0.3131035799
+Iteration 1250, p_obj::0.3131035799
+Iteration 1260, p_obj::0.3131035799
+Iteration 1270, p_obj::0.3131035799
+Iteration 1280, p_obj::0.3131035799
+Iteration 1290, p_obj::0.3131035799
+Iteration 1300, p_obj::0.3131035799
+Iteration 1310, p_obj::0.3131035799
+Iteration 1320, p_obj::0.3131035799
+Iteration 1330, p_obj::0.3131035799
+Iteration 1340, p_obj::0.3131035799
+Iteration 1350, p_obj::0.3131035799
+Iteration 1360, p_obj::0.3131035799
+Iteration 1370, p_obj::0.3131035799
+Iteration 1380, p_obj::0.3131035799
+Iteration 1390, p_obj::0.3131035799
+Iteration 1400, p_obj::0.3131035799
+Iteration 1410, p_obj::0.3131035799
+Iteration 1420, p_obj::0.3131035799
+Iteration 1430, p_obj::0.3131035799
+Iteration 1440, p_obj::0.3131035799
+Iteration 1450, p_obj::0.3131035799
+Iteration 1460, p_obj::0.3131035799
+Iteration 1470, p_obj::0.3131035799
+Iteration 1480, p_obj::0.3131035799
+Iteration 1490, p_obj::0.3131035799
+Iteration 1500, p_obj::0.3131035799
+Iteration 1510, p_obj::0.3131035799
+Iteration 1520, p_obj::0.3131035799
+Iteration 1530, p_obj::0.3131035799
+Iteration 1540, p_obj::0.3131035799
+Iteration 1550, p_obj::0.3131035799
+Iteration 1560, p_obj::0.3131035799
+Iteration 1570, p_obj::0.3131035799
+Iteration 1580, p_obj::0.3131035799
+Iteration 1590, p_obj::0.3131035799
+Iteration 1600, p_obj::0.3131035799
+Iteration 1610, p_obj::0.3131035799
+Iteration 1620, p_obj::0.3131035799
+Iteration 1630, p_obj::0.3131035799
+Iteration 1640, p_obj::0.3131035799
+Iteration 1650, p_obj::0.3131035799
+Iteration 1660, p_obj::0.3131035799
+Iteration 1670, p_obj::0.3131035799
+Iteration 1680, p_obj::0.3131035799
+Iteration 1690, p_obj::0.3131035799
+Iteration 1700, p_obj::0.3131035799
+Iteration 1710, p_obj::0.3131035799
+Iteration 1720, p_obj::0.3131035799
+Iteration 1730, p_obj::0.3131035799
+Iteration 1740, p_obj::0.3131035799
+Iteration 1750, p_obj::0.3131035799
+Iteration 1760, p_obj::0.3131035799
+Iteration 1770, p_obj::0.3131035799
+Iteration 1780, p_obj::0.3131035799
+Iteration 1790, p_obj::0.3131035799
+Iteration 1800, p_obj::0.3131035799
+Iteration 1810, p_obj::0.3131035799
+Iteration 1820, p_obj::0.3131035799
+Iteration 1830, p_obj::0.3131035799
+Iteration 1840, p_obj::0.3131035799
+Iteration 1850, p_obj::0.3131035799
+Iteration 1860, p_obj::0.3131035799
+Iteration 1870, p_obj::0.3131035799
+Iteration 1880, p_obj::0.3131035799
+Iteration 1890, p_obj::0.3131035799
+Iteration 1900, p_obj::0.3131035799
+Iteration 1910, p_obj::0.3131035799
+Iteration 1920, p_obj::0.3131035799
+Iteration 1930, p_obj::0.3131035799
+Iteration 1940, p_obj::0.3131035799
+Iteration 1950, p_obj::0.3131035799
+Iteration 1960, p_obj::0.3131035799
+Iteration 1970, p_obj::0.3131035799
+Iteration 1980, p_obj::0.3131035799
+Iteration 1990, p_obj::0.3131035799
+Iteration 0, p_obj::0.5000000000
+Iteration 10, p_obj::0.3131112987
+Iteration 20, p_obj::0.3131049677
+Iteration 30, p_obj::0.3131041524
+Iteration 40, p_obj::0.3131037103
+Iteration 50, p_obj::0.3131035839
+Iteration 60, p_obj::0.3131035820
+Iteration 70, p_obj::0.3131035808
+Iteration 80, p_obj::0.3131035804
+Iteration 90, p_obj::0.3131035802
+Iteration 100, p_obj::0.3131035799
+Iteration 110, p_obj::0.3131035799
+Iteration 120, p_obj::0.3131035799
+Iteration 130, p_obj::0.3131035799
+Iteration 140, p_obj::0.3131035799
+Iteration 150, p_obj::0.3131035799
+Iteration 160, p_obj::0.3131035799
+Iteration 170, p_obj::0.3131035799
+Iteration 180, p_obj::0.3131035799
+Iteration 190, p_obj::0.3131035799
+Iteration 200, p_obj::0.3131035799
+Iteration 210, p_obj::0.3131035799
+Iteration 220, p_obj::0.3131035799
+Iteration 230, p_obj::0.3131035799
+Iteration 240, p_obj::0.3131035799
+Iteration 250, p_obj::0.3131035799
+Iteration 260, p_obj::0.3131035799
+Iteration 270, p_obj::0.3131035799
+Iteration 280, p_obj::0.3131035799
+Iteration 290, p_obj::0.3131035799
+Iteration 300, p_obj::0.3131035799
+Iteration 310, p_obj::0.3131035799
+Iteration 320, p_obj::0.3131035799
+Iteration 330, p_obj::0.3131035799
+Iteration 340, p_obj::0.3131035799
+Iteration 350, p_obj::0.3131035799
+Iteration 360, p_obj::0.3131035799
+Iteration 370, p_obj::0.3131035799
+Iteration 380, p_obj::0.3131035799
+Iteration 390, p_obj::0.3131035799
+Iteration 400, p_obj::0.3131035799
+Iteration 410, p_obj::0.3131035799
+Iteration 420, p_obj::0.3131035799
+Iteration 430, p_obj::0.3131035799
+Iteration 440, p_obj::0.3131035799
+Iteration 450, p_obj::0.3131035799
+Iteration 460, p_obj::0.3131035799
+Iteration 470, p_obj::0.3131035799
+Iteration 480, p_obj::0.3131035799
+Iteration 490, p_obj::0.3131035799
+Iteration 500, p_obj::0.3131035799
+Iteration 510, p_obj::0.3131035799
+Iteration 520, p_obj::0.3131035799
+Iteration 530, p_obj::0.3131035799
+Iteration 540, p_obj::0.3131035799
+Iteration 550, p_obj::0.3131035799
+Iteration 560, p_obj::0.3131035799
+Iteration 570, p_obj::0.3131035799
+Iteration 580, p_obj::0.3131035799
+Iteration 590, p_obj::0.3131035799
+Iteration 600, p_obj::0.3131035799
+Iteration 610, p_obj::0.3131035799
+Iteration 620, p_obj::0.3131035799
+Iteration 630, p_obj::0.3131035799
+Iteration 640, p_obj::0.3131035799
+Iteration 650, p_obj::0.3131035799
+Iteration 660, p_obj::0.3131035799
+Iteration 670, p_obj::0.3131035799
+Iteration 680, p_obj::0.3131035799
+Iteration 690, p_obj::0.3131035799
+Iteration 700, p_obj::0.3131035799
+Iteration 710, p_obj::0.3131035799
+Iteration 720, p_obj::0.3131035799
+Iteration 730, p_obj::0.3131035799
+Iteration 740, p_obj::0.3131035799
+Iteration 750, p_obj::0.3131035799
+Iteration 760, p_obj::0.3131035799
+Iteration 770, p_obj::0.3131035799
+Iteration 780, p_obj::0.3131035799
+Iteration 790, p_obj::0.3131035799
+Iteration 800, p_obj::0.3131035799
+Iteration 810, p_obj::0.3131035799
+Iteration 820, p_obj::0.3131035799
+Iteration 830, p_obj::0.3131035799
+Iteration 840, p_obj::0.3131035799
+Iteration 850, p_obj::0.3131035799
+Iteration 860, p_obj::0.3131035799
+Iteration 870, p_obj::0.3131035799
+Iteration 880, p_obj::0.3131035799
+Iteration 890, p_obj::0.3131035799
+Iteration 900, p_obj::0.3131035799
+Iteration 910, p_obj::0.3131035799
+Iteration 920, p_obj::0.3131035799
+Iteration 930, p_obj::0.3131035799
+Iteration 940, p_obj::0.3131035799
+Iteration 950, p_obj::0.3131035799
+Iteration 960, p_obj::0.3131035799
+Iteration 970, p_obj::0.3131035799
+Iteration 980, p_obj::0.3131035799
+Iteration 990, p_obj::0.3131035799
+Iteration 1000, p_obj::0.3131035799
+Iteration 1010, p_obj::0.3131035799
+Iteration 1020, p_obj::0.3131035799
+Iteration 1030, p_obj::0.3131035799
+Iteration 1040, p_obj::0.3131035799
+Iteration 1050, p_obj::0.3131035799
+Iteration 1060, p_obj::0.3131035799
+Iteration 1070, p_obj::0.3131035799
+Iteration 1080, p_obj::0.3131035799
+Iteration 1090, p_obj::0.3131035799
+Iteration 1100, p_obj::0.3131035799
+Iteration 1110, p_obj::0.3131035799
+Iteration 1120, p_obj::0.3131035799
+Iteration 1130, p_obj::0.3131035799
+Iteration 1140, p_obj::0.3131035799
+Iteration 1150, p_obj::0.3131035799
+Iteration 1160, p_obj::0.3131035799
+Iteration 1170, p_obj::0.3131035799
+Iteration 1180, p_obj::0.3131035799
+Iteration 1190, p_obj::0.3131035799
+Iteration 1200, p_obj::0.3131035799
+Iteration 1210, p_obj::0.3131035799
+Iteration 1220, p_obj::0.3131035799
+Iteration 1230, p_obj::0.3131035799
+Iteration 1240, p_obj::0.3131035799
+Iteration 1250, p_obj::0.3131035799
+Iteration 1260, p_obj::0.3131035799
+Iteration 1270, p_obj::0.3131035799
+Iteration 1280, p_obj::0.3131035799
+Iteration 1290, p_obj::0.3131035799
+Iteration 1300, p_obj::0.3131035799
+Iteration 1310, p_obj::0.3131035799
+Iteration 1320, p_obj::0.3131035799
+Iteration 1330, p_obj::0.3131035799
+Iteration 1340, p_obj::0.3131035799
+Iteration 1350, p_obj::0.3131035799
+Iteration 1360, p_obj::0.3131035799
+Iteration 1370, p_obj::0.3131035799
+Iteration 1380, p_obj::0.3131035799
+Iteration 1390, p_obj::0.3131035799
+Iteration 1400, p_obj::0.3131035799
+Iteration 1410, p_obj::0.3131035799
+Iteration 1420, p_obj::0.3131035799
+Iteration 1430, p_obj::0.3131035799
+Iteration 1440, p_obj::0.3131035799
+Iteration 1450, p_obj::0.3131035799
+Iteration 1460, p_obj::0.3131035799
+Iteration 1470, p_obj::0.3131035799
+Iteration 1480, p_obj::0.3131035799
+Iteration 1490, p_obj::0.3131035799
+Iteration 1500, p_obj::0.3131035799
+Iteration 1510, p_obj::0.3131035799
+Iteration 1520, p_obj::0.3131035799
+Iteration 1530, p_obj::0.3131035799
+Iteration 1540, p_obj::0.3131035799
+Iteration 1550, p_obj::0.3131035799
+Iteration 1560, p_obj::0.3131035799
+Iteration 1570, p_obj::0.3131035799
+Iteration 1580, p_obj::0.3131035799
+Iteration 1590, p_obj::0.3131035799
+Iteration 1600, p_obj::0.3131035799
+Iteration 1610, p_obj::0.3131035799
+Iteration 1620, p_obj::0.3131035799
+Iteration 1630, p_obj::0.3131035799
+Iteration 1640, p_obj::0.3131035799
+Iteration 1650, p_obj::0.3131035799
+Iteration 1660, p_obj::0.3131035799
+Iteration 1670, p_obj::0.3131035799
+Iteration 1680, p_obj::0.3131035799
+Iteration 1690, p_obj::0.3131035799
+Iteration 1700, p_obj::0.3131035799
+Iteration 1710, p_obj::0.3131035799
+Iteration 1720, p_obj::0.3131035799
+Iteration 1730, p_obj::0.3131035799
+Iteration 1740, p_obj::0.3131035799
+Iteration 1750, p_obj::0.3131035799
+Iteration 1760, p_obj::0.3131035799
+Iteration 1770, p_obj::0.3131035799
+Iteration 1780, p_obj::0.3131035799
+Iteration 1790, p_obj::0.3131035799
+Iteration 1800, p_obj::0.3131035799
+Iteration 1810, p_obj::0.3131035799
+Iteration 1820, p_obj::0.3131035799
+Iteration 1830, p_obj::0.3131035799
+Iteration 1840, p_obj::0.3131035799
+Iteration 1850, p_obj::0.3131035799
+Iteration 1860, p_obj::0.3131035799
+Iteration 1870, p_obj::0.3131035799
+Iteration 1880, p_obj::0.3131035799
+Iteration 1890, p_obj::0.3131035799
+Iteration 1900, p_obj::0.3131035799
+Iteration 1910, p_obj::0.3131035799
+Iteration 1920, p_obj::0.3131035799
+Iteration 1930, p_obj::0.3131035799
+Iteration 1940, p_obj::0.3131035799
+Iteration 1950, p_obj::0.3131035799
+Iteration 1960, p_obj::0.3131035799
+Iteration 1970, p_obj::0.3131035799
+Iteration 1980, p_obj::0.3131035799
+Iteration 1990, p_obj::0.3131035799
+/home/mathurin/workspace/andersoncd/extracd/lasso.py:301: RuntimeWarning: divide by zero encountered in true_divide
+  theta = R / alpha
+Iteration 0, p_obj::0.33886, d_obj::nan, gap::nan
+/home/mathurin/workspace/andersoncd/extracd/lasso.py:301: RuntimeWarning: divide by zero encountered in true_divide
+  theta = R / alpha
+Iteration 10, p_obj::0.32279, d_obj::nan, gap::nan
+Iteration 20, p_obj::0.32278, d_obj::nan, gap::nan
+Iteration 30, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 40, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 50, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 60, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 70, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 80, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 90, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 100, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 110, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 120, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 130, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 140, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 150, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 160, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 170, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 180, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 190, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 200, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 210, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 220, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 230, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 240, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 250, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 260, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 270, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 280, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 290, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 300, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 310, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 320, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 330, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 340, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 350, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 360, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 370, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 380, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 390, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 400, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 410, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 420, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 430, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 440, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 450, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 460, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 470, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 480, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 490, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 500, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 510, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 520, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 530, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 540, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 550, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 560, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 570, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 580, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 590, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 600, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 610, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 620, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 630, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 640, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 650, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 660, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 670, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 680, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 690, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 700, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 710, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 720, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 730, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 740, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 750, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 760, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 770, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 780, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 790, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 800, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 810, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 820, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 830, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 840, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 850, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 860, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 870, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 880, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 890, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 900, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 910, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 920, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 930, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 940, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 950, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 960, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 970, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 980, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 990, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1000, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1010, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1020, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1030, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1040, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1050, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1060, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1070, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1080, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1090, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1100, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1110, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1120, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1130, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1140, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1150, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1160, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1170, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1180, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1190, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1200, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1210, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1220, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1230, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1240, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1250, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1260, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1270, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1280, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1290, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1300, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1310, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1320, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1330, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1340, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1350, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1360, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1370, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1380, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1390, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1400, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1410, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1420, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1430, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1440, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1450, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1460, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1470, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1480, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1490, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1500, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1510, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1520, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1530, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1540, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1550, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1560, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1570, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1580, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1590, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1600, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1610, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1620, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1630, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1640, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1650, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1660, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1670, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1680, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1690, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1700, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1710, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1720, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1730, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1740, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1750, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1760, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1770, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1780, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1790, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1800, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1810, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1820, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1830, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1840, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1850, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1860, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1870, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1880, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1890, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1900, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1910, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1920, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1930, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1940, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1950, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1960, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1970, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1980, p_obj::0.32277, d_obj::nan, gap::nan
+Iteration 1990, p_obj::0.32277, d_obj::nan, gap::nan
+</pre></div>
+</div>
+<p>starts plot</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.close.html#matplotlib.pyplot.close" title="matplotlib.pyplot.close" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">close</span></a><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="matplotlib.pyplot.subplots" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+
+<span class="k">for</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">i</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">all_algos</span></a><span class="p">):</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_Es</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">]</span>
+    <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">use_acc</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">K</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">use_acc</span></a><span class="p">:</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linestyle</span></a> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span>
+    <span class="k">elif</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;fista&#39;</span><span class="p">,</span> <span class="s1">&#39;apcg&#39;</span><span class="p">)):</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linestyle</span></a> <span class="o">=</span> <span class="s1">&#39;dotted&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linestyle</span></a> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+
+    <a href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.semilogy.html#matplotlib.axes.Axes.semilogy" title="matplotlib.axes.Axes.semilogy" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span></a><span class="p">(</span>
+        <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="collections.defaultdict" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_coef</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">f_gap</span></a> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">)),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a> <span class="o">-</span> <span class="n">p_star</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_algo_name</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">use_acc</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="n">color</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dict_color</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">algo</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linestyle</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linestyle</span></a><span class="p">)</span>
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.semilogy.html#matplotlib.axes.Axes.semilogy" title="matplotlib.axes.Axes.semilogy" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span></a><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span></a><span class="p">)),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_cg</span></a> <span class="o">-</span> <span class="n">p_star</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;conjugate grad.&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">linestyle</span></a><span class="o">=</span><span class="s1">&#39;dashdot&#39;</span><span class="p">)</span>
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$f(x^{(k)}) - f(x^{*})$&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;iteration $k$&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.set_yticks.html#matplotlib.axes.Axes.set_yticks" title="matplotlib.axes.Axes.set_yticks" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span></a><span class="p">((</span><span class="mf">1e-15</span><span class="p">,</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e0</span><span class="p">))</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.tight_layout.html#matplotlib.pyplot.tight_layout" title="matplotlib.pyplot.tight_layout" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">()</span>
+
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.legend.html#matplotlib.pyplot.legend" title="matplotlib.pyplot.legend" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span></a><span class="p">()</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot intro ols" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_intro_ols_001.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  25.884 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-intro-ols-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/2a12ab3c679651a9193f332a2c626618/plot_intro_ols.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_intro_ols.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/63dcd43c6cf0dcc5003c9154ecc23015/plot_intro_ols.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_intro_ols.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Quentin Bertrand, Mathurin Massias.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
