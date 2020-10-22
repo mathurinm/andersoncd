@@ -1,0 +1,22 @@
+include *.rst
+include *.md
+include *.in
+include LICENSE
+include extracd/__init__.py
+include Makefile
+include requirements.txt
+include doc/Makefile
+include doc/index.rst
+include doc/doc-requirements.txt
+include doc/api.rst
+include doc/conf.py
+include examples/README.txt
+recursive-include extracd *.py
+
+recursive-include examples *.py
+### Exclude
+
+exclude .coveragerc
+exclude *.yml
+recursive-exclude extracd *.pyc
+

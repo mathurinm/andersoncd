@@ -1,0 +1,23 @@
+language: python
+
+env:
+  - PYTHON_VERSION=3.7
+  - PYTHON_VERSION=3.8
+
+before_install:
+  - wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p /home/travis/miniconda
+  - export PATH=/home/travis/miniconda/bin:$PATH
+  - conda update --yes --quiet conda
+install:
+  - conda create -n extracd-env python=${PYTHON_VERSION} -y
+  - pip install pytest pytest-cov coverage numpydoc
+  - pip install flake8 check-manifest codecov
+  - pip install -e .
+script:
+  # - check-manifest  TODO readd for pipy publication
+  - pytest -lv --cov-report term-missing extracd --cov=extracd --cov-config .coveragerc
+  - flake8 --count extracd
+after_success:
+  - codecov
