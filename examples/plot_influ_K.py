@@ -1,3 +1,10 @@
+"""
+Plot influence of parameter K
+=============================
+
+How many points must be extrapolated for optimal performance?
+"""
+
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt

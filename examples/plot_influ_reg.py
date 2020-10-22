@@ -1,10 +1,16 @@
+"""
+Plot influence of linear system regularization
+==============================================
+
+Why regularizing the linear system seems to hurt Anderson performance.
+"""
 from collections import defaultdict
 
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 from scipy import sparse
 from numpy.linalg import norm
+import matplotlib.pyplot as plt
 from scipy.sparse.linalg import cg
 from celer.datasets import fetch_libsvm
 from celer.plot_utils import configure_plt
@@ -12,11 +18,10 @@ from celer.plot_utils import configure_plt
 from extracd.lasso import solver_enet, primal_enet, apcg
 
 
-plot_all_algos = True
-
 configure_plt()
 
 n_features = 1000
+corr = 0.5
 X, y = fetch_libsvm('rcv1_train')
 X = X[:, :n_features]
 
@@ -35,30 +40,32 @@ alpha = 0
 tol = 1e-15
 E_cg = []
 E_cg.append(norm(y) ** 2 / 2)
-max_iter = 2000
+
+max_iter = 1500
 
 
-def callback(x):
+def my_func(x):
     pobj = primal_enet(y - X @ x, x, alpha)
     E_cg.append(pobj)
 
 
-w_star = cg(
-    X.T @ X, X.T @ y, callback=callback, maxiter=max_iter, tol=1e-32)[0]
+w_star = cg(X.T @ X, X.T @ y, callback=my_func, maxiter=max_iter, tol=1e-32)[0]
+
 E_cg = np.array(E_cg)
 
 
 f_gap = 10
 return_all = False
-all_algos = [
-    ('pgd', False, 1),
-    ('pgd', True, 5),
-    ('fista', False, 1),
-    ('cd', False, 1),
-    ('cd', True, 5),
-    ('apcg', False, 1),
-]
 
+
+all_algos = [
+    ('cd', False, None, None),
+    ('cd', True, 6, 1e-3),
+    ('cd', True, 6, 1e-4),
+    ('cd', True, 6, 1e-5),
+    ('cd', True, 6, 1e-10),
+    ('cd', True, 6, None),
+]
 
 dict_coef = defaultdict(lambda: 1)
 dict_coef['cdsym'] = 2
@@ -75,7 +82,7 @@ for algo in all_algos:
         w, E, _ = solver_enet(
             X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
             return_all=return_all, algo=algo[0], use_acc=algo[1],
-            K=algo[2])
+            K=algo[2], reg_amount=algo[3])
     dict_Es[algo] = E.copy()
 
 
@@ -105,10 +112,10 @@ for E in dict_Es.values():
 
 ###############################################################
 # starts plot
+current_palette = sns.color_palette("colorblind")
 
 plt.close('all')
-fig, ax = plt.subplots(figsize=(9, 6))
-
+fig, ax = plt.subplots(figsize=(8, 5))
 
 for i, algo in enumerate(all_algos):
     E = dict_Es[algo]
@@ -121,20 +128,24 @@ for i, algo in enumerate(all_algos):
     else:
         linestyle = 'solid'
 
+    if not use_acc:
+        label = "CD, no acc"
+        color = current_palette[1]
+    else:
+        if algo[3] is None:
+            label = r"$\lambda_{\mathrm{reg}} = 0$"
+            color = current_palette[1]
+        else:
+            label = r"$\lambda_{\mathrm{reg}} = 10^{%d}$" % np.log10(algo[3])
+            color = plt.cm.viridis((i + 1) / len(all_algos))
     ax.semilogy(
         dict_coef[algo[0]] * f_gap * np.arange(len(E)), E - p_star,
-        label=dict_algo_name[use_acc, algo[0]],
-        color=dict_color[algo[0]], linestyle=linestyle)
+        label=label, color=color, linestyle=linestyle)
 
-ax.semilogy(
-    np.arange(len(E_cg)), E_cg - p_star, label="conjugate grad.",
-    color='black', linestyle='dashdot')
 
+ax.set_yticks((1e-15, 1e-10, 1e-5, 1))
 plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
 plt.xlabel(r"iteration $k$")
-ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 plt.tight_layout()
-
-
 plt.legend()
 plt.show(block=False)

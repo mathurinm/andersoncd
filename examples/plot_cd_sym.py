@@ -1,3 +1,10 @@
+
+"""
+Plot convergence of CD, pseudo-symmetric CD, and Anderson versions
+==================================================================
+
+TODO desc
+"""
 from collections import defaultdict
 
 import numpy as np
