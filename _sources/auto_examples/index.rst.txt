@@ -80,12 +80,12 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="TODO desc">
+    <div class="sphx-glr-thumbcontainer" tooltip="On least squares and logistic regression, performance of pseudo-symmetric coordinate descent.">
 
 .. only:: html
 
  .. figure:: /auto_examples/images/thumb/sphx_glr_plot_cd_sym_thumb.png
-     :alt: Plot convergence of CD, pseudo-symmetric CD, and Anderson versions
+     :alt: Convergence of CD, pseudo-symmetric CD, and their Anderson versions
 
      :ref:`sphx_glr_auto_examples_plot_cd_sym.py`
 
