@@ -218,7 +218,8 @@ def solver_enet(
                         w = w_acc
                         R = R_acc
                 except np.linalg.LinAlgError:
-                    print("----------Linalg error")
+                    if verbose:
+                        print("----------Linalg error")
 
     if return_all:
         return w, np.array(E), gaps[:it // f_gap + 1], np.array(iterates)
