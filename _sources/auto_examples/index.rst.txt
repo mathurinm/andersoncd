@@ -22,7 +22,7 @@ Examples Gallery
 .. only:: html
 
  .. figure:: /auto_examples/images/thumb/sphx_glr_plot_influ_K_thumb.png
-     :alt: Plot influence of parameter K
+     :alt: Influence of number of extrapolated points K
 
      :ref:`sphx_glr_auto_examples_plot_influ_K.py`
 

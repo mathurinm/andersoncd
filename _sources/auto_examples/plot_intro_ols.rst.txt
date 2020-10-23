@@ -30,44 +30,80 @@ outperforms inertial acceleration.
     from extracd.lasso import solver_enet, primal_enet, apcg
 
 
-    plot_all_algos = True
-
     configure_plt()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    usetex mode requires TeX.
+
+
+
+
+Load the data:
+
+
+.. code-block:: default
+
 
     n_features = 1000
     X, y = fetch_libsvm('rcv1_train')
     X = X[:, :n_features]
 
-    if not sparse.issparse(X):
-        y -= y.mean()
-        X -= np.mean(X, axis=0)[None, :]
-        X /= norm(X, axis=0)[None, :]
-    else:
-        X.multiply(1 / sparse.linalg.norm(X, axis=0))
-        y -= y.mean()
-        y /= norm(y)
+    X.multiply(1 / sparse.linalg.norm(X, axis=0))
+    y -= y.mean()
+    y /= norm(y)
 
-    alpha_max = np.max(np.abs(X.T @ y))
-
-    alpha = 0
-    tol = 1e-13
+    # conjugate gradient competitor:
     E_cg = []
     E_cg.append(norm(y) ** 2 / 2)
-    max_iter = 2000
 
 
     def callback(x):
-        pobj = primal_enet(y - X @ x, x, alpha)
+        pobj = primal_enet(y - X @ x, x, 0)
         E_cg.append(pobj)
 
 
     w_star = cg(
-        X.T @ X, X.T @ y, callback=callback, maxiter=max_iter, tol=1e-32)[0]
+        X.T @ X, X.T @ y, callback=callback, maxiter=500, tol=1e-32)[0]
     E_cg = np.array(E_cg)
 
 
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Dataset: rcv1_train
+    Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
+
+
+
+
+Run algorithms:
+
+
+.. code-block:: default
+
+
+    # solvers parameters:
+    alpha = 0  # Least Squares
+    tol = 1e-13
+    max_iter = 2000
     f_gap = 10
-    return_all = False
+
     all_algos = [
         ('pgd', False),
         ('pgd', True),
@@ -97,8 +133,7 @@ outperforms inertial acceleration.
         else:
             w, E, _ = solver_enet(
                 X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
-                return_all=return_all, algo=algo[0], use_acc=algo[1],
-                verbose=False)
+                algo=algo[0], use_acc=algo[1], verbose=False)
         dict_Es[algo] = E.copy()
 
 
@@ -124,9 +159,6 @@ outperforms inertial acceleration.
 
  .. code-block:: none
 
-    usetex mode requires TeX.
-    Dataset: rcv1_train
-    Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
     Running  GD
     Running  GD - Anderson
     Running  GD - inertial
@@ -137,7 +169,7 @@ outperforms inertial acceleration.
 
 
 
-starts plot
+Plot convergence curves:
 
 
 .. code-block:: default
@@ -169,6 +201,7 @@ starts plot
     plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
     plt.xlabel(r"iteration $k$")
     ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
+    plt.title("Convergence on Least Squares")
     plt.tight_layout()
 
 
@@ -178,7 +211,7 @@ starts plot
 
 
 .. image:: /auto_examples/images/sphx_glr_plot_intro_ols_001.png
-    :alt: plot intro ols
+    :alt: Convergence on Least Squares
     :class: sphx-glr-single-img
 
 
@@ -188,7 +221,7 @@ starts plot
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  12.124 seconds)
+   **Total running time of the script:** ( 0 minutes  11.895 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_intro_ols.py:
