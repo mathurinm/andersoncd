@@ -38,7 +38,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="CD outperforms GD, and Anderson acceleration outperforms inertial acceleration.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Coordinate descent outperforms gradient descent, and Anderson acceleration outperforms inertial...">
 
 .. only:: html
 
