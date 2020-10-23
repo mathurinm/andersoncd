@@ -9,15 +9,13 @@
     .. _sphx_glr_auto_examples_plot_influ_reg.py:
 
 
-Plot influence of linear system regularization
-==============================================
+Influence of linear system regularization
+=========================================
 
 Why regularizing the linear system seems to hurt Anderson performance.
 
 
 .. code-block:: default
-
-    from collections import defaultdict
 
     import numpy as np
     import seaborn as sns
@@ -28,100 +26,10 @@ Why regularizing the linear system seems to hurt Anderson performance.
     from celer.datasets import fetch_libsvm
     from celer.plot_utils import configure_plt
 
-    from extracd.lasso import solver_enet, primal_enet, apcg
+    from extracd.lasso import solver_enet, primal_enet
 
 
     configure_plt()
-
-    n_features = 1000
-    corr = 0.5
-    X, y = fetch_libsvm('rcv1_train')
-    X = X[:, :n_features]
-
-    if not sparse.issparse(X):
-        y -= y.mean()
-        X -= np.mean(X, axis=0)[None, :]
-        X /= norm(X, axis=0)[None, :]
-    else:
-        X.multiply(1 / sparse.linalg.norm(X, axis=0))
-        y -= y.mean()
-        y /= norm(y)
-
-    alpha_max = np.max(np.abs(X.T @ y))
-
-    alpha = 0
-    tol = 1e-15
-    E_cg = []
-    E_cg.append(norm(y) ** 2 / 2)
-
-    max_iter = 1500
-
-
-    def my_func(x):
-        pobj = primal_enet(y - X @ x, x, alpha)
-        E_cg.append(pobj)
-
-
-    w_star = cg(X.T @ X, X.T @ y, callback=my_func, maxiter=max_iter, tol=1e-32)[0]
-
-    E_cg = np.array(E_cg)
-
-
-    f_gap = 10
-    return_all = False
-
-
-    all_algos = [
-        ('cd', False, None, None),
-        ('cd', True, 6, 1e-3),
-        ('cd', True, 6, 1e-4),
-        ('cd', True, 6, 1e-5),
-        ('cd', True, 6, 1e-10),
-        ('cd', True, 6, None),
-    ]
-
-    dict_coef = defaultdict(lambda: 1)
-    dict_coef['cdsym'] = 2
-    dict_coef['cd2'] = 2
-
-
-    dict_Es = {}
-
-    for algo in all_algos:
-        if algo[0] == 'apcg':
-            w, E, gaps = apcg(
-                X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap)
-        else:
-            w, E, _ = solver_enet(
-                X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
-                return_all=return_all, algo=algo[0], use_acc=algo[1],
-                K=algo[2], reg_amount=algo[3])
-        dict_Es[algo] = E.copy()
-
-
-    current_palette = sns.color_palette("colorblind")
-    dict_color = {}
-    dict_color["pgd"] = current_palette[0]
-    dict_color["fista"] = current_palette[0]
-    dict_color["cd"] = current_palette[1]
-    dict_color["apcg"] = current_palette[1]
-    dict_color['cdsym'] = current_palette[2]
-    dict_color["cd2"] = current_palette[3]
-
-    dict_algo_name = {}
-    dict_algo_name[False, "pgd"] = "GD"
-    dict_algo_name[False, "cd"] = "CD"
-    dict_algo_name[False, "cdsym"] = "CD SYM"
-    dict_algo_name[True, "pgd"] = "GD - Anderson"
-    dict_algo_name[True, "cd"] = "CD - Anderson"
-    dict_algo_name[True, "cdsym"] = "CD SYM - Anderson"
-    dict_algo_name[False, "fista"] = "GD - inertial"
-    dict_algo_name[False, "apcg"] = "CD - inertial"
-
-
-    p_star = primal_enet(y - X @ w_star, w_star, alpha)
-    for E in dict_Es.values():
-        p_star = min(p_star, min(E))
 
 
 
@@ -134,46 +42,104 @@ Why regularizing the linear system seems to hurt Anderson performance.
  .. code-block:: none
 
     usetex mode requires TeX.
+
+
+
+
+Load the data:
+
+
+.. code-block:: default
+
+    n_features = 1000
+    X, y = fetch_libsvm('rcv1_train')
+    X = X[:, :n_features]
+
+    X.multiply(1 / sparse.linalg.norm(X, axis=0))
+    y -= y.mean()
+    y /= norm(y)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
     Dataset: rcv1_train
     Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
 
 
 
 
-starts plot
+Run solver with various regularization strengths:
 
 
 .. code-block:: default
 
-    current_palette = sns.color_palette("colorblind")
+    alpha = 0
+    tol = 1e-15
+    f_gap = 10
+    max_iter = 1000
+
+    reg_amount_list = [1e-3, 1e-4, 1e-5, 1e-10, None]
+
+    dict_Es = {}
+
+    for reg_amount in reg_amount_list:
+        w, E, _ = solver_enet(
+            X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
+            algo="cd", use_acc=True, reg_amount=reg_amount)
+        dict_Es[reg_amount] = E.copy()
+
+    E_noacc = solver_enet(X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter,
+                          algo="cd", use_acc=False)[1]
+
+    palette = sns.color_palette("colorblind")
+
+
+    p_star = np.inf
+    for E in dict_Es.values():
+        p_star = min(p_star, min(E))
+
+
+
+
+
+
+
+
+Plot results
+
+
+.. code-block:: default
+
 
     plt.close('all')
     fig, ax = plt.subplots(figsize=(8, 5))
 
-    for i, algo in enumerate(all_algos):
-        E = dict_Es[algo]
-        use_acc = algo[1]
-        K = algo[2]
-        if use_acc:
-            linestyle = 'dashed'
-        elif algo[0].startswith(('fista', 'apcg')):
-            linestyle = 'dotted'
-        else:
-            linestyle = 'solid'
+    ax.semilogy(
+        f_gap * np.arange(len(E_noacc)), E_noacc - p_star,
+        label="CD, no acc.", color=palette[1])
 
-        if not use_acc:
-            label = "CD, no acc"
-            color = current_palette[1]
+
+    for i, reg_amount in enumerate(reg_amount_list):
+        E = dict_Es[reg_amount]
+
+        if reg_amount is None:
+            label = r"$\lambda_{\mathrm{reg}} = 0$"
+            color = palette[1]
         else:
-            if algo[3] is None:
-                label = r"$\lambda_{\mathrm{reg}} = 0$"
-                color = current_palette[1]
-            else:
-                label = r"$\lambda_{\mathrm{reg}} = 10^{%d}$" % np.log10(algo[3])
-                color = plt.cm.viridis((i + 1) / len(all_algos))
+            label = r"$\lambda_{\mathrm{reg}} = 10^{%d}$" % np.log10(
+                reg_amount)
+            color = plt.cm.viridis((i + 1) / len(reg_amount_list))
         ax.semilogy(
-            dict_coef[algo[0]] * f_gap * np.arange(len(E)), E - p_star,
-            label=label, color=color, linestyle=linestyle)
+            f_gap * np.arange(len(E)), E - p_star,
+            label=label, color=color, linestyle="dashed")
 
 
     ax.set_yticks((1e-15, 1e-10, 1e-5, 1))
@@ -196,7 +162,7 @@ starts plot
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.783 seconds)
+   **Total running time of the script:** ( 0 minutes  4.131 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_influ_reg.py:

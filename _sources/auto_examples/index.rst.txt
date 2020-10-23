@@ -38,6 +38,27 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Why regularizing the linear system seems to hurt Anderson performance.">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_influ_reg_thumb.png
+     :alt: Influence of linear system regularization
+
+     :ref:`sphx_glr_auto_examples_plot_influ_reg.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_influ_reg
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Coordinate descent outperforms gradient descent, and Anderson acceleration outperforms inertial...">
 
 .. only:: html
@@ -56,27 +77,6 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_intro_ols
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Why regularizing the linear system seems to hurt Anderson performance.">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_influ_reg_thumb.png
-     :alt: Plot influence of linear system regularization
-
-     :ref:`sphx_glr_auto_examples_plot_influ_reg.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_influ_reg
 
 .. raw:: html
 
