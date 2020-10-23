@@ -76,7 +76,8 @@ def _cd_logreg_sparse(
 
 def solver_logreg(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', return_all=False, seed=0, reg_amount=None):
+        use_acc=False, algo='cd', return_all=False, seed=0, reg_amount=None,
+        verbose=False):
     """Solve the sparse logistic regression with CD/ISTA/FISTA,
     eventually with extrapolation.
 
@@ -151,14 +152,16 @@ def solver_logreg(
 
                 gap = p_obj - d_obj
 
-                print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
-                      (it, p_obj, d_obj, gap))
+                if verbose:
+                    print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
+                          (it, p_obj, d_obj, gap))
                 gaps[it // f_gap] = gap
                 if gap < tol:
                     print("Early exit")
                     break
             else:
-                print("Iteration %d, p_obj::%.10f" % (it, p_obj))
+                if verbose:
+                    print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
         if algo.startswith('cd'):
             if is_sparse:
@@ -212,7 +215,8 @@ def solver_logreg(
                         w = w_acc
                         Xw = Xw_acc
                 except np.linalg.LinAlgError:
-                    print("----------Linalg error")
+                    if verbose:
+                        print("----------Linalg error")
 
     if return_all:
         return w, np.array(E), gaps[:it // f_gap + 1], np.array(iterates)

@@ -140,7 +140,7 @@ html_theme_options = {
     'navbar_links': [
         ("Examples", "auto_examples/index"),
         ("API", "api"),
-        ("GitHub", "https://github.com/LCSL/extracd", True)
+        ("GitHub", "https://github.com/mathurinm/andersoncd", True)
     ],
     'bootswatch_theme': "united"
 }
