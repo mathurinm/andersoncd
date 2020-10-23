@@ -2,10 +2,9 @@
 Comparison of CD, GD, inertial and Anderson acceleration
 ========================================================
 
-CD outperforms GD, and Anderson acceleration outperforms inertial acceleration.
+Coordinate descent outperforms gradient descent, and Anderson acceleration
+outperforms inertial acceleration.
 """
-from collections import defaultdict
-
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -109,10 +108,9 @@ plt.close('all')
 fig, ax = plt.subplots(figsize=(9, 6))
 
 
-for i, algo in enumerate(all_algos):
+for algo in all_algos:
     E = dict_Es[algo]
     use_acc = algo[1]
-    K = algo[2]
     if use_acc:
         linestyle = 'dashed'
     elif algo[0].startswith(('fista', 'apcg')):
@@ -122,7 +120,7 @@ for i, algo in enumerate(all_algos):
 
     ax.semilogy(
         f_gap * np.arange(len(E)), E - p_star,
-        label=dict_algo_name[use_acc, algo[0]],
+        label=dict_algo_name[algo],
         color=dict_color[algo[0]], linestyle=linestyle)
 
 ax.semilogy(
