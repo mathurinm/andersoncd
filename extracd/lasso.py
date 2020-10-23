@@ -76,7 +76,8 @@ def _cd_enet_sparse(
 
 def solver_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', return_all=False, reg_amount=None, seed=0):
+        use_acc=False, algo='cd', return_all=False, reg_amount=None, seed=0,
+        verbose=False):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
     Objective:
@@ -156,14 +157,16 @@ def solver_enet(
 
                 gap = p_obj - d_obj
 
-                print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
-                      (it, p_obj, d_obj, gap))
+                if verbose:
+                    print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
+                          (it, p_obj, d_obj, gap))
                 gaps[it // f_gap] = gap
                 if gap < tol:
                     print("Early exit")
                     break
             else:
-                print("Iteration %d, p_obj::%.10f" % (it, p_obj))
+                if verbose:
+                    print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
         if algo.startswith("cd"):
             if is_sparse:
@@ -226,7 +229,7 @@ def solver_enet(
 @ njit
 def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
     n_features = X.shape[1]
-    for j in range(n_features):
+    for j in np.random.choice(n_features, n_features):
         z_j_old = z[j]
         step = 1. / (lc[j] * tau * n_features)
         z[j] = ST(z[j] - X[:, j] @ (tau ** 2 * Xu + Xz - y) * step,
@@ -242,7 +245,7 @@ def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
 @ njit
 def _apcg_sparse(
         data, indices, indptr, z, u, tau, Xu, Xz, y, alpha, lc, n_features):
-    for j in range(n_features):
+    for j in np.random.choice(n_features, n_features):
         Xjs = data[indptr[j]:indptr[j+1]]
         idx_nz = indices[indptr[j]:indptr[j+1]]
         z_j_old = z[j]
@@ -258,7 +261,7 @@ def _apcg_sparse(
     return tau
 
 
-def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10):
+def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     """Solve the Lasso with accelerated proximal coordinate gradient."""
 
     n_samples, n_features = X.shape
@@ -298,20 +301,25 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10):
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
                 break
 
-            theta = R / alpha
+            if alpha != 0:
+                theta = R / alpha
 
-            d_norm_theta = np.max(np.abs(X.T @ theta))
-            if d_norm_theta > 1.:
-                theta /= d_norm_theta
-            d_obj = dual_lasso(y, theta, alpha)
+                d_norm_theta = np.max(np.abs(X.T @ theta))
+                if d_norm_theta > 1.:
+                    theta /= d_norm_theta
+                d_obj = dual_lasso(y, theta, alpha)
 
-            gap = p_obj - d_obj
+                gap = p_obj - d_obj
 
-            print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
-                  (it, p_obj, d_obj, gap))
-            gaps[it // f_gap] = gap
-            if gap < tol:
-                print("Early exit")
-                break
+                if verbose:
+                    print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
+                          (it, p_obj, d_obj, gap))
+                gaps[it // f_gap] = gap
+                if gap < tol:
+                    print("Early exit")
+                    break
+            else:
+                if verbose:
+                    print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
     return w, np.array(E), gaps[:it // f_gap + 1]
