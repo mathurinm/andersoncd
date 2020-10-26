@@ -67,7 +67,7 @@ def _bcd_sparse(
 
 def solver_group(
         X, y, alpha, grp_size, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='bcd', return_all=False):
+        use_acc=False, algo='bcd'):
     """Solve the GroupLasso with BCD/ISTA/FISTA, eventually with extrapolation.
 
     Groups are contiguous, of size grp_size.
@@ -80,8 +80,6 @@ def solver_group(
 
     alpha: strength of the group penalty
     """
-    if return_all:
-        iterates = []
 
     is_sparse = sparse.issparse(X)
     n_features = X.shape[1]
@@ -120,8 +118,6 @@ def solver_group(
     gaps = np.zeros(max_iter // f_gap)
 
     for it in range(max_iter):
-        if return_all:
-            iterates.append(w.copy())
         if it % f_gap == 0:
             if algo == 'fista':
                 R = y - X @ w
@@ -188,7 +184,4 @@ def solver_group(
                 except np.linalg.LinAlgError:
                     print("----------Linalg error")
 
-    if return_all:
-        return w, np.array(E), gaps[:it // f_gap + 1], np.array(iterates)
-    else:
-        return w, np.array(E), gaps[:it // f_gap + 1]
+    return w, np.array(E), gaps[:it // f_gap + 1]

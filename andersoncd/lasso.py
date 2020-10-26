@@ -76,8 +76,7 @@ def _cd_enet_sparse(
 
 def solver_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', return_all=False, reg_amount=None, seed=0,
-        verbose=False):
+        use_acc=False, algo='cd', reg_amount=None, seed=0, verbose=False):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
     Objective:
@@ -91,9 +90,6 @@ def solver_enet(
 
     rho: strength of the squared l2 penalty
     """
-    if return_all:
-        iterates = []
-
     is_sparse = sparse.issparse(X)
     n_features = X.shape[1]
 
@@ -135,8 +131,6 @@ def solver_enet(
     gaps = np.zeros(max_iter // f_gap)
 
     for it in range(max_iter):
-        if return_all:
-            iterates.append(w.copy())
         if it % f_gap == 0:
             if algo == 'fista':
                 R = y - X @ w
@@ -221,10 +215,7 @@ def solver_enet(
                     if verbose:
                         print("----------Linalg error")
 
-    if return_all:
-        return w, np.array(E), gaps[:it // f_gap + 1], np.array(iterates)
-    else:
-        return w, np.array(E), gaps[:it // f_gap + 1]
+    return w, np.array(E), gaps[:it // f_gap + 1]
 
 
 @ njit
