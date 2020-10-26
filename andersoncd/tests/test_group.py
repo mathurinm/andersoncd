@@ -4,7 +4,7 @@ from numpy.linalg import norm
 
 from celer import GroupLasso
 
-from extracd.group import solver_group
+from andersoncd.group import solver_group
 
 
 p_alphas = np.geomspace(1, 1 / 100, num=5)

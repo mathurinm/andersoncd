@@ -1,10 +1,10 @@
-.. extracd documentation master file, created by
+.. andersoncd documentation master file, created by
    sphinx-quickstart on Mon May 23 16:22:52 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-extracd
-=======
+andersoncd
+==========
 
 This is a library to run Anderson extrapolated coordinate descent.
 
@@ -24,13 +24,13 @@ From a working environment, you can install the package with::
 
 To check if everything worked fine, you can do::
 
-    $ python -c 'import extracd'
+    $ python -c 'import andersoncd'
 
 and it should not give any error message.
 
 From a Python shell you can just do::
 
-    >>> import extracd
+    >>> import andersoncd
 
 If you don't want to use Anaconda, you should still be able to install using `pip`.
 

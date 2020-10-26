@@ -4,8 +4,8 @@ from numpy.linalg import norm
 
 from sklearn.linear_model import ElasticNet
 
-from extracd.lasso import solver_enet
-from extracd.data.synthetic import simu_linreg
+from andersoncd.lasso import solver_enet
+from andersoncd.data.synthetic import simu_linreg
 
 
 l1_ratios = [0.9, 0.7, 0.6]

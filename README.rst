@@ -1,20 +1,19 @@
-extracd
-=======
+Anderson extrapolation for Coordinate Descent
+=============================================
 
 This package implements Anderson extrapolation for coordinate descent.
 
-It also implements inertial proximal gradient descent (ie APPROXwithout parallelism).
+It also implements inertial proximal gradient descent (ie APPROX without parallelism).
 
-In order to be able to reproduce the experiments you can install the package, by first creating a conda environment.
+In order to be able to reproduce the experiments you can install the package.
 
 
 Install
-=====
+=======
 
 To be able to run the code you first need to run, in this folder (code folder, where the setup.py is):
 ```pip install -e .```
 
-If we forgot any dependency, we kindly ask you to install it yourself.
 
 You should now be able to run a friendly example:
 ```ipython -i expes/expe_ols/plot_intro_ols.py```

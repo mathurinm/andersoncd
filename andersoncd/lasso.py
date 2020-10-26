@@ -5,7 +5,7 @@ from numba import njit
 
 from numpy.linalg import norm
 
-from extracd.utils import power_method
+from andersoncd.utils import power_method
 
 
 def primal_enet(R, w, alpha, rho=0):

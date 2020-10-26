@@ -14,7 +14,7 @@ from scipy.sparse.linalg import cg
 from celer.datasets import fetch_libsvm
 from celer.plot_utils import configure_plt
 
-from extracd.lasso import solver_enet, primal_enet, apcg
+from andersoncd.lasso import solver_enet, primal_enet, apcg
 
 
 configure_plt()

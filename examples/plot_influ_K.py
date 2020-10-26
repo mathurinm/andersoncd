@@ -14,7 +14,7 @@ from numpy.linalg import norm
 from celer.datasets import fetch_libsvm
 from celer.plot_utils import configure_plt
 
-from extracd.lasso import solver_enet
+from andersoncd.lasso import solver_enet
 
 
 configure_plt()

@@ -5,8 +5,8 @@ from numba import njit
 
 from numpy.linalg import norm
 
-from extracd.utils import power_method
-from extracd.lasso import dual_lasso
+from andersoncd.utils import power_method
+from andersoncd.lasso import dual_lasso
 
 
 def primal_grp(R, w, alpha, grp_size):

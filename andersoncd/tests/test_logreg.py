@@ -4,7 +4,7 @@ from numpy.linalg import norm
 
 from celer import LogisticRegression
 
-from extracd.logreg import solver_logreg
+from andersoncd.logreg import solver_logreg
 
 
 pCmins = [2, 5, 10]

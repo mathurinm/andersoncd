@@ -5,8 +5,8 @@ from numba import njit
 
 from numpy.linalg import norm
 
-from extracd.utils import power_method
-from extracd.lasso import ST, ST_vec
+from andersoncd.utils import power_method
+from andersoncd.lasso import ST, ST_vec
 
 
 def primal_logreg(Xw, y, w, alpha, rho=0):

@@ -6,8 +6,8 @@ from scipy import sparse
 from celer.datasets import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
-from extracd.data.real import load_openml
-from extracd.logreg import solver_logreg
+from andersoncd.data.real import load_openml
+from andersoncd.logreg import solver_logreg
 
 
 # to reproduce the fig of the paper (long)
