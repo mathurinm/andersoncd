@@ -5,8 +5,8 @@ import numpy as np
 from celer.datasets import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
-from extracd.data.real import load_openml
-from extracd.lasso import solver_enet, apcg
+from andersoncd.data.real import load_openml
+from andersoncd.lasso import solver_enet, apcg
 
 
 dataset_names = [

@@ -11,13 +11,13 @@ before_install:
   - export PATH=/home/travis/miniconda/bin:$PATH
   - conda update --yes --quiet conda
 install:
-  - conda create -n extracd-env python=${PYTHON_VERSION} -y
+  - conda create -n andersoncd-env python=${PYTHON_VERSION} -y
   - pip install pytest pytest-cov coverage numpydoc
   - pip install flake8 check-manifest codecov
   - pip install -e .
 script:
   # - check-manifest  TODO readd for pipy publication
-  - pytest -lv --cov-report term-missing extracd --cov=extracd --cov-config .coveragerc
-  - flake8 --count extracd
+  - pytest -lv --cov-report term-missing andersoncd --cov=andersoncd --cov-config .coveragerc
+  - flake8 --count andersoncd
 after_success:
   - codecov

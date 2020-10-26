@@ -20,9 +20,9 @@ from sklearn.preprocessing import label_binarize
 from celer.datasets import fetch_libsvm
 from celer.plot_utils import configure_plt
 
-from extracd.utils import power_method
-from extracd.lasso import solver_enet, primal_enet
-from extracd.logreg import solver_logreg, primal_logreg
+from andersoncd.utils import power_method
+from andersoncd.lasso import solver_enet, primal_enet
+from andersoncd.logreg import solver_logreg, primal_logreg
 
 
 configure_plt()

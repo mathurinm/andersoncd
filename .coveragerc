@@ -2,8 +2,8 @@
 
 [run]
 branch = True
-source = extracd
-include = */extracd/*
+source = andersoncd
+include = */andersoncd/*
 omit = */setup.py
 
 [report]

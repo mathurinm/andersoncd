@@ -5,8 +5,8 @@ from numba import njit
 
 from numpy.linalg import norm
 
-from extracd.utils import power_method
-from extracd.lasso import ST, ST_vec
+from andersoncd.utils import power_method
+from andersoncd.lasso import ST, ST_vec
 
 
 def primal_logreg(Xw, y, w, alpha, rho=0):
@@ -76,8 +76,7 @@ def _cd_logreg_sparse(
 
 def solver_logreg(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', return_all=False, seed=0, reg_amount=None,
-        verbose=False):
+        use_acc=False, algo='cd', seed=0, reg_amount=None, verbose=False):
     """Solve the sparse logistic regression with CD/ISTA/FISTA,
     eventually with extrapolation.
 
@@ -94,8 +93,6 @@ def solver_logreg(
     rho: strength of the squared l2 penalty
     """
     np.random.seed(seed)
-    if return_all:
-        iterates = []
 
     is_sparse = sparse.issparse(X)
     n_features = X.shape[1]
@@ -134,8 +131,6 @@ def solver_logreg(
     gaps = np.zeros(max_iter // f_gap)
 
     for it in range(max_iter):
-        if return_all:
-            iterates.append(w.copy())
         if it % f_gap == 0:
             if algo == 'fista':
                 Xw = X @ w
@@ -218,7 +213,4 @@ def solver_logreg(
                     if verbose:
                         print("----------Linalg error")
 
-    if return_all:
-        return w, np.array(E), gaps[:it // f_gap + 1], np.array(iterates)
-    else:
-        return w, np.array(E), gaps[:it // f_gap + 1]
+    return w, np.array(E), gaps[:it // f_gap + 1]

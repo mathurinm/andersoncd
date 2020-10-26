@@ -8,8 +8,8 @@ from numpy.linalg import norm
 from celer.datasets import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
-from extracd.utils import get_cd_mat
-from extracd.data.real import load_openml
+from andersoncd.utils import get_cd_mat
+from andersoncd.data.real import load_openml
 
 
 datasets = [

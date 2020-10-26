@@ -61,7 +61,7 @@ jobs:
             name: Check installation
             command: |
               which python
-              python -c "import extracd"
+              python -c "import andersoncd"
 
         # Build docs
         - run:

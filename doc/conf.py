@@ -12,7 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-from extracd import __version__ as version
+from andersoncd import __version__ as version
 import sys
 import warnings
 # import os
@@ -67,7 +67,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'extracd'
+project = u'andersoncd'
 copyright = u'2020, Quentin Bertrand, Mathurin Massias'
 author = u'Quentin Bertrand, Mathurin Massias'
 
@@ -230,7 +230,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'extracddoc'
+htmlhelp_basename = 'andersoncddoc'
 
 numpydoc_show_class_members = False
 
@@ -254,7 +254,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'extracd.tex', u'extracd Documentation',
+    (master_doc, 'andersoncd.tex', u'andersoncd Documentation',
      u'Mathurin Massias', 'manual'),
 ]
 
@@ -284,7 +284,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'extracd', u'extracd Documentation',
+    (master_doc, 'andersoncd', u'andersoncd Documentation',
      [author], 1)
 ]
 
@@ -298,8 +298,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'extracd', u'extracd Documentation',
-     author, 'extracd', 'One line description of project.',
+    (master_doc, 'andersoncd', u'andersoncd Documentation',
+     author, 'andersoncd', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -327,10 +327,10 @@ intersphinx_mapping = {
 
 sphinx_gallery_conf = {
     'backreferences_dir': 'gen_modules/backreferences',
-    'doc_module': ('extracd', 'numpy'),
+    'doc_module': ('andersoncd', 'numpy'),
     'examples_dirs': '../examples',
     'gallery_dirs': 'auto_examples',
     'reference_url': {
-        'extracd': None,
+        'andersoncd': None,
     }
 }
