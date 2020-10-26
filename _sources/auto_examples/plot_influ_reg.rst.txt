@@ -26,7 +26,7 @@ Why regularizing the linear system seems to hurt Anderson performance.
     from celer.datasets import fetch_libsvm
     from celer.plot_utils import configure_plt
 
-    from extracd.lasso import solver_enet, primal_enet
+    from andersoncd.lasso import solver_enet, primal_enet
 
 
     configure_plt()
@@ -162,7 +162,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.914 seconds)
+   **Total running time of the script:** ( 0 minutes  3.966 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_influ_reg.py:

@@ -4,10 +4,10 @@
 API Documentation
 =================
 
-.. currentmodule:: extracd
+.. currentmodule:: andersoncd
 
-extracd
-=======
+andersoncd
+==========
 
 Functions
 
