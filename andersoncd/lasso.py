@@ -90,6 +90,7 @@ def solver_enet(
 
     rho: strength of the squared l2 penalty
     """
+
     is_sparse = sparse.issparse(X)
     n_features = X.shape[1]
 
@@ -230,8 +231,9 @@ def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu -= (1 - n_features * tau) / tau ** 2 * dz * X[:, j]
         Xz += dz * X[:, j]
+        tau_old = tau
         tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
-    return tau
+    return tau, tau_old
 
 
 @ njit
@@ -249,8 +251,9 @@ def _apcg_sparse(
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu[idx_nz] -= (1 - n_features * tau) / tau ** 2 * dz * Xjs
         Xz[idx_nz] += dz * Xjs
+        tau_old = tau
         tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
-    return tau
+    return tau, tau_old
 
 
 def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
@@ -278,15 +281,15 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
     for it in range(max_iter):
         if sparse.issparse(X):
-            _apcg_sparse(
+            tau, tau_old = _apcg_sparse(
                 X.data, X.indices, X.indptr, z, u, tau, Xu, Xz, y, alpha, lc,
                 n_features)
         else:
-            tau = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
+            tau, tau_old = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
 
         if it % f_gap == 0:
-            w = tau ** 2 * u + z
-            R = y - X @ w
+            w = tau_old ** 2 * u + z
+            R = y - X @ w  # MM: todo this is brutal if f_gap = 1
             p_obj = primal_enet(R, w, alpha)
             E.append(p_obj)
 
@@ -295,7 +298,6 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
             if alpha != 0:
                 theta = R / alpha
-
                 d_norm_theta = np.max(np.abs(X.T @ theta))
                 if d_norm_theta > 1.:
                     theta /= d_norm_theta
