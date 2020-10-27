@@ -230,8 +230,9 @@ def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu -= (1 - n_features * tau) / tau ** 2 * dz * X[:, j]
         Xz += dz * X[:, j]
+        tau_old = tau
         tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
-    return tau
+    return tau, tau_old
 
 
 @ njit
@@ -249,13 +250,15 @@ def _apcg_sparse(
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu[idx_nz] -= (1 - n_features * tau) / tau ** 2 * dz * Xjs
         Xz[idx_nz] += dz * Xjs
+        tau_old = tau
         tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
-    return tau
+    return tau, tau_old
 
 
 def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     """Solve the Lasso with accelerated proximal coordinate gradient."""
 
+    np.random.seed(0)
     n_samples, n_features = X.shape
     is_sparse = sparse.issparse(X)
     if not is_sparse and not np.isfortran(X):
@@ -278,14 +281,14 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
     for it in range(max_iter):
         if sparse.issparse(X):
-            _apcg_sparse(
+            tau, tau_old = _apcg_sparse(
                 X.data, X.indices, X.indptr, z, u, tau, Xu, Xz, y, alpha, lc,
                 n_features)
         else:
-            tau = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
+            tau, tau_old = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
 
         if it % f_gap == 0:
-            w = tau ** 2 * u + z
+            w = tau_old ** 2 * u + z
             R = y - X @ w
             p_obj = primal_enet(R, w, alpha)
             E.append(p_obj)
