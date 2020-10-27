@@ -76,7 +76,7 @@ def _cd_logreg_sparse(
 
 def solver_logreg(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', seed=0, reg_amount=None, verbose=False):
+        use_acc=True, algo='cd', seed=0, reg_amount=None, verbose=False):
     """Solve the sparse logistic regression with CD/ISTA/FISTA,
     eventually with extrapolation.
 
@@ -229,8 +229,9 @@ def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu -= (1 - n_features * tau) / tau ** 2 * dz * X[:, j]
         Xz += dz * X[:, j]
+        tau_old = tau
         tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
-    return tau
+    return tau, tau_old
 
 
 @ njit
@@ -252,8 +253,9 @@ def _apcg_sparse(
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu[idx_nz] -= (1 - n_features * tau) / tau ** 2 * dz * Xj
         Xz[idx_nz] += dz * Xj
+        tau_old = tau
         tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
-    return tau
+    return tau, tau_old
 
 
 def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10,
@@ -282,14 +284,14 @@ def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10,
 
     for it in range(max_iter):
         if is_sparse:
-            tau = _apcg_sparse(
+            tau, tau_old = _apcg_sparse(
                 X.data, X.indices, X.indptr, z, u, tau, Xu, Xz, y, alpha, lc,
                 n_features)
         else:
-            tau = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
+            tau, tau_old = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
 
         if it % f_gap == 0:
-            w = tau ** 2 * u + z
+            w = tau_old ** 2 * u + z
             Xw = X @ w
             p_obj = primal_logreg(Xw, y, w, alpha)
             E.append(p_obj)
