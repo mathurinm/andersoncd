@@ -9,6 +9,24 @@ from andersoncd.utils import power_method
 
 
 def primal_enet(R, w, alpha, rho=0):
+    """Primal objective of the Elastic Net
+
+    Parameters
+    ----------
+    R : array, shape (n_samples,)
+        Residuals (y - Xw)
+    w : array, shape (n_features,)
+        Coefficient vector
+    alpha : float
+        L1 regularization strength.
+    rho : float (default=0)
+        L2 regularization strength.
+
+    Returns
+    -------
+    p_obj : float
+        Value of the objective at w.
+    """
     p_obj = 0.5 * norm(R) ** 2 + alpha * norm(w, ord=1)
     if rho != 0.:
         p_obj += rho / 2. * w @ w
@@ -79,16 +97,61 @@ def solver_enet(
         use_acc=False, algo='cd', reg_amount=None, seed=0, verbose=False):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
-    Objective:
+    The minimized objective is:
     norm(y - Xw, ord=2)**2 / 2 + alpha * norm(x, ord=1) + rho/2 * norm(w) ** 2
 
-    Parameters:
-    algo: string
-        'cd', 'pgd', 'fista'
+    Parameters
+    ----------
+    X : {array_like, sparse matrix}, shape (n_samples, n_features)
+        Design matrix.
 
-    alpha: strength of the l1 penalty
+    y : ndarray, shape (n_samples,)
+        Observation vector.
 
-    rho: strength of the squared l2 penalty
+    alpha : float
+        L1 regularization strength.
+
+    rho : float (optional, default=0)
+        L2 regularization strength.
+
+    max_iter : int, default=1000
+        Maximum number of iterations.
+
+    tol : float, default=1e-4
+        The algorithm early stops if the duality gap is less than tol.
+
+    f_gap: int, default=10
+        The gap is computed every f_gap iterations.
+
+    K : int, default=5
+        Number of points used for Anderson extrapolation.
+
+    use_acc : bool, default=False TODO change to True?
+        Whether or not to use Anderson acceleration.
+
+    algo : {'cd', 'pgd', 'fista'}
+        Algorithm used to solve the Elastic net problem.
+
+    reg_amount : float or None (default=None)
+        Amount of regularization used when solving for the extrapolation
+        coefficients. None means 0 and should be preferred.
+
+    seed : int (default=0)
+        Seed for randomness.
+
+    verbose : bool, default=False
+        Verbosity.
+
+    Returns
+    -------
+    W : array, shape (n_features,)
+        Estimated coefficients.
+
+    E : ndarray
+        Objectives every gap_freq iterations.
+
+    gaps : ndarray
+        Duality gaps every gap_freq iterations.
     """
     is_sparse = sparse.issparse(X)
     n_features = X.shape[1]
@@ -256,7 +319,42 @@ def _apcg_sparse(
 
 
 def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
-    """Solve the Lasso with accelerated proximal coordinate gradient."""
+    """Solve the Lasso with accelerated proximal coordinate gradient.
+
+    Parameters
+    ----------
+    X : {array_like, sparse matrix}, shape (n_samples, n_features)
+        Design matrix
+
+    y : ndarray, shape (n_samples,)
+        Observation vector
+
+    alpha : float
+        Regularization strength
+
+    max_iter : int, default=1000
+        Maximum number of iterations
+
+    tol : float, default=1e-4
+        The algorithm early stops if the duality gap is less than tol.
+
+    f_gap: int, default=10
+        The gap is computed every f_gap iterations.
+
+    verbose : bool, default=False
+        Verbosity.
+
+    Returns
+    -------
+    W : array, shape (n_features,)
+        Estimated coefficients.
+
+    E : ndarray
+        Objectives every gap_freq iterations.
+
+    gaps : ndarray
+        Duality gaps every gap_freq iterations.
+    """
 
     np.random.seed(0)
     n_samples, n_features = X.shape

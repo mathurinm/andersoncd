@@ -14,3 +14,11 @@ Functions
 .. autosummary::
    :toctree: generated/
 
+   solver_enet
+   solver_logreg
+   apcg
+   power_method
+   primal_enet
+   primal_logreg
+
+
