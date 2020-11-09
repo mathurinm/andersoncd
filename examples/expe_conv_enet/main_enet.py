@@ -2,7 +2,7 @@ from itertools import product
 
 import pandas
 import numpy as np
-from celer.datasets import fetch_libsvm
+from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.data.real import load_openml

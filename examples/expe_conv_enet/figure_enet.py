@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from celer.plot_utils import configure_plt
+from andersoncd.plot_utils import configure_plt
 
 
 configure_plt()

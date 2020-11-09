@@ -13,6 +13,7 @@ jobs:
               echo "set -e" >> $BASH_ENV
               echo "export DISPLAY=:99" >> $BASH_ENV
               echo "export OPENBLAS_NUM_THREADS=4" >> $BASH_ENV
+              echo "export LIBSVMDATA_HOME=$HOME/celer_data/" >> $BASH_ENV
               echo "BASH_ENV:"
               cat $BASH_ENV
 
@@ -72,12 +73,6 @@ jobs:
               make clean;
               make SPHINXOPTS=-v html;
               cd ..;
-
-        - run:
-            name: List celer data after make
-            command: |
-              ls $HOME/celer_data
-              find $HOME/celer_data -maxdepth 3
 
         - save_cache:
             key: celer-data
