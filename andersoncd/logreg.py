@@ -259,10 +259,10 @@ def _apcg_sparse(
 
 
 def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10,
-                verbose=False):
+                verbose=False, seed=42):
     """Solve Logistic regression with accelerated proximal coordinate gradient.
     """
-
+    np.random.seed(seed)
     n_samples, n_features = X.shape
     is_sparse = sparse.issparse(X)
     if not is_sparse and not np.isfortran(X):
