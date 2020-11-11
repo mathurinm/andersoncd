@@ -31,12 +31,12 @@ def test_logreg_solver(algo, use_acc, pCmin):
 
     if algo == "apcg":
         coef_ours, _, _ = apcg_logreg(
-            X, y, alpha=1/C, tol=tol, verbose=True, max_iter=500_000)
+            X, y, alpha=1/C, tol=tol, verbose=True, max_iter=2_00_000)
     else:
         coef_ours = solver_logreg(
             X, y, alpha=1/C,
             tol=tol, algo=algo, use_acc=use_acc, max_iter=20000)[0]
-    np.testing.assert_allclose(coef_ours, coef_celer)
+    np.testing.assert_allclose(coef_ours, coef_celer, atol=1e-10)
 
 
 def test_apcg():
@@ -50,3 +50,9 @@ def test_apcg():
     w, E, gaps = apcg_logreg(X, y, alpha, tol=tol,
                              verbose=True, max_iter=1_000_000)
     np.testing.assert_array_less(gaps[-1], tol)
+
+
+if __name__ == '__main__':
+    for pCmin in pCmins:
+        for algo, use_acc in algos:
+            test_logreg_solver(algo, use_acc, pCmin)
