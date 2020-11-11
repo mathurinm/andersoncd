@@ -259,6 +259,7 @@ def _apcg_sparse(
 def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     """Solve the Lasso with accelerated proximal coordinate gradient."""
 
+    np.random.seed(0)
     n_samples, n_features = X.shape
     is_sparse = sparse.issparse(X)
     if not is_sparse and not np.isfortran(X):
@@ -290,6 +291,7 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
         if it % f_gap == 0:
             w = tau_old ** 2 * u + z
             R = y - X @ w  # MM: todo this is brutal if f_gap = 1
+
             p_obj = primal_enet(R, w, alpha)
             E.append(p_obj)
 

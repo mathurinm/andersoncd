@@ -1,6 +1,9 @@
 Anderson extrapolation for Coordinate Descent
 =============================================
 
+|image0| |image1|
+
+
 This package implements Anderson extrapolation for coordinate descent.
 
 It also implements inertial proximal gradient descent (ie APPROX without parallelism).
@@ -38,10 +41,16 @@ Reproduce all experiments
 Figure 7, 8, 9 and 10, 11, 12 in appendix (convergence on various datasets and regularizers):
 These take quite a long time to run given the extensive validation, they should be run
 with multithreading.
-::bash
+::
 
     cd expes/expe_conv_logreg
     run main.py
     run plot.py
 
 and the same for ``expes/expe_conv_enet`` and ``expes/expe_conv_lasso``
+
+
+.. |image0| image:: https://travis-ci.com/mathurinm/andersoncd.svg?branch=master
+   :target: https://travis-ci.com/mathurinm/andersoncd/
+.. |image1| image:: https://codecov.io/gh/mathurinm/andersoncd/branch/master/graphs/badge.svg?branch=master
+   :target: https://codecov.io/gh/mathurinm/andersoncd
