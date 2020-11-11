@@ -36,7 +36,7 @@ def test_logreg_solver(algo, use_acc, pCmin):
         coef_ours = solver_logreg(
             X, y, alpha=1/C,
             tol=tol, algo=algo, use_acc=use_acc, max_iter=20000)[0]
-    np.testing.assert_allclose(coef_ours, coef_celer, atol=1e-8)
+    np.testing.assert_allclose(coef_ours, coef_celer, atol=1e-7)
 
 
 def test_apcg():
