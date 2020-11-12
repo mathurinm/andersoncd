@@ -83,9 +83,9 @@ def _cd_logreg_sparse(
         grad = 0.
         for i in range(X_indptr[j], X_indptr[j + 1]):
             idx = X_indices[i]
-            grad += X_data[i] * y[idx] * sigmoid(-y[idx] * Xw[idx])
+            grad -= X_data[i] * y[idx] * sigmoid(-y[idx] * Xw[idx])
         old_w_j = w[j]
-        w[j] = ST(old_w_j + grad / lc[j], alpha / lc[j])
+        w[j] = ST(old_w_j - grad / lc[j], alpha / lc[j])
         if rho != 0:
             w[j] /= 1 + rho / lc[j]
 
@@ -142,6 +142,7 @@ def solver_logreg(
 
     seed : int (default=0)
         Seed for randomness.
+
 
     verbose : bool, default=False
         Verbosity.
@@ -277,5 +278,112 @@ def solver_logreg(
                 except np.linalg.LinAlgError:
                     if verbose:
                         print("----------Linalg error")
+
+    return w, np.array(E), gaps[:it // f_gap + 1]
+
+
+@ njit
+def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
+    n_features = X.shape[1]
+    for j in np.random.choice(n_features, n_features):
+        z_j_old = z[j]
+        step = 1. / (lc[j] * tau * n_features)
+        z[j] = ST(z[j] +
+                  y * X[:, j] @ sigmoid(- y * (tau ** 2 * Xu + Xz)) * step,
+                  alpha * step)
+        dz = z[j] - z_j_old
+        u[j] -= (1 - n_features * tau) / tau ** 2 * dz
+        Xu -= (1 - n_features * tau) / tau ** 2 * dz * X[:, j]
+        Xz += dz * X[:, j]
+        tau_old = tau
+        tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
+    return tau, tau_old
+
+
+@ njit
+def _apcg_sparse(
+        data, indices, indptr, z, u, tau, Xu, Xz, y, alpha, lc, n_features):
+    for j in np.random.choice(n_features, n_features):
+        Xj = data[indptr[j]:indptr[j+1]]
+        idx_nz = indices[indptr[j]:indptr[j+1]]
+        z_j_old = z[j]
+        step = 1. / (lc[j] * tau * n_features)
+        grad = 0
+        for i in range(indptr[j], indptr[j + 1]):
+            idx = indices[i]
+            grad -= data[i] * y[idx] * \
+                sigmoid(-y[idx] * (tau ** 2 * Xu[idx] + Xz[idx]))
+
+        z[j] = ST(z[j] - grad * step, alpha * step)
+        dz = z[j] - z_j_old
+        u[j] -= (1 - n_features * tau) / tau ** 2 * dz
+        Xu[idx_nz] -= (1 - n_features * tau) / tau ** 2 * dz * Xj
+        Xz[idx_nz] += dz * Xj
+        tau_old = tau
+        tau = ((tau ** 4 + 4 * tau ** 2) ** 0.5 - tau ** 2) / 2
+    return tau, tau_old
+
+
+def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10,
+                verbose=False, seed=42):
+    """Solve Logistic regression with accelerated proximal coordinate gradient.
+    """
+    np.random.seed(seed)
+    n_samples, n_features = X.shape
+    is_sparse = sparse.issparse(X)
+    if not is_sparse and not np.isfortran(X):
+        X = np.asfortranarray(X)
+
+    if is_sparse:
+        lc = sparse.linalg.norm(X, axis=0) ** 2 / 4.
+    else:
+        lc = (X ** 2).sum(axis=0) / 4.
+
+    w = np.zeros(n_features)
+    u = np.zeros(n_features)
+    z = w.copy()
+    tau = 1. / n_features
+    Xu = np.zeros(n_samples)
+    Xz = np.zeros(n_samples)
+    E = []
+    gaps = np.zeros(max_iter // f_gap)
+
+    for it in range(max_iter):
+        if is_sparse:
+            tau, tau_old = _apcg_sparse(
+                X.data, X.indices, X.indptr, z, u, tau, Xu, Xz, y, alpha, lc,
+                n_features)
+        else:
+            tau, tau_old = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
+
+        if it % f_gap == 0:
+            w = tau_old ** 2 * u + z
+            Xw = X @ w
+            p_obj = primal_logreg(Xw, y, w, alpha)
+            E.append(p_obj)
+
+            if np.abs(p_obj) > np.abs(E[0] * 1e3):
+                break
+
+            if alpha != 0:
+                theta = y * sigmoid(-y * Xw) / alpha
+
+                d_norm_theta = np.max(np.abs(X.T @ theta))
+                if d_norm_theta > 1.:
+                    theta /= d_norm_theta
+                d_obj = dual_logreg(y, theta, alpha)
+
+                gap = p_obj - d_obj
+
+                if verbose:
+                    print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
+                          (it, p_obj, d_obj, gap))
+                gaps[it // f_gap] = gap
+                if gap < tol:
+                    print("Early exit")
+                    break
+            else:
+                if verbose:
+                    print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
     return w, np.array(E), gaps[:it // f_gap + 1]
