@@ -2,8 +2,6 @@ import pytest
 import numpy as np
 from numpy.linalg import norm
 
-from celer import GroupLasso
-
 from andersoncd.group import solver_group
 
 
@@ -26,13 +24,8 @@ def test_group_solver(algo, use_acc, p_alpha):
     tol = 1e-12
 
     # our solver
-    w = solver_group(
+    w, E, gaps = solver_group(
         X, y, alpha, grp_size, algo=algo, max_iter=20000, tol=tol,
-        f_gap=100, use_acc=use_acc)[0]
+        f_gap=100, use_acc=use_acc)
 
-    # alternative solver
-    estimator = GroupLasso(
-        groups=grp_size, alpha=alpha/len(y), fit_intercept=False, tol=tol)
-    estimator.fit(X, y)
-
-    np.testing.assert_allclose(w, estimator.coef_, rtol=1e-6)
+    np.testing.assert_array_less(gaps[-1], tol)

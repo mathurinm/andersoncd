@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 
 from scipy import sparse
 from numpy.linalg import norm
-from celer.datasets import fetch_libsvm
-from celer.plot_utils import configure_plt
+from libsvmdata import fetch_libsvm
 
+from andersoncd.plot_utils import configure_plt
 from andersoncd.lasso import solver_enet
 
 

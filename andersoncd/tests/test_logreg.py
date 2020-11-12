@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from numpy.linalg import norm
 
-from celer import LogisticRegression
+from sklearn.linear_model import LogisticRegression
 
 from andersoncd.logreg import solver_logreg, apcg_logreg
 
@@ -25,7 +25,8 @@ def test_logreg_solver(algo, use_acc, pCmin):
     C = pCmin * C_min
     tol = 1e-14
     estimator = LogisticRegression(
-        C=C, verbose=1, solver="celer-pn", fit_intercept=False, tol=tol)
+        C=C, verbose=1, solver='liblinear', penalty='l1', fit_intercept=False,
+        tol=tol)
     estimator.fit(X, y)
     coef_celer = estimator.coef_.ravel()
 

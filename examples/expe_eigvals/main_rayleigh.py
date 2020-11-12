@@ -5,7 +5,7 @@ import pandas
 import scipy
 import numpy as np
 from numpy.linalg import norm
-from celer.datasets import fetch_libsvm
+from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.utils import get_cd_mat
