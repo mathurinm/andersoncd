@@ -143,7 +143,6 @@ def solver_logreg(
     seed : int (default=0)
         Seed for randomness.
 
-
     verbose : bool, default=False
         Verbosity.
 
@@ -324,9 +323,39 @@ def _apcg_sparse(
     return tau, tau_old
 
 
-def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10,
-                verbose=False, seed=42):
-    """Solve Logistic regression with accelerated proximal coordinate gradient.
+def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0,
+                verbose=False):
+    """Solve the l1 regularized logistic regression with with accelerated
+    proximal coordinate gradient.
+
+    Parameters
+    ----------
+    X : {array_like, sparse matrix}, shape (n_samples, n_features)
+        Design matrix
+    y : ndarray, shape (n_samples,)
+        Observation vector
+    alpha : float
+        Regularization strength
+    max_iter : int, default=1000
+        Maximum number of iterations
+    tol : float, default=1e-4
+        The algorithm early stops if the duality gap is less than tol.
+    f_gap: int, default=10
+        The gap is computed every f_gap iterations.
+    seed : int (default=0)
+        Seed for randomness.
+    verbose : bool, default=False
+        Verbosity.
+
+
+    Returns
+    -------
+    w : array, shape (n_features,)
+        Estimated coefficients.
+    E : ndarray
+        Objectives every gap_freq iterations.
+    gaps : ndarray
+        Duality gaps every gap_freq iterations.
     """
     np.random.seed(seed)
     n_samples, n_features = X.shape
