@@ -76,7 +76,7 @@ def _cd_enet_sparse(
 
 def solver_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', reg_amount=None, seed=0, verbose=False):
+        use_acc=True, algo='cd', reg_amount=None, seed=0, verbose=False):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
     Objective:
@@ -90,6 +90,7 @@ def solver_enet(
 
     rho: strength of the squared l2 penalty
     """
+
     is_sparse = sparse.issparse(X)
     n_features = X.shape[1]
 
@@ -289,7 +290,8 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
         if it % f_gap == 0:
             w = tau_old ** 2 * u + z
-            R = y - X @ w
+            R = y - X @ w  # MM: todo this is brutal if f_gap = 1
+
             p_obj = primal_enet(R, w, alpha)
             E.append(p_obj)
 
@@ -298,7 +300,6 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
             if alpha != 0:
                 theta = R / alpha
-
                 d_norm_theta = np.max(np.abs(X.T @ theta))
                 if d_norm_theta > 1.:
                     theta /= d_norm_theta
