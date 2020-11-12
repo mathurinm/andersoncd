@@ -24,8 +24,8 @@ outperforms inertial acceleration.
     from scipy import sparse
     from numpy.linalg import norm
     from scipy.sparse.linalg import cg
-    from celer.datasets import fetch_libsvm
-    from celer.plot_utils import configure_plt
+    from libsvmdata import fetch_libsvm
+    from andersoncd.plot_utils import configure_plt
 
     from andersoncd.lasso import solver_enet, primal_enet, apcg
 
@@ -87,7 +87,6 @@ Load the data:
  .. code-block:: none
 
     Dataset: rcv1_train
-    Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
 
 
 
@@ -221,7 +220,7 @@ Plot convergence curves:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.155 seconds)
+   **Total running time of the script:** ( 0 minutes  10.654 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_intro_ols.py:

@@ -122,9 +122,9 @@
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html#numpy.linalg.norm" title="numpy.linalg.norm" class="sphx-glr-backref-module-numpy-linalg sphx-glr-backref-type-py-function"><span class="n">norm</span></a>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">cg</span>
-<span class="kn">from</span> <span class="nn">celer.datasets</span> <span class="kn">import</span> <span class="n">fetch_libsvm</span>
-<span class="kn">from</span> <span class="nn">celer.plot_utils</span> <span class="kn">import</span> <span class="n">configure_plt</span>
+<span class="kn">from</span> <span class="nn">libsvmdata</span> <span class="kn">import</span> <span class="n">fetch_libsvm</span>
 
+<span class="kn">from</span> <span class="nn">andersoncd.plot_utils</span> <span class="kn">import</span> <span class="n">configure_plt</span>
 <span class="kn">from</span> <span class="nn">andersoncd.lasso</span> <span class="kn">import</span> <span class="n">solver_enet</span><span class="p">,</span> <span class="n">primal_enet</span>
 
 
@@ -147,7 +147,6 @@
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset: rcv1_train
-Replace is False and data exists, so doing nothing. Use replace=True to re-download the data.
 </pre></div>
 </div>
 <p>Run solver with various regularization strengths:</p>
@@ -210,7 +209,7 @@ Replace is False and data exists, so doing nothing. Use replace=True to re-downl
 </pre></div>
 </div>
 <img alt="plot influ reg" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_influ_reg_001.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.391 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.080 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-influ-reg-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/99f8d0e91c4855b14455c773182433a5/plot_influ_reg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_influ_reg.py</span></code></a></p>
