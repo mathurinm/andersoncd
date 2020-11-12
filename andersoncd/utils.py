@@ -79,7 +79,24 @@ def get_kaczmarz_mat(X):
     return mat
 
 
-def power_method(A, max_iter=100, tol=1e-6):
+def power_method(A, max_iter=1000, tol=1e-6):
+    """Compute spectral norm of A using the power method.
+
+    Parameters
+    ----------
+    A : ndarray, shape (n, d)
+        Matrix whose spectral norm is computed.
+    max_iter : int, default=1000.
+        Maximum number of power iterations.
+    tol : float, default=1e-6
+        Tolerance : if the estimated norm changes less than tol, the algorithm
+        stops.
+
+    Returns
+    -------
+    spec_norm : float
+        The estimated spectral norm.
+    """
     n, d = A.shape
     np.random.seed(1)
     u = np.random.randn(n)
