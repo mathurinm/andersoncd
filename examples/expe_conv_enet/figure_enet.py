@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from andersoncd.plot_utils import configure_plt
+from andersoncd.plot_utils import configure_plt, plot_legend_apart
 
 
 configure_plt()
@@ -74,6 +74,7 @@ dict_xlim["news20", 1000] = 500_000
 
 
 ####################################
+# div_alphas = [10, 100]
 div_alphas = [10, 100, 1000, 5000]
 # use div_alphas = [10] if you want to be fast
 ########################################
@@ -94,7 +95,7 @@ dataset = "leukemia"
 for idx1, div_rho in enumerate(div_rhos):
     for idx2, div_alpha in enumerate(div_alphas):
         df_data_all = pandas.read_pickle(
-            "%s_%i_%i.pkl" % (dataset, div_alpha, div_rho))
+            "results/%s_%i_%i.pkl" % (dataset, div_alpha, div_rho))
 
         df_data = df_data_all[df_data_all['div_alpha'] == div_alpha]
         gaps = df_data['gaps']
@@ -112,7 +113,7 @@ for idx1, div_rho in enumerate(div_rhos):
             try:
                 axarr.flat[idx1 * len(div_alphas) + idx2].set_xlim(
                     0, dict_xlim[dataset, div_alpha])
-            except:
+            except Exception:
                 print("no xlim")
         if idx1 == len(div_rhos) - 1:
             axarr.flat[
@@ -149,7 +150,23 @@ for idx1, div_rho in enumerate(div_rhos):
     axarr_E.flat[idx1 * len(div_alphas)].set_ylabel(
         r"$\rho = \lambda / %i$" % div_rho)
 
-fig.show()
-fig_E.show()
+save_fig = False
+# save_fig = True
+fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
+fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
+
+if save_fig:
+    fig.savefig(
+        "%sgaps_real_enet.pdf" % fig_dir, bbox_inches="tight")
+    fig.savefig(
+        "%sgaps_real_enet.svg" % fig_dir_svg, bbox_inches="tight")
+    fig_E.savefig(
+        "%senergies_real_enet.pdf" % fig_dir, bbox_inches="tight")
+    fig_E.savefig(
+        "%senergies_real_enet.svg" % fig_dir_svg, bbox_inches="tight")
+    plot_legend_apart(
+        axarr[0][0], "%senergies_real_enet_legend.pdf" % fig_dir, ncol=6)
+
 
 fig.show()
+fig_E.show()

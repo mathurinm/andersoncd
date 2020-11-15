@@ -283,13 +283,15 @@ def solver_enet(
 
 
 @ njit
-def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
+def _apcg(X, z, u, tau, Xu, Xz, y, alpha, rho, lc):
     n_features = X.shape[1]
     for j in np.random.choice(n_features, n_features):
         z_j_old = z[j]
         step = 1. / (lc[j] * tau * n_features)
         z[j] = ST(z[j] - X[:, j] @ (tau ** 2 * Xu + Xz - y) * step,
                   alpha * step)
+        if rho != 0:
+            z[j] /= 1 + rho * step
         dz = z[j] - z_j_old
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu -= (1 - n_features * tau) / tau ** 2 * dz * X[:, j]
@@ -301,7 +303,8 @@ def _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc):
 
 @ njit
 def _apcg_sparse(
-        data, indices, indptr, z, u, tau, Xu, Xz, y, alpha, lc, n_features):
+        data, indices, indptr, z, u, tau, Xu, Xz, y, alpha, rho, lc,
+        n_features):
     for j in np.random.choice(n_features, n_features):
         Xjs = data[indptr[j]:indptr[j+1]]
         idx_nz = indices[indptr[j]:indptr[j+1]]
@@ -310,6 +313,8 @@ def _apcg_sparse(
         z[j] = ST(z[j] - Xjs @ ((tau ** 2 * Xu[idx_nz] + Xz[idx_nz] -
                                  y[idx_nz])) * step,
                   alpha * step)
+        if rho != 0:
+            z[j] /= 1 + rho * step
         dz = z[j] - z_j_old
         u[j] -= (1 - n_features * tau) / tau ** 2 * dz
         Xu[idx_nz] -= (1 - n_features * tau) / tau ** 2 * dz * Xjs
@@ -319,7 +324,8 @@ def _apcg_sparse(
     return tau, tau_old
 
 
-def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
+def apcg(
+        X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     """Solve the Lasso with accelerated proximal coordinate gradient.
 
     Parameters
@@ -331,7 +337,10 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
         Observation vector
 
     alpha : float
-        Regularization strength
+        Regularization strength for the l1 norm
+
+    rho: float
+        Regularization strength for the l2 (squared) norm
 
     max_iter : int, default=1000
         Maximum number of iterations
@@ -381,16 +390,16 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     for it in range(max_iter):
         if sparse.issparse(X):
             tau, tau_old = _apcg_sparse(
-                X.data, X.indices, X.indptr, z, u, tau, Xu, Xz, y, alpha, lc,
-                n_features)
+                X.data, X.indices, X.indptr, z, u, tau, Xu, Xz, y, alpha, rho,
+                lc, n_features)
         else:
-            tau, tau_old = _apcg(X, z, u, tau, Xu, Xz, y, alpha, lc)
+            tau, tau_old = _apcg(X, z, u, tau, Xu, Xz, y, alpha, rho, lc)
 
         if it % f_gap == 0:
             w = tau_old ** 2 * u + z
             R = y - X @ w  # MM: todo this is brutal if f_gap = 1
 
-            p_obj = primal_enet(R, w, alpha)
+            p_obj = primal_enet(R, w, alpha, rho=rho)
             E.append(p_obj)
 
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
@@ -398,10 +407,17 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
             if alpha != 0:
                 theta = R / alpha
-                d_norm_theta = np.max(np.abs(X.T @ theta))
-                if d_norm_theta > 1.:
-                    theta /= d_norm_theta
-                d_obj = dual_lasso(y, theta, alpha)
+                # d_norm_theta = np.max(np.abs(X.T @ theta))
+                # if d_norm_theta > 1.:
+                #     theta /= d_norm_theta
+                if rho == 0:
+                    d_norm_theta = np.max(np.abs(X.T @ theta))
+                    if d_norm_theta > 1.:
+                        theta /= d_norm_theta
+                    d_obj = dual_lasso(y, theta, alpha)
+                else:
+                    XTR = X.T @ R
+                    d_obj = dual_enet(XTR, y - R, y, alpha, rho)
 
                 gap = p_obj - d_obj
 
