@@ -137,8 +137,8 @@ ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 plt.tight_layout()
 
 
-# save_fig = False
-save_fig = True
+save_fig = False
+# save_fig = True
 fig_dir = "../../extrapol_cd/tex/aistats20/prebuiltimages/"
 fig_dir_svg = "../../extrapol_cd/tex/aistats20/images/"
 
