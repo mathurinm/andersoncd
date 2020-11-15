@@ -10,15 +10,17 @@ from andersoncd.lasso import solver_enet, apcg
 
 
 # to generate the exact fig of the paper:
-# dataset_names = [
+dataset_names = ["hiva_agnostic"]
 #     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
 # div_alphas = [10, 100, 1000, 5000]
 
 
 # if you want to run the file quickly choose instead:
-dataset_names = [
-    "leukemia", "gina_agnostic", ]
-div_alphas = [10, 100]
+# dataset_names = ["rcv1_train"]
+div_alphas = [5_000]
+
+# div_alphas = [1000]
+# div_alphas = [10, 100]
 
 
 algos = [
@@ -88,7 +90,7 @@ def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
             'rcv1_train', 'news20', 'kdda_train', 'finance')):
-        X, y = fetch_libsvm(dataset_name)
+        X, y = fetch_libsvm(dataset_name, normalize=True)
         y /= np.linalg.norm(y)
     else:
         X, y = load_openml(dataset_name)
@@ -102,11 +104,11 @@ def parallel_function(dataset_name, algo, div_alpha):
 
     if algo_name == 'apcg':
         w, E, gaps = apcg(
-            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap)
+            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap, verbose=True)
     else:
         w, E, gaps = solver_enet(
             X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
-            use_acc=use_acc, K=K, algo=algo_name)
+            use_acc=use_acc, K=K, algo=algo_name, verbose=True)
 
     return (dataset_name, algo_name, use_acc, K, div_alpha, w, E, gaps, f_gap)
 
@@ -137,4 +139,4 @@ for dataset_name in dataset_names:
     for div_alpha in div_alphas:
         df_temp = df[df['dataset'] == dataset_name]
         df_temp[df_temp['div_alpha'] == div_alpha].to_pickle(
-            "%s_%i.pkl" % (dataset_name, div_alpha))
+            "results/%s_%i.pkl" % (dataset_name, div_alpha))
