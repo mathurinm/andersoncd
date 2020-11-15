@@ -20,7 +20,8 @@ dataset_names = [
 div_alphas = [10, 100, 1_000, 5_000]
 # div_alphas = [10, 100, 1_000]
 
-################## config #####################################################
+"""Config
+"""
 configure_plt()
 
 current_palette = sns.color_palette("colorblind")
@@ -104,7 +105,7 @@ for idx1, dataset in enumerate(dataset_names):
             "results/%s_%i.pkl" % (dataset, div_alpha))
 
         df_data_all['sort'] = 5
-        df_data_all.loc[df_data_all.use_acc == True, 'sort'] = 0
+        df_data_all.loc[df_data_all.use_acc, 'sort'] = 0
         df_data_all.loc[df_data_all.algo_name == 'apcg', 'sort'] = 1
         df_data_all.loc[df_data_all.algo_name == 'fista', 'sort'] = 2
         df_data_all.sort_values(by=['sort'], inplace=True)
@@ -165,8 +166,8 @@ for idx1, dataset in enumerate(dataset_names):
         "%s" % dataset_title[dataset])
 
 
-# save_fig = False
-save_fig = True
+save_fig = False
+# save_fig = True
 fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
 fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
 

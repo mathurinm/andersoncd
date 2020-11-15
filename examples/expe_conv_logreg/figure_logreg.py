@@ -91,7 +91,7 @@ for idx1, dataset in enumerate(dataset_names):
             try:
                 axarr.flat[idx1 * len(div_alphas) + idx2].set_xlim(
                     0, dict_xlim[dataset, div_alpha])
-            except:
+            except Exception:
                 print("no xlim")
             axarr.flat[idx1 * len(div_alphas) + idx2].set_ylim((1e-10, 1))
         if idx1 == len(dataset_names) - 1:
@@ -131,7 +131,8 @@ for idx1, dataset in enumerate(dataset_names):
     axarr_E.flat[idx1 * len(div_alphas)].set_ylabel(
         "%s" % dataset_title[dataset])
 
-save_fig = True
+save_fig = False
+# save_fig = True
 fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
 fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
 

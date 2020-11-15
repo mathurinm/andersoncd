@@ -2,7 +2,6 @@ from itertools import product
 
 import pandas
 import numpy as np
-from scipy import sparse
 from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
@@ -21,7 +20,8 @@ div_alphas = [10, 100, 1000]
 # div_alphas = [10, 100]
 
 
-############################## config #########################################
+"""Config
+"""
 algos = [
     ['cd', True, 5],
     ['cd', False, 5],
@@ -83,7 +83,9 @@ dict_f_gap["rcv1_train"] = 10
 dict_f_gap["news20"] = 10
 dict_f_gap["kdda_train"] = 10
 dict_f_gap["finance"] = 50
-############################## end config #####################################
+
+"""End config
+"""
 
 
 def parallel_function(dataset_name, algo, div_alpha):
@@ -103,7 +105,7 @@ def parallel_function(dataset_name, algo, div_alpha):
     max_iter = dict_maxiter[dataset_name, div_alpha]
     if algo_name == 'apcg':
         w, E, gaps = apcg_logreg(
-            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,verbose=True)
+            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap, verbose=True)
     else:
         w, E, gaps = solver_logreg(
             X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter,

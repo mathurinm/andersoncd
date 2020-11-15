@@ -9,11 +9,10 @@ import seaborn as sns
 from scipy import sparse
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
-from scipy.sparse.linalg import cg
 from libsvmdata import fetch_libsvm
 
 from andersoncd.plot_utils import configure_plt
-from andersoncd.lasso import solver_enet, primal_enet
+from andersoncd.lasso import solver_enet
 
 
 configure_plt()
