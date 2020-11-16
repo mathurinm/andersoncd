@@ -151,10 +151,10 @@ for idx1, div_rho in enumerate(div_rhos):
         r"$\rho = \lambda / %i$" % div_rho)
 
 save_fig = False
-fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
-fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
 
 if save_fig:
+    fig_dir = "../"
+    fig_dir_svg = "../"
     fig.savefig(
         "%sgaps_real_enet.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(

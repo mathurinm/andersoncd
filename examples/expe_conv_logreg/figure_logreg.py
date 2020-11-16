@@ -129,10 +129,9 @@ for idx1, dataset in enumerate(dataset_names):
         "%s" % dataset_title[dataset])
 
 save_fig = False
-fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
-fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
-
 if save_fig:
+    fig_dir = "../"
+    fig_dir_svg = "../"
     fig.savefig(
         "%sgaps_real_logreg.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(
