@@ -132,8 +132,8 @@ plt.tight_layout()
 
 save_fig = False
 # save_fig = True
-fig_dir = "../../extrapol_cd/tex/aistats20/prebuiltimages/"
-fig_dir_svg = "../../extrapol_cd/tex/aistats20/images/"
+fig_dir = "../"
+fig_dir_svg = "../"
 
 if save_fig:
     fig.savefig(
