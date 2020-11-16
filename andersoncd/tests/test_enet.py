@@ -40,7 +40,6 @@ def test_enet_solver(algo, use_acc, l1_ratio):
             rho=alpha * (1 - l1_ratio) * n_samples, tol=tol, algo=algo,
             use_acc=use_acc, max_iter=1_000_000)[0]
 
-    print(coef_ours - coef_sk)
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
 

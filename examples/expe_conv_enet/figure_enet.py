@@ -151,7 +151,6 @@ for idx1, div_rho in enumerate(div_rhos):
         r"$\rho = \lambda / %i$" % div_rho)
 
 save_fig = False
-# save_fig = True
 fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
 fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
 

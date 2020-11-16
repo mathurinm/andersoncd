@@ -55,17 +55,10 @@ f_gap = 10
 all_algos = [
     ('pgd', False),
     ('cd', False),
-    # cg here
     ('pgd', True),
     ('cd', True),
     ('fista', False),
     ('apcg', False)
-    # ('pgd', False),
-    # ('pgd', True),
-    # ('fista', False),
-    # ('cd', False),
-    # ('cd', True),
-    # ('apcg', False),
 ]
 
 dict_algo_name = {}

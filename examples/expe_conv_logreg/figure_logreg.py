@@ -54,11 +54,8 @@ dict_xlim["news20", 10] = 3_000
 dict_xlim["news20", 100] = 10_000
 dict_xlim["news20", 1000] = 150_000
 
-
-# dataset_names = ["gina_agnostic"]
 dataset_names = ["gina_agnostic", 'rcv1_train', "news20"]
 div_alphas = [10, 100, 1_000]
-# div_alphas = [10, 100, 1000]
 
 fig, axarr = plt.subplots(
     len(dataset_names), len(div_alphas), sharex=False, sharey=True,
@@ -132,7 +129,6 @@ for idx1, dataset in enumerate(dataset_names):
         "%s" % dataset_title[dataset])
 
 save_fig = False
-# save_fig = True
 fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
 fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
 

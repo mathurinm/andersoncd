@@ -399,7 +399,7 @@ def apcg(
             w = tau_old ** 2 * u + z
             R = y - X @ w  # MM: todo this is brutal if f_gap = 1
 
-            p_obj = primal_enet(R, w, alpha, rho=rho)
+            p_obj = primal_enet(R, w, alpha, rho)
             E.append(p_obj)
 
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
@@ -407,9 +407,6 @@ def apcg(
 
             if alpha != 0:
                 theta = R / alpha
-                # d_norm_theta = np.max(np.abs(X.T @ theta))
-                # if d_norm_theta > 1.:
-                #     theta /= d_norm_theta
                 if rho == 0:
                     d_norm_theta = np.max(np.abs(X.T @ theta))
                     if d_norm_theta > 1.:

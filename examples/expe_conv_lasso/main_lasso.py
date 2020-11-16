@@ -10,17 +10,18 @@ from andersoncd.lasso import solver_enet, apcg
 
 
 # to generate the exact fig of the paper:
-dataset_names = ["hiva_agnostic"]
-#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
-# div_alphas = [10, 100, 1000, 5000]
+dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+div_alphas = [10, 100, 1000, 5000]
 
 
 # if you want to run the file quickly choose instead:
-# dataset_names = ["rcv1_train"]
-div_alphas = [5_000]
-
-# div_alphas = [1000]
+# dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
 # div_alphas = [10, 100]
+
+
+n_jobs = 1
+# n_jobs = len(dataset_names) * len(div_alphas) * len(algos)
+# n_jobs = min(n_jobs, 15)
 
 
 algos = [
@@ -115,9 +116,7 @@ def parallel_function(dataset_name, algo, div_alpha):
 
 print("enter parallel")
 backend = 'loky'
-n_jobs = len(dataset_names) * len(div_alphas) * len(algos)
 
-n_jobs = min(n_jobs, 15)
 
 with parallel_backend("loky", inner_max_num_threads=1):
     results = Parallel(

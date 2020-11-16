@@ -9,16 +9,11 @@ from andersoncd.plot_utils import configure_plt, plot_legend_apart
 # to generate the exact fig of the paper:
 dataset_names = [
     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
-# div_alphas = [10, 100, 1000, 5000]
-
-
-# if you want to run the expe quickly choose instead:
-# dataset_names = ["hiva_agnostic", 'rcv1_train']
-# dataset_names = ["hiva_agnostic", 'rcv1_train']
-# dataset_names = ["leukemia", "gina_agnostic"]
-# dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic"]
 div_alphas = [10, 100, 1_000, 5_000]
-# div_alphas = [10, 100, 1_000]
+
+# if you want to run the file quickly choose instead:
+# dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+# div_alphas = [10, 100]
 
 """Config
 """
@@ -167,7 +162,6 @@ for idx1, dataset in enumerate(dataset_names):
 
 
 save_fig = False
-# save_fig = True
 fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
 fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
 
