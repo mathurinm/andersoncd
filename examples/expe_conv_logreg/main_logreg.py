@@ -96,7 +96,6 @@ def parallel_function(dataset_name, algo, div_alpha):
     if dataset_name.startswith((
             'rcv1_train', 'news20', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
-        # X.multiply(1 / sparse.linalg.norm(X, axis=0))
     else:
         X, y = load_openml(dataset_name, normalize_y=False)
 

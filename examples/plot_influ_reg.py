@@ -11,7 +11,7 @@ from numpy.linalg import norm
 import matplotlib.pyplot as plt
 from libsvmdata import fetch_libsvm
 
-from andersoncd.plot_utils import configure_plt, plot_legend_apart
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 from andersoncd.lasso import solver_enet
 
 
@@ -102,7 +102,7 @@ if save_fig:
         "%sinflu_reg_amount_lasso.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(
         "%sinflu_reg_amount_lasso.svg" % fig_dir_svg, bbox_inches="tight")
-    fig = plot_legend_apart(
+    fig = _plot_legend_apart(
         ax, "%sinflu_reg_amount_lasso_legend.pdf" % fig_dir, ncol=3)
 
 

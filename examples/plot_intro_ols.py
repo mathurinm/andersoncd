@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from numpy.linalg import norm
 from scipy.sparse.linalg import cg
 from libsvmdata import fetch_libsvm
-from andersoncd.plot_utils import configure_plt, plot_legend_apart
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 from andersoncd.lasso import solver_enet, primal_enet, apcg
 
@@ -140,7 +140,7 @@ if save_fig:
         "%sintro_ols.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(
         "%sintro_ols.svg" % fig_dir_svg, bbox_inches="tight")
-    fig = plot_legend_apart(
+    fig = _plot_legend_apart(
         ax, "%sintro_ols_legend.pdf" % fig_dir, ncol=3)
 
 plt.title("Convergence on Least Squares")

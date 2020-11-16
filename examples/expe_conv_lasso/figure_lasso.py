@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from andersoncd.plot_utils import configure_plt, plot_legend_apart
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 
 # to generate the exact fig of the paper:
@@ -15,8 +15,6 @@ div_alphas = [10, 100, 1_000, 5_000]
 # dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
 # div_alphas = [10, 100]
 
-"""Config
-"""
 configure_plt()
 
 current_palette = sns.color_palette("colorblind")
@@ -174,7 +172,7 @@ if save_fig:
         "%senergies_real_lasso.pdf" % fig_dir, bbox_inches="tight")
     fig_E.savefig(
         "%senergies_real_lasso.svg" % fig_dir_svg, bbox_inches="tight")
-    plot_legend_apart(
+    _plot_legend_apart(
         axarr[0][0], "%senergies_real_lasso_legend.pdf" % fig_dir, ncol=6)
 
 fig.show()

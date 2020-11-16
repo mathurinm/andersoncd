@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from andersoncd.plot_utils import configure_plt, plot_legend_apart
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 
 configure_plt()
@@ -74,7 +74,6 @@ dict_xlim["news20", 1000] = 500_000
 
 
 ####################################
-# div_alphas = [10, 100]
 div_alphas = [10, 100, 1000, 5000]
 # use div_alphas = [10] if you want to be fast
 ########################################
@@ -163,7 +162,7 @@ if save_fig:
         "%senergies_real_enet.pdf" % fig_dir, bbox_inches="tight")
     fig_E.savefig(
         "%senergies_real_enet.svg" % fig_dir_svg, bbox_inches="tight")
-    plot_legend_apart(
+    _plot_legend_apart(
         axarr[0][0], "%senergies_real_enet_legend.pdf" % fig_dir, ncol=6)
 
 
