@@ -6,7 +6,7 @@ from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.data.real import load_openml
-from andersoncd.lasso import solver_enet, apcg
+from andersoncd.lasso import solver_enet, apcg_enet
 
 
 # to generate the exact fig of the paper:
@@ -102,7 +102,7 @@ def parallel_function(dataset_name, algo, div_alpha):
     max_iter = dict_maxiter[dataset_name, div_alpha]
 
     if algo_name == 'apcg':
-        w, E, gaps = apcg(
+        w, E, gaps = apcg_enet(
             X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap, verbose=True)
     else:
         w, E, gaps = solver_enet(

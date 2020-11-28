@@ -13,7 +13,7 @@ from scipy.sparse.linalg import cg
 from libsvmdata import fetch_libsvm
 from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
-from andersoncd.lasso import solver_enet, primal_enet, apcg
+from andersoncd.lasso import solver_enet, primal_enet, apcg_enet
 
 
 configure_plt()
@@ -75,7 +75,7 @@ dict_Es = {}
 for algo in all_algos:
     print("Running ", dict_algo_name[algo])
     if algo[0] == 'apcg':
-        w, E, gaps = apcg(
+        w, E, gaps = apcg_enet(
             X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
             verbose=False)
     else:

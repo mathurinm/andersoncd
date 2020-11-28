@@ -324,7 +324,7 @@ def _apcg_sparse(
     return tau, tau_old
 
 
-def apcg(
+def apcg_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     """Solve the Lasso with accelerated proximal coordinate gradient.
 
