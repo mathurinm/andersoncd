@@ -1,3 +1,4 @@
+import time
 import numpy as np
 
 from scipy import sparse
@@ -94,7 +95,8 @@ def _cd_enet_sparse(
 
 def solver_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=True, algo='cd', reg_amount=None, seed=0, verbose=False):
+        use_acc=True, algo='cd', reg_amount=None, seed=0, verbose=False,
+        compute_time=False, tmax=1000):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
     The minimized objective is:
@@ -155,7 +157,7 @@ def solver_enet(
     """
 
     is_sparse = sparse.issparse(X)
-    n_features = X.shape[1]
+    n_samples, n_features = X.shape
 
     if not is_sparse and not np.isfortran(X):
         X = np.asfortranarray(X)
@@ -168,10 +170,13 @@ def solver_enet(
                  cdsym=lambda: np.hstack((_range, _range[::-1])),
                  cdshuf=lambda: np.random.choice(
                      n_features, n_features, replace=False),
+                 rcd=lambda: np.random.choice(
+                     n_features, n_features, replace=True),
                  )
 
     if use_acc:
         last_K_w = np.zeros([K + 1, n_features])
+        last_K_R = np.zeros([K + 1, n_samples])
         U = np.zeros([K, n_features])
 
     if algo == 'pgd' or algo == 'fista':
@@ -194,12 +199,22 @@ def solver_enet(
     E = []
     gaps = np.zeros(max_iter // f_gap)
 
+    if compute_time:
+        times = []
+        t_start = time.time()
+
     for it in range(max_iter):
+        # if it % 50 == 0:
+        #     R = y - X @ w
         if it % f_gap == 0:
             if algo == 'fista':
                 R = y - X @ w
             p_obj = primal_enet(R, w, alpha, rho)
             E.append(p_obj)
+            if compute_time:
+                times.append(time.time() - t_start)
+                if time.time() - t_start > tmax:
+                    break
 
             if alpha != 0:
                 theta = R / alpha
@@ -226,7 +241,7 @@ def solver_enet(
                 if verbose:
                     print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
-        if algo.startswith("cd"):
+        if algo.startswith(("cd", "rcd")):
             if is_sparse:
                 _cd_enet_sparse(X.data, X.indices, X.indptr, w,
                                 R, alpha, rho, lc, feats[algo]())
@@ -253,9 +268,11 @@ def solver_enet(
         if use_acc:
             if it < K + 1:
                 last_K_w[it] = w
+                last_K_R[it] = R.copy()
             else:
                 for k in range(K):
                     last_K_w[k] = last_K_w[k + 1]
+                    last_K_R[k] = last_K_R[k+1]
                 last_K_w[K] = w
 
                 for k in range(K):
@@ -267,10 +284,10 @@ def solver_enet(
                 try:
                     z = np.linalg.solve(C, np.ones(K))
                     c = z / z.sum()
-                    w_acc = np.sum(last_K_w[:-1] * c[:, None],
-                                   axis=0)
+                    w_acc = np.sum(last_K_w[:-1] * c[:, None], axis=0)
                     p_obj = primal_enet(R, w, alpha, rho)
                     R_acc = y - X @ w_acc
+                    # R_acc = np.sum(last_K_R[:-1] * c[:, None], axis=0)
                     p_obj_acc = primal_enet(R_acc, w_acc, alpha, rho)
                     if p_obj_acc < p_obj:
                         w = w_acc
@@ -278,8 +295,10 @@ def solver_enet(
                 except np.linalg.LinAlgError:
                     if verbose:
                         print("----------Linalg error")
-
-    return w, np.array(E), gaps[:it // f_gap + 1]
+    if compute_time:
+        return w, np.array(E), gaps[:it // f_gap + 1], times
+    else:
+        return w, np.array(E), gaps[:it // f_gap + 1]
 
 
 @ njit
@@ -319,7 +338,9 @@ def _apcg_sparse(
     return tau, tau_old
 
 
-def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
+def apcg(
+        X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False,
+        compute_time=False, tmax=1000):
     """Solve the Lasso with accelerated proximal coordinate gradient.
 
     Parameters
@@ -368,6 +389,9 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
     else:
         lc = (X ** 2).sum(axis=0)
 
+    if compute_time:
+        times = []
+        t_start = time.time()
     # Algo 2 in Li, Lu, Xiao 2014
     w = np.zeros(n_features)
     u = np.zeros(n_features)
@@ -392,6 +416,9 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
 
             p_obj = primal_enet(R, w, alpha)
             E.append(p_obj)
+            times.append(time.time() - t_start)
+            if time.time() - t_start > tmax:
+                break
 
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
                 break
@@ -416,4 +443,7 @@ def apcg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, verbose=False):
                 if verbose:
                     print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
-    return w, np.array(E), gaps[:it // f_gap + 1]
+    if compute_time:
+        return w, np.array(E), gaps[:it // f_gap + 1], times
+    else:
+        return w, np.array(E), gaps[:it // f_gap + 1]
