@@ -150,9 +150,11 @@ for idx1, div_alpha in enumerate(dataset_names):
     axarr_times_E[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
 
 axarr_times_E[0, 0].set_ylabel("Lasso \n rcv1")
+axarr_times_E[0, 0].set_ylim((1e-16, 2))
 
 axarr_times_E[1, 0].set_ylabel("Enet \n leukemia")
 
+# save_fig = False
 save_fig = True
 
 if save_fig:

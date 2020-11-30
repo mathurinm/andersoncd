@@ -6,7 +6,7 @@ from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.data.real import load_openml
-from andersoncd.lasso import solver_enet, apcg
+from andersoncd.logreg import solver_logreg
 
 
 # to generate the exact fig of the paper:
@@ -17,12 +17,12 @@ from andersoncd.lasso import solver_enet, apcg
 
 # if you want to run the file quickly choose instead:
 # dataset_names = ["leukemia"]
-dataset_names = ["rcv1_train"]
-div_alphas = [1000]
+dataset_names = ["news20"]
+div_alphas = [100]
 
 
 algos = [
-    ['apcg', False, 5],
+    # ['apcg', False, 5],
     ['pgd', False, 5],
     ['pgd', True, 5],
     ['fista', False, 5],
@@ -39,7 +39,7 @@ dict_maxiter["gina_agnostic", 10] = 1_000
 dict_maxiter["hiva_agnostic", 10] = 10_000
 dict_maxiter["upselling", 10] = 10_000
 dict_maxiter["rcv1_train", 10] = 10_000
-dict_maxiter["news20", 10] = 100_000
+dict_maxiter["news20", 10] = 10_000
 dict_maxiter["kdda_train", 10] = 10_000
 dict_maxiter["finance", 10] = 5_000
 
@@ -85,9 +85,6 @@ dict_f_gap["kdda_train"] = 10
 dict_f_gap["finance"] = 50
 
 dict_tmax = {}
-dict_tmax["leukemia", 10] = 10
-dict_tmax["leukemia", 100] = 20
-dict_tmax["leukemia", 1000] = 120
 
 dict_tmax["rcv1_train", 10] = 5
 dict_tmax["rcv1_train", 100] = 10
@@ -95,9 +92,8 @@ dict_tmax["rcv1_train", 1000] = 120
 dict_tmax["rcv1_train", 5000] = 600
 
 dict_tmax["news20", 10] = 60
-dict_tmax["news20", 100] = 10
-dict_tmax["news20", 1000] = 120
-dict_tmax["news20", 5000] = 600
+dict_tmax["news20", 100] = 3600
+dict_tmax["news20", 1000] = 6000
 
 
 def parallel_function(dataset_name, algo, div_alpha):
@@ -125,7 +121,7 @@ def parallel_function(dataset_name, algo, div_alpha):
                 X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
                 compute_time=True, tmax=tmax, verbose=True)
         else:
-            w, E, gaps, times = solver_enet(
+            w, E, gaps, times = solver_logreg(
                 X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
                 use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
                 tmax=tmax, verbose=True, seed=42)
@@ -137,7 +133,7 @@ def parallel_function(dataset_name, algo, div_alpha):
     df.columns = [
         'dataset', 'algo_name', 'use_acc', 'K', 'div_alpha', "optimum", "E",
         "gaps", "f_gaps", "times"]
-    str_results = "results/%s_%s_%s%i.pkl" % (
+    str_results = "results/logreg_%s_%s_%s%i.pkl" % (
                 dataset_name, algo_name, str(use_acc), div_alpha)
     df.to_pickle(str_results)
 

@@ -10,7 +10,7 @@ from andersoncd.lasso import solver_enet, apcg
 
 
 dataset_names = ["leukemia"]
-div_alphas = [10]
+div_alphas = [100, 1000]
 
 
 algos = [
@@ -45,7 +45,7 @@ dict_maxiter["news20", 100] = 10_000
 dict_maxiter["kdda_train", 100] = 1_000
 dict_maxiter["finance", 100] = 50_000
 
-dict_maxiter["leukemia", 1000] = 500_000
+dict_maxiter["leukemia", 1000] = 1_000_000
 dict_maxiter["mushroom", 1000] = 100_000
 dict_maxiter["gina_agnostic", 1000] = 100_000
 dict_maxiter["hiva_agnostic", 1000] = 100_000
@@ -79,7 +79,7 @@ dict_f_gap["finance"] = 50
 dict_tmax = {}
 dict_tmax["leukemia", 10] = 2
 dict_tmax["leukemia", 100] = 20
-dict_tmax["leukemia", 1000] = 120
+dict_tmax["leukemia", 1000] = 50
 
 dict_tmax["rcv1_train", 10] = 5
 dict_tmax["rcv1_train", 100] = 10
@@ -99,7 +99,7 @@ def parallel_function(dataset_name, algo, div_alpha):
 
     alpha_max = np.max(np.abs(X.T @ y))
     alpha = alpha_max / div_alpha
-    tol = 1e-14
+    tol = 1e-20
     f_gap = dict_f_gap[dataset_name]
 
     max_iter = dict_maxiter[dataset_name, div_alpha]
@@ -131,8 +131,8 @@ def parallel_function(dataset_name, algo, div_alpha):
 print("enter parallel")
 n_jobs = len(dataset_names) * len(div_alphas) * len(algos)
 
-n_jobs = 1
-# n_jobs = min(n_jobs, 15)
+# n_jobs = 1
+n_jobs = min(n_jobs, 15)
 
 with parallel_backend("loky", inner_max_num_threads=1):
     Parallel(

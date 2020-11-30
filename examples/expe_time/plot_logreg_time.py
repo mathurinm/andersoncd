@@ -1,12 +1,11 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from numpy.linalg import norm
 from libsvmdata import fetch_libsvm
 from andersoncd.plot_utils import configure_plt
 
 from andersoncd.lasso import solver_enet, apcg
-
+from andersoncd.logreg import solver_logreg
 
 configure_plt()
 
@@ -14,20 +13,18 @@ configure_plt()
 # Load the data:
 
 # n_features = 1000
-X, y = fetch_libsvm('rcv1_train', normalize=True)
+X, y = fetch_libsvm('news20', normalize=True)
+# X, y = fetch_libsvm('rcv1_train', normalize=True)
 # X = X[:, :n_features]
-
-y -= y.mean()
-y /= norm(y)
 
 ###############################################################################
 # Run algorithms:
 
 # solvers parameters:
-div_alpha = 10
+div_alpha = 100
 # div_rho = 100
 alpha_max = np.max(np.abs(X.T @ y))
-alpha = alpha_max / div_alpha
+alpha = alpha_max / (2 * div_alpha)
 # rho = alpha/div_rho
 rho = 0
 
@@ -37,12 +34,12 @@ f_gap = 10
 
 all_algos = [
     # ('apcg', False),
-    ('pgd', False),
-    ('pgd', True),
-    ('fista', False),
-    ('cd', False),
-    ('rcd', False),
+    # ('cd', False),
+    # ('rcd', False),
     ('cd', True),
+    # ('pgd', False),
+    # ('pgd', True),
+    # ('fista', False)
 ]
 
 dict_algo_name = {}
@@ -54,7 +51,7 @@ dict_algo_name["cd", True] = "CD - Anderson"
 dict_algo_name["fista", False] = "GD - inertial"
 dict_algo_name["apcg", False] = "CD - inertial"
 
-tmax = 3
+tmax = 600
 # tmax =
 dict_Es = {}
 dict_times = {}
@@ -66,7 +63,7 @@ for algo in all_algos:
             X, y, alpha, rho=rho, max_iter=max_iter, tol=tol,
             f_gap=f_gap, verbose=True, compute_time=True, tmax=tmax)
     else:
-        _, E, _, times = solver_enet(
+        _, E, _, times = solver_logreg(
             X, y, alpha=alpha, rho=rho,
             f_gap=f_gap, max_iter=max_iter, tol=tol,
             algo=algo[0], use_acc=algo[1], verbose=True, compute_time=True,
