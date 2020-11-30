@@ -176,7 +176,6 @@ def solver_enet(
 
     if use_acc:
         last_K_w = np.zeros([K + 1, n_features])
-        last_K_R = np.zeros([K + 1, n_samples])
         U = np.zeros([K, n_features])
 
     if algo == 'pgd' or algo == 'fista':
@@ -266,14 +265,15 @@ def solver_enet(
             raise ValueError("Unknown algo %s" % algo)
 
         if use_acc:
-            if it < K + 1:
-                last_K_w[it] = w
-                last_K_R[it] = R.copy()
-            else:
-                for k in range(K):
-                    last_K_w[k] = last_K_w[k + 1]
-                    last_K_R[k] = last_K_R[k+1]
-                last_K_w[K] = w
+            # if (it == 0) or (it % (K + 1) != 0):
+            last_K_w[it % (K + 1)] = w
+            # last_K_R[it] = R.copy()
+            # else:
+            if it % (K + 1) == K:
+                # for k in range(K):
+                #     last_K_w[k] = last_K_w[k + 1]
+                #     # last_K_R[k] = last_K_R[k+1]
+                # last_K_w[K] = w
 
                 for k in range(K):
                     U[k] = last_K_w[k + 1] - last_K_w[k]
