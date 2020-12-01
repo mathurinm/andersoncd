@@ -211,8 +211,10 @@ def solver_logreg(
             E.append(p_obj)
 
             if compute_time:
-                times.append(time.time() - t_start)
-                if time.time() - t_start > tmax:
+                ellapsed_times = time.time() - t_start
+                times.append(ellapsed_times)
+                print("Ellapsed time: %f " % ellapsed_times)
+                if ellapsed_times > tmax:
                     break
 
             if alpha != 0:
@@ -262,13 +264,6 @@ def solver_logreg(
         else:
             raise ValueError("Unknown algo %s" % algo)
 
-        # if use_acc:
-        #     if it < K + 1:
-        #         last_K_w[it] = w
-        #     else:
-        #         for k in range(K):
-        #             last_K_w[k] = last_K_w[k + 1]
-        #         last_K_w[K] = w
         if use_acc:
             last_K_w[it % (K + 1)] = w
             if it % (K + 1) == K:
