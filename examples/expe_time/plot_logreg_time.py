@@ -21,10 +21,10 @@ X, y = fetch_libsvm('news20', normalize=True)
 # Run algorithms:
 
 # solvers parameters:
-div_alpha = 100
+div_alpha = 10
 # div_rho = 100
-alpha_max = np.max(np.abs(X.T @ y))
-alpha = alpha_max / (2 * div_alpha)
+alpha_max = np.max(np.abs(X.T @ y)) / 2
+alpha = alpha_max / div_alpha
 # rho = alpha/div_rho
 rho = 0
 
@@ -34,7 +34,7 @@ f_gap = 10
 
 all_algos = [
     # ('apcg', False),
-    # ('cd', False),
+    ('cd', False),
     # ('rcd', False),
     ('cd', True),
     # ('pgd', False),
@@ -51,7 +51,7 @@ dict_algo_name["cd", True] = "CD - Anderson"
 dict_algo_name["fista", False] = "GD - inertial"
 dict_algo_name["apcg", False] = "CD - inertial"
 
-tmax = 600
+tmax = 60
 # tmax =
 dict_Es = {}
 dict_times = {}

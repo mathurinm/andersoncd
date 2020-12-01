@@ -13,20 +13,21 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 
 # if you want to run the expe quickly choose instead:
-dataset_names = ["rcv1_train", "leukemia"]
+dataset_names = ["rcv1_train", "leukemia", "news20"]
 div_alphas = [10, 100, 1000]
+# div_alphas = [10, 100, 1000]
 
 
 ################## config ####################################################
 configure_plt()
 
 algos = [
-    ['cd', False, 5],
-    ['rcd', False, 5],
     ['cd', True, 5],
-    # ['apcg', False, 5],
     ['pgd', True, 5],
+    ['cd', False, 5],
     ['pgd', False, 5],
+    ['rcd', False, 5],
+    # ['apcg', False, 5],
     ['fista', False, 5]
 ]
 
@@ -99,8 +100,10 @@ dict_xlim["news20", 1000] = 500_000
 ###############################################################################
 
 fig_times_E, axarr_times_E = plt.subplots(
-    2, len(div_alphas), sharex=False, sharey=True,
+    3, len(div_alphas), sharex=False, sharey=True,
     figsize=[14, 8], constrained_layout=True)
+
+fontsize = 45
 
 
 for idx1, div_alpha in enumerate(dataset_names):
@@ -116,6 +119,10 @@ for idx1, div_alpha in enumerate(dataset_names):
                 df_data_all = pandas.read_pickle(
                     "results/enet_%s_%s_%s%i.pkl" % (
                         "leukemia", algo_name, str(use_acc), div_alpha))
+            if idx1 == 2:
+                df_data_all = pandas.read_pickle(
+                    "results/logreg_%s_%s_%s%i.pkl" % (
+                        "news20", algo_name, str(use_acc), div_alpha))
             Es = df_data_all['E']
             pobj_star = min(min(E.min() for E in Es), pobj_star)
 
@@ -126,10 +133,15 @@ for idx1, div_alpha in enumerate(dataset_names):
                     "results/%s_%s_%s%i.pkl" % (
                         "rcv1_train", algo_name, str(use_acc), div_alpha))
             if idx1 == 1:
-                # import ipdb; ipdb.set_trace()
                 df_data_all = pandas.read_pickle(
                     "results/enet_%s_%s_%s%i.pkl" % (
                         "leukemia", algo_name, str(use_acc), div_alpha))
+            if idx1 == 2:
+                df_data_all = pandas.read_pickle(
+                    "results/logreg_%s_%s_%s%i.pkl" % (
+                        "news20", algo_name, str(use_acc), div_alpha))
+                # if div_alpha == 1000:
+                #     import ipdb; ipdb.set_trace()
 
             use_accs = df_data_all['use_acc']
             algo_names = df_data_all['algo_name']
@@ -143,17 +155,22 @@ for idx1, div_alpha in enumerate(dataset_names):
                     label=dict_algo_name[use_acc, algo_name],
                     linestyle=dict_linestyle[use_acc, algo_name],
                     color=dict_color[algo_name])
+            axarr_times_E[idx1, idx2].tick_params(axis='x', labelsize=35)
+        # plt.tick_params(labelsize=50)
 
         axarr_times_E[0, idx2].set_title(
-            r"Lasso  $\lambda =\lambda_{\max} / %i  $ " % div_alpha)
-        axarr_times_E[-1, idx2].set_xlabel("Time (s)")
+            r"$\lambda_{\max} / %i  $ " % div_alpha,
+            fontsize=fontsize)
+        axarr_times_E[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
     axarr_times_E[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
+    axarr_times_E[idx1, 0].tick_params(axis='y', labelsize=35)
+    # axarr_times_E[idx1, 0].set_yticklabels(labels=(1e-15, 1e-10, 1e-5, 1), fontsize=25)
 
-axarr_times_E[0, 0].set_ylabel("Lasso \n rcv1")
+axarr_times_E[0, 0].set_ylabel("Lasso \n rcv1", fontsize=fontsize)
+axarr_times_E[1, 0].set_ylabel("Enet \n leuk.", fontsize=fontsize)
+axarr_times_E[2, 0].set_ylabel("Logreg \n news20", fontsize=fontsize)
+
 axarr_times_E[0, 0].set_ylim((1e-16, 2))
-
-axarr_times_E[1, 0].set_ylabel("Enet \n leukemia")
-
 # save_fig = False
 save_fig = True
 
@@ -165,7 +182,7 @@ if save_fig:
     fig_times_E.savefig(
         "%senergies_time.svg" % fig_dir_svg, bbox_inches="tight")
     _plot_legend_apart(
-        axarr_times_E[0, 0], "%senergies_time_legend.pdf" % fig_dir, ncol=6)
+        axarr_times_E[0, 0], "%senergies_time_legend.pdf" % fig_dir, ncol=3)
 
 
 fig_times_E.show()

@@ -91,7 +91,7 @@ dict_tmax["leukemia", 1000] = 120
 
 dict_tmax["rcv1_train", 10] = 5
 dict_tmax["rcv1_train", 100] = 10
-dict_tmax["rcv1_train", 1000] = 120
+dict_tmax["rcv1_train", 1000] = 300
 dict_tmax["rcv1_train", 5000] = 600
 
 dict_tmax["news20", 10] = 60
@@ -119,16 +119,25 @@ def parallel_function(dataset_name, algo, div_alpha):
 
     tmax = dict_tmax[dataset_name, div_alpha]
 
-    for _ in range(2):
-        if algo_name == 'apcg':
-            w, E, gaps, times = apcg(
-                X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
-                compute_time=True, tmax=tmax, verbose=True)
-        else:
-            w, E, gaps, times = solver_enet(
-                X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
-                use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
-                tmax=tmax, verbose=True, seed=42)
+    if algo_name == 'apcg':
+        w, E, gaps, times = apcg(
+            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
+            compute_time=True, tmax=5, verbose=True)
+    else:
+        w, E, gaps, times = solver_enet(
+            X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
+            use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
+            tmax=5, verbose=True, seed=42)
+
+    if algo_name == 'apcg':
+        w, E, gaps, times = apcg(
+            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
+            compute_time=True, tmax=tmax, verbose=True)
+    else:
+        w, E, gaps, times = solver_enet(
+            X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
+            use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
+            tmax=tmax, verbose=True, seed=42)
 
     my_results = (
         dataset_name, algo_name, use_acc, K, div_alpha, w,

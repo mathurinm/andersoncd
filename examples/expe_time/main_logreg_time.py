@@ -18,7 +18,7 @@ from andersoncd.logreg import solver_logreg
 # if you want to run the file quickly choose instead:
 # dataset_names = ["leukemia"]
 dataset_names = ["news20"]
-div_alphas = [100]
+div_alphas = [1000]
 
 
 algos = [
@@ -49,7 +49,7 @@ dict_maxiter["gina_agnostic", 100] = 1_000
 dict_maxiter["hiva_agnostic", 100] = 5000
 dict_maxiter["upselling", 100] = 10_000
 dict_maxiter["rcv1_train", 100] = 10_000
-dict_maxiter["news20", 100] = 10_000
+dict_maxiter["news20", 100] = 1_000_000
 dict_maxiter["kdda_train", 100] = 1_000
 dict_maxiter["finance", 100] = 50_000
 
@@ -59,7 +59,7 @@ dict_maxiter["gina_agnostic", 1000] = 100_000
 dict_maxiter["hiva_agnostic", 1000] = 100_000
 dict_maxiter["upselling", 1000] = 100_000
 dict_maxiter["rcv1_train", 1000] = 100_000
-dict_maxiter["news20", 1000] = 1_000_000
+dict_maxiter["news20", 1000] = 10_000_000
 dict_maxiter["kdda_train", 1000] = 1_000
 dict_maxiter["finance", 1000] = 50_000
 
@@ -69,7 +69,7 @@ dict_maxiter["gina_agnostic", 5_000] = 300_000
 dict_maxiter["hiva_agnostic", 5_000] = 300_000
 dict_maxiter["upselling", 5000] = 100_000
 dict_maxiter["rcv1_train", 5000] = 500_000
-dict_maxiter["news20", 5000] = 1_000_000
+dict_maxiter["news20", 5000] = 10_000_000
 dict_maxiter["kdda_train", 5000] = 1_000
 
 
@@ -91,9 +91,10 @@ dict_tmax["rcv1_train", 100] = 10
 dict_tmax["rcv1_train", 1000] = 120
 dict_tmax["rcv1_train", 5000] = 600
 
-dict_tmax["news20", 10] = 60
-dict_tmax["news20", 100] = 3600
-dict_tmax["news20", 1000] = 6000
+dict_tmax["news20", 10] = 180
+# dict_tmax["news20", 100] = 50
+dict_tmax["news20", 100] = 8_000
+dict_tmax["news20", 1000] = 40_000
 
 
 def parallel_function(dataset_name, algo, div_alpha):
@@ -101,12 +102,10 @@ def parallel_function(dataset_name, algo, div_alpha):
     if dataset_name.startswith((
             'rcv1_train', 'news20', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
-        y -= y.mean()
-        y /= np.linalg.norm(y)
     else:
         X, y = load_openml(dataset_name)
 
-    alpha_max = np.max(np.abs(X.T @ y))
+    alpha_max = np.max(np.abs(X.T @ y)) / 2
     alpha = alpha_max / div_alpha
     tol = 1e-14
     f_gap = dict_f_gap[dataset_name]
@@ -115,16 +114,30 @@ def parallel_function(dataset_name, algo, div_alpha):
 
     tmax = dict_tmax[dataset_name, div_alpha]
 
-    for _ in range(2):
-        if algo_name == 'apcg':
-            w, E, gaps, times = apcg(
-                X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
-                compute_time=True, tmax=tmax, verbose=True)
-        else:
-            w, E, gaps, times = solver_logreg(
-                X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
-                use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
-                tmax=tmax, verbose=True, seed=42)
+    # for _ in range(2):
+
+    if algo_name == 'apcg':
+        w, E, gaps, times = apcg(
+            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
+            compute_time=True, tmax=10, verbose=True)
+    else:
+        w, E, gaps, times = solver_logreg(
+            X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
+            use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
+            tmax=10, verbose=True, seed=42)
+
+    if algo_name == 'apcg':
+        w, E, gaps, times = apcg(
+            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
+            compute_time=True, tmax=tmax, verbose=True)
+    else:
+        w, E, gaps, times = solver_logreg(
+            X, y, alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
+            use_acc=use_acc, K=K, algo=algo_name, compute_time=True,
+            tmax=tmax, verbose=True, seed=42)
+
+    if len(times) == 0:
+        return 1 / 0
 
     my_results = (
         dataset_name, algo_name, use_acc, K, div_alpha, w,
