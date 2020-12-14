@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from andersoncd.plot_utils import configure_plt
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 
 configure_plt()
@@ -25,13 +25,12 @@ dict_linestyle[False, "apcg"] = 'dotted'
 
 dict_algo_name = {}
 dict_algo_name[False, "pgd"] = "PGD"
-dict_algo_name[False, "cd"] = "CD"
+dict_algo_name[False, "cd"] = "PCD"
 dict_algo_name[True, "pgd"] = "PGD - Anderson"
-dict_algo_name[True, "cd"] = "CD - Anderson"
+dict_algo_name[True, "cd"] = "PCD - Anderson"
 dict_algo_name[False, "fista"] = "PGD - inertial"
-dict_algo_name[False, "apcg"] = "CD - inertial"
+dict_algo_name[False, "apcg"] = "PCD - inertial"
 
-dataset_names = ["gina_agnostic", 'rcv1_train', "news20"]
 
 dataset_title = {}
 dataset_title["leukemia"] = "leukemia"
@@ -48,9 +47,15 @@ dict_xlim = {}
 dict_xlim["gina_agnostic", 10] = 2500
 dict_xlim["gina_agnostic", 100] = 3000
 dict_xlim["gina_agnostic", 1000] = 10_000
-dict_xlim["gina_agnostic", 5000] = 10_000
+dict_xlim["rcv1_train", 10] = 1_000
+dict_xlim["rcv1_train", 100] = 5_000
+dict_xlim["rcv1_train", 1000] = 200_000
+dict_xlim["news20", 10] = 3_000
+dict_xlim["news20", 100] = 10_000
+dict_xlim["news20", 1000] = 150_000
 
-div_alphas = [10, 100, 1000]
+dataset_names = ["gina_agnostic", 'rcv1_train', "news20"]
+div_alphas = [10, 100, 1_000]
 
 fig, axarr = plt.subplots(
     len(dataset_names), len(div_alphas), sharex=False, sharey=True,
@@ -65,7 +70,7 @@ for idx1, dataset in enumerate(dataset_names):
 
     for idx2, div_alpha in enumerate(div_alphas):
         df_data_all = pandas.read_pickle(
-            "%s_%i.pkl" % (dataset, div_alpha))
+            "results/%s_%i.pkl" % (dataset, div_alpha))
 
         df_data = df_data_all[df_data_all['div_alpha'] == div_alpha]
         gaps = df_data['gaps']
@@ -83,7 +88,7 @@ for idx1, dataset in enumerate(dataset_names):
             try:
                 axarr.flat[idx1 * len(div_alphas) + idx2].set_xlim(
                     0, dict_xlim[dataset, div_alpha])
-            except:
+            except Exception:
                 print("no xlim")
             axarr.flat[idx1 * len(div_alphas) + idx2].set_ylim((1e-10, 1))
         if idx1 == len(dataset_names) - 1:
@@ -122,6 +127,21 @@ for idx1, dataset in enumerate(dataset_names):
 
     axarr_E.flat[idx1 * len(div_alphas)].set_ylabel(
         "%s" % dataset_title[dataset])
+
+save_fig = False
+if save_fig:
+    fig_dir = "../"
+    fig_dir_svg = "../"
+    fig.savefig(
+        "%sgaps_real_logreg.pdf" % fig_dir, bbox_inches="tight")
+    fig.savefig(
+        "%sgaps_real_logreg.svg" % fig_dir_svg, bbox_inches="tight")
+    fig_E.savefig(
+        "%senergies_real_logreg.pdf" % fig_dir, bbox_inches="tight")
+    fig_E.savefig(
+        "%senergies_real_logreg.svg" % fig_dir_svg, bbox_inches="tight")
+    _plot_legend_apart(
+        axarr[0][0], "%senergies_real_logreg_legend.pdf" % fig_dir, ncol=6)
 
 
 fig.show()

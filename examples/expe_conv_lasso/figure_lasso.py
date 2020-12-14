@@ -3,21 +3,18 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from andersoncd.plot_utils import configure_plt
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 
 # to generate the exact fig of the paper:
-# dataset_names = [
-#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
-# div_alphas = [10, 100, 1000, 5000]
-
-
-# if you want to run the expe quickly choose instead:
 dataset_names = [
-    "leukemia", "gina_agnostic", ]
-div_alphas = [10, 100]
+    "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+div_alphas = [10, 100, 1_000, 5_000]
 
-################## config #####################################################
+# if you want to run the file quickly choose instead:
+# dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+# div_alphas = [10, 100]
+
 configure_plt()
 
 current_palette = sns.color_palette("colorblind")
@@ -98,10 +95,10 @@ fig_E, axarr_E = plt.subplots(
 for idx1, dataset in enumerate(dataset_names):
     for idx2, div_alpha in enumerate(div_alphas):
         df_data_all = pandas.read_pickle(
-            "%s_%i.pkl" % (dataset, div_alpha))
+            "results/%s_%i.pkl" % (dataset, div_alpha))
 
         df_data_all['sort'] = 5
-        df_data_all.loc[df_data_all.use_acc == True, 'sort'] = 0
+        df_data_all.loc[df_data_all.use_acc, 'sort'] = 0
         df_data_all.loc[df_data_all.algo_name == 'apcg', 'sort'] = 1
         df_data_all.loc[df_data_all.algo_name == 'fista', 'sort'] = 2
         df_data_all.sort_values(by=['sort'], inplace=True)
@@ -161,7 +158,22 @@ for idx1, dataset in enumerate(dataset_names):
     axarr_E.flat[idx1 * len(div_alphas)].set_ylabel(
         "%s" % dataset_title[dataset])
 
-fig.show()
-fig_E.show()
+
+save_fig = False
+
+if save_fig:
+    fig_dir = "../"
+    fig_dir_svg = "../"
+    fig.savefig(
+        "%sgaps_real_lasso.pdf" % fig_dir, bbox_inches="tight")
+    fig.savefig(
+        "%sgaps_real_lasso.svg" % fig_dir_svg, bbox_inches="tight")
+    fig_E.savefig(
+        "%senergies_real_lasso.pdf" % fig_dir, bbox_inches="tight")
+    fig_E.savefig(
+        "%senergies_real_lasso.svg" % fig_dir_svg, bbox_inches="tight")
+    _plot_legend_apart(
+        axarr[0][0], "%senergies_real_lasso_legend.pdf" % fig_dir, ncol=6)
 
 fig.show()
+fig_E.show()
