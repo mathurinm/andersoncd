@@ -16,7 +16,7 @@ Functions
 
    solver_enet
    solver_logreg
-   apcg
+   apcg_enet
    apcg_logreg
    power_method
    primal_enet

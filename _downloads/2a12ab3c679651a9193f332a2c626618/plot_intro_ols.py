@@ -8,13 +8,12 @@ outperforms inertial acceleration.
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from scipy import sparse
 from numpy.linalg import norm
 from scipy.sparse.linalg import cg
 from libsvmdata import fetch_libsvm
-from andersoncd.plot_utils import configure_plt
+from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
-from andersoncd.lasso import solver_enet, primal_enet, apcg
+from andersoncd.lasso import solver_enet, primal_enet, apcg_enet
 
 
 configure_plt()
@@ -23,10 +22,9 @@ configure_plt()
 # Load the data:
 
 n_features = 1000
-X, y = fetch_libsvm('rcv1_train')
+X, y = fetch_libsvm('rcv1_train', normalize=True)
 X = X[:, :n_features]
 
-X.multiply(1 / sparse.linalg.norm(X, axis=0))
 y -= y.mean()
 y /= norm(y)
 
@@ -56,11 +54,11 @@ f_gap = 10
 
 all_algos = [
     ('pgd', False),
-    ('pgd', True),
-    ('fista', False),
     ('cd', False),
+    ('pgd', True),
     ('cd', True),
-    ('apcg', False),
+    ('fista', False),
+    ('apcg', False)
 ]
 
 dict_algo_name = {}
@@ -77,7 +75,7 @@ dict_Es = {}
 for algo in all_algos:
     print("Running ", dict_algo_name[algo])
     if algo[0] == 'apcg':
-        w, E, gaps = apcg(
+        w, E, gaps = apcg_enet(
             X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
             verbose=False)
     else:
@@ -103,10 +101,10 @@ for E in dict_Es.values():
 # Plot convergence curves:
 
 plt.close('all')
-fig, ax = plt.subplots(figsize=(9, 6))
+fig, ax = plt.subplots(figsize=(8, 3))
 
 
-for algo in all_algos:
+for i, algo in enumerate(all_algos):
     E = dict_Es[algo]
     use_acc = algo[1]
     if use_acc:
@@ -116,21 +114,35 @@ for algo in all_algos:
     else:
         linestyle = 'solid'
 
+    if i == 2:
+        ax.semilogy(
+            np.arange(len(E_cg)), E_cg - p_star, label="conjugate grad.",
+            color='black', linestyle='dashdot')
     ax.semilogy(
         f_gap * np.arange(len(E)), E - p_star,
         label=dict_algo_name[algo],
         color=dict_color[algo[0]], linestyle=linestyle)
 
-ax.semilogy(
-    np.arange(len(E_cg)), E_cg - p_star, label="conjugate grad.",
-    color='black', linestyle='dashdot')
 
 plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
 plt.xlabel(r"iteration $k$")
 ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
-plt.title("Convergence on Least Squares")
 plt.tight_layout()
 
 
+save_fig = False
+# save_fig = True
+fig_dir = "../"
+fig_dir_svg = "../"
+
+if save_fig:
+    fig.savefig(
+        "%sintro_ols.pdf" % fig_dir, bbox_inches="tight")
+    fig.savefig(
+        "%sintro_ols.svg" % fig_dir_svg, bbox_inches="tight")
+    fig = _plot_legend_apart(
+        ax, "%sintro_ols_legend.pdf" % fig_dir, ncol=3)
+
+plt.title("Convergence on Least Squares")
 plt.legend()
 plt.show(block=False)

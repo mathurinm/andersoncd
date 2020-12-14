@@ -27,8 +27,6 @@ coordinate descent.
     import matplotlib.pyplot as plt
     from scipy.sparse.linalg import cg
     from scipy.optimize import fmin_l_bfgs_b
-    from sklearn.datasets import fetch_openml
-    from sklearn.preprocessing import label_binarize
     from libsvmdata import fetch_libsvm
 
     from andersoncd.plot_utils import configure_plt
@@ -78,6 +76,12 @@ Load the data:
  .. code-block:: none
 
     Dataset: real-sim
+    Downloading data from https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/real-sim.bz2 (33.6 MB)
+
+    file_sizes:   0%|                                   | 0.00/35.2M [00:00<?, ?B/s]    file_sizes:   0%|                           | 24.6k/35.2M [00:00<05:19, 110kB/s]    file_sizes:   0%|                           | 49.2k/35.2M [00:00<05:20, 110kB/s]    file_sizes:   0%|                            | 106k/35.2M [00:00<04:24, 133kB/s]    file_sizes:   1%|1                           | 221k/35.2M [00:00<03:25, 170kB/s]    file_sizes:   1%|3                           | 451k/35.2M [00:01<02:33, 227kB/s]    file_sizes:   3%|7                           | 909k/35.2M [00:01<01:50, 310kB/s]    file_sizes:   5%|#4                         | 1.83M/35.2M [00:01<01:17, 429kB/s]    file_sizes:  10%|##8                        | 3.66M/35.2M [00:01<00:52, 599kB/s]    file_sizes:  15%|####                       | 5.23M/35.2M [00:02<00:36, 825kB/s]    file_sizes:  19%|#####                     | 6.81M/35.2M [00:02<00:25, 1.12MB/s]    file_sizes:  24%|######1                   | 8.38M/35.2M [00:02<00:17, 1.50MB/s]    file_sizes:  28%|#######3                  | 9.95M/35.2M [00:02<00:12, 1.96MB/s]    file_sizes:  33%|########5                 | 11.5M/35.2M [00:02<00:09, 2.50MB/s]    file_sizes:  37%|#########6                | 13.1M/35.2M [00:03<00:07, 3.10MB/s]    file_sizes:  42%|##########8               | 14.7M/35.2M [00:03<00:05, 3.72MB/s]    file_sizes:  46%|###########9              | 16.2M/35.2M [00:03<00:04, 4.32MB/s]    file_sizes:  51%|#############1            | 17.8M/35.2M [00:03<00:03, 4.87MB/s]    file_sizes:  55%|##############3           | 19.4M/35.2M [00:04<00:02, 5.36MB/s]    file_sizes:  60%|###############4          | 21.0M/35.2M [00:04<00:02, 5.75MB/s]    file_sizes:  64%|################6         | 22.5M/35.2M [00:04<00:02, 6.08MB/s]    file_sizes:  68%|#################8        | 24.1M/35.2M [00:04<00:01, 6.33MB/s]    file_sizes:  73%|##################9       | 25.7M/35.2M [00:04<00:01, 6.52MB/s]    file_sizes:  77%|####################1     | 27.3M/35.2M [00:05<00:01, 6.64MB/s]    file_sizes:  82%|#####################2    | 28.8M/35.2M [00:05<00:00, 6.74MB/s]    file_sizes:  86%|######################4   | 30.4M/35.2M [00:05<00:00, 6.82MB/s]    file_sizes:  91%|#######################6  | 32.0M/35.2M [00:05<00:00, 6.87MB/s]    file_sizes:  95%|########################7 | 33.5M/35.2M [00:06<00:00, 6.89MB/s]    file_sizes: 100%|#########################9| 35.1M/35.2M [00:06<00:00, 6.92MB/s]    file_sizes: 100%|##########################| 35.2M/35.2M [00:06<00:00, 5.58MB/s]
+    Successfully downloaded file to /home/circleci/celer_data/libsvm/binary/real-sim.bz2
+    Decompressing...
+    Loading svmlight file...
 
     <72309x1000 sparse matrix of type '<class 'numpy.float64'>'
     	with 1124310 stored elements in COOrdinate format>
@@ -231,7 +235,7 @@ Generate figures for both Least Squares and Logistic regression
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 5 minutes  21.448 seconds)
+   **Total running time of the script:** ( 5 minutes  12.947 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_cd_sym.py:

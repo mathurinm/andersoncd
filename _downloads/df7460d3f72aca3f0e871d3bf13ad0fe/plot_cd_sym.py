@@ -15,8 +15,6 @@ from numpy.linalg import norm
 import matplotlib.pyplot as plt
 from scipy.sparse.linalg import cg
 from scipy.optimize import fmin_l_bfgs_b
-from sklearn.datasets import fetch_openml
-from sklearn.preprocessing import label_binarize
 from libsvmdata import fetch_libsvm
 
 from andersoncd.plot_utils import configure_plt
