@@ -36,7 +36,7 @@ dict_color = {}
 dict_color["pgd"] = current_palette[0]
 dict_color["fista"] = current_palette[0]
 dict_color["cd"] = current_palette[1]
-dict_color["rcd"] = current_palette[1]
+dict_color["rcd"] = current_palette[4]
 dict_color["apcg"] = current_palette[1]
 
 dict_linestyle = {}
@@ -44,7 +44,7 @@ dict_linestyle[False, "pgd"] = "-"
 dict_linestyle[False, "cd"] = "-"
 dict_linestyle[True, "pgd"] = "--"
 dict_linestyle[True, "cd"] = "--"
-dict_linestyle[False, "rcd"] = (0, (3, 5, 1, 5, 1, 5))
+dict_linestyle[False, "rcd"] = "-"
 dict_linestyle[False, "fista"] = 'dotted'
 dict_linestyle[False, "apcg"] = 'dotted'
 

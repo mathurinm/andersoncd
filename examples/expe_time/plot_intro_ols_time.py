@@ -106,7 +106,7 @@ dict_color = {}
 dict_color["pgd"] = current_palette[0]
 dict_color["fista"] = current_palette[0]
 dict_color["cd"] = current_palette[1]
-dict_color["rcd"] = current_palette[1]
+dict_color["rcd"] = current_palette[4]
 dict_color["apcg"] = current_palette[1]
 
 
@@ -131,7 +131,7 @@ for algo in all_algos:
     elif algo[0].startswith(('fista', 'apcg')):
         linestyle = 'dotted'
     elif algo[0].startswith('rcd'):
-        linestyle = (0, (3, 5, 1, 5, 1, 5))
+        linestyle = '-'
     else:
         linestyle = 'solid'
 
@@ -161,8 +161,8 @@ ax_times.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 
 ax.set_title("Convergence on Least Squares")
 
-fontsize = 50
-ax_times.set_ylabel("OLS \n rcv1", fontsize=fontsize)
+fontsize = 30
+# ax_times.set_ylabel("OLS \n rcv1", fontsize=fontsize)
 ax_times.set_xlabel("Time (s)", fontsize=fontsize)
 ax_times.tick_params(axis='x', labelsize=35)
 ax_times.tick_params(axis='y', labelsize=35)
@@ -170,6 +170,7 @@ ax_times.tick_params(axis='y', labelsize=35)
 fig.tight_layout()
 fig_times.tight_layout()
 
+# save_fig = False
 save_fig = True
 
 if save_fig:
