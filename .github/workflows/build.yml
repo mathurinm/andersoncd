@@ -27,5 +27,5 @@ jobs:
 
     - name: Test
       run: |
-        pip install pytest pytest-cov coverage
+        pip install pytest pytest-cov coverage numpydoc
         pytest -lv --cov-report term-missing andersoncd --cov=andersoncd --cov-config .coveragerc
