@@ -44,7 +44,7 @@ for pb in ("ols", "logreg"):
 
     f_gap = 10
     tol = 1e-15
-    max_iter = 2000
+    max_iter = 750
 
     # run "best algorithm": conj. grad. for LS, LBFGS for logreg:
     E_optimal = []
