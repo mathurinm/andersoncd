@@ -31,7 +31,7 @@ jobs:
         pytest -lv --cov-report term-missing andersoncd --cov=andersoncd --cov-config .coveragerc
 
     - name: codecov
-        needs: test
-        run: |
-          codecov
+      needs: test
+      run: |
+        codecov
 
