@@ -87,7 +87,7 @@ plt.ylim(1e-15, 1)
 plt.tight_layout()
 
 
-save_fig = True
+save_fig = False
 fig_dir = "../"
 fig_dir_svg = "../"
 
