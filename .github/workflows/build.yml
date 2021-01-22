@@ -21,11 +21,17 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install
+    - name: install
       run: |
         pip install -e .
 
-    - name: Test
+    - name: test
       run: |
-        pip install pytest pytest-cov coverage numpydoc
+        pip install pytest pytest-cov coverage numpydoc codecov
         pytest -lv --cov-report term-missing andersoncd --cov=andersoncd --cov-config .coveragerc
+
+    - name: codecov
+        needs: test
+        run: |
+        codecov
+
