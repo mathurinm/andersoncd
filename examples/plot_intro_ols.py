@@ -100,8 +100,15 @@ for E in dict_Es.values():
 ###############################################################################
 # Plot convergence curves:
 
+save_fig = False
+# save_fig = True
+if save_fig:
+    figsize = (8, 3)
+else:
+    figsize = (10, 5)
+
 plt.close('all')
-fig, ax = plt.subplots(figsize=(8, 3))
+fig, ax = plt.subplots(figsize=figsize)
 
 
 for i, algo in enumerate(all_algos):
@@ -130,8 +137,6 @@ ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 plt.tight_layout()
 
 
-save_fig = False
-# save_fig = True
 fig_dir = "../"
 fig_dir_svg = "../"
 
