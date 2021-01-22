@@ -30,8 +30,10 @@ jobs:
         pip install pytest pytest-cov coverage numpydoc codecov
         pytest -lv --cov-report term-missing andersoncd --cov=andersoncd --cov-config .coveragerc
 
-    - name: codecov
-      needs: test
+  codecov:
+    needs: build-linux
+    steps:
+    - name : codecov
       run: |
         codecov
 
