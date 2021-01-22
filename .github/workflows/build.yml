@@ -33,5 +33,5 @@ jobs:
     - name: codecov
         needs: test
         run: |
-        codecov
+          codecov
 
