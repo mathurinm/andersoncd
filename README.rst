@@ -50,7 +50,7 @@ with multithreading.
 and the same for ``expes/expe_conv_enet`` and ``expes/expe_conv_lasso``
 
 
-.. |image0| image:: https://travis-ci.com/mathurinm/andersoncd.svg?branch=master
-   :target: https://travis-ci.com/mathurinm/andersoncd/
+.. |image0| image:: https://github.com/mathurinm/andersoncd/workflows/build/badge.svg
+   :target: https://github.com/mathurinm/andersoncd/actions?query=workflow%3Abuild
 .. |image1| image:: https://codecov.io/gh/mathurinm/andersoncd/branch/master/graphs/badge.svg?branch=master
    :target: https://codecov.io/gh/mathurinm/andersoncd
