@@ -23,6 +23,7 @@ jobs:
 
     - name: install
       run: |
+        pip install -U pip
         pip install -e .
 
     - name: test
@@ -30,5 +31,3 @@ jobs:
         pip install pytest pytest-cov coverage numpydoc codecov
         pytest -lv --cov-report term-missing andersoncd --cov=andersoncd --cov-config .coveragerc
         codecov
-
-
