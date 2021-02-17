@@ -144,6 +144,12 @@ def solver_enet(
     verbose : bool, default=False
         Verbosity.
 
+    compute_time : bool, default=False
+        If you want to compoute time or not
+
+    tmax : float, default=1000
+        Maximum time you the algorithm to run
+
     Returns
     -------
     W : array, shape (n_features,)
@@ -343,10 +349,13 @@ def _apcg_sparse(
     return tau, tau_old
 
 
-def apcg(
+def apcg_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, verbose=False,
         compute_time=False, tmax=1000):
-    """Solve the Lasso with accelerated proximal coordinate gradient.
+    """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
+
+    The minimized objective is:
+    norm(y - Xw, ord=2)**2 / 2 + alpha * norm(x, ord=1) + rho/2 * norm(w) ** 2
 
     Parameters
     ----------
@@ -359,7 +368,7 @@ def apcg(
     alpha : float
         Regularization strength for the l1 norm
 
-    rho: float
+    rho : float, default=0
         Regularization strength for the l2 (squared) norm
 
     max_iter : int, default=1000
@@ -368,11 +377,17 @@ def apcg(
     tol : float, default=1e-4
         The algorithm early stops if the duality gap is less than tol.
 
-    f_gap: int, default=10
+    f_gap : int, default=10
         The gap is computed every f_gap iterations.
 
     verbose : bool, default=False
         Verbosity.
+
+    compute_time : bool, default=False
+        If you want to compoute time or not
+
+    tmax : float, default=1000
+        Maximum time you the algorithm to run
 
     Returns
     -------
@@ -424,9 +439,10 @@ def apcg(
 
             p_obj = primal_enet(R, w, alpha, rho)
             E.append(p_obj)
-            times.append(time.time() - t_start)
-            if time.time() - t_start > tmax:
-                break
+            if compute_time:
+                times.append(time.time() - t_start)
+                if time.time() - t_start > tmax:
+                    break
 
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
                 break

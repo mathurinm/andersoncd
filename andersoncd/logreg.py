@@ -148,6 +148,12 @@ def solver_logreg(
     verbose : bool, default=False
         Verbosity.
 
+    compute_time : bool, default=False
+        If you want to compoute time or not
+
+    tmax : float, default=1000
+        Maximum time you the algorithm to run
+
     Returns
     -------
     W : array, shape (n_features,)
