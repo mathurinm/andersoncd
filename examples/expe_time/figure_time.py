@@ -170,12 +170,13 @@ axarr_times_E[1, 0].set_ylabel("Enet \n leuk.", fontsize=fontsize)
 axarr_times_E[2, 0].set_ylabel("Logreg \n news20", fontsize=fontsize)
 
 axarr_times_E[0, 0].set_ylim((1e-16, 2))
-# save_fig = False
-save_fig = True
+
+save_fig = False
+# save_fig = True
 
 if save_fig:
-    fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
-    fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
+    fig_dir = "../"
+    fig_dir_svg = "../"
     fig_times_E.savefig(
         "%senergies_time.pdf" % fig_dir, bbox_inches="tight")
     fig_times_E.savefig(
