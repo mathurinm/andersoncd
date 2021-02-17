@@ -145,10 +145,10 @@ def solver_enet(
         Verbosity.
 
     compute_time : bool, default=False
-        If you want to compoute time or not
+        If you want to compute time or not
 
     tmax : float, default=1000
-        Maximum time you the algorithm to run
+        Maximum time (in seconds) the algorithm is allowed to run
 
     Returns
     -------
@@ -209,8 +209,6 @@ def solver_enet(
         t_start = time.time()
 
     for it in range(max_iter):
-        # if it % 50 == 0:
-        #     R = y - X @ w
         if it % f_gap == 0:
             if algo == 'fista':
                 R = y - X @ w
@@ -271,16 +269,9 @@ def solver_enet(
             raise ValueError("Unknown algo %s" % algo)
 
         if use_acc:
-            # if (it == 0) or (it % (K + 1) != 0):
             last_K_w[it % (K + 1)] = w
-            # last_K_R[it] = R.copy()
-            # else:
-            if it % (K + 1) == K:
-                # for k in range(K):
-                #     last_K_w[k] = last_K_w[k + 1]
-                #     # last_K_R[k] = last_K_R[k+1]
-                # last_K_w[K] = w
 
+            if it % (K + 1) == K:
                 for k in range(K):
                     U[k] = last_K_w[k + 1] - last_K_w[k]
                 C = np.dot(U, U.T)
@@ -293,7 +284,6 @@ def solver_enet(
                     w_acc = np.sum(last_K_w[:-1] * c[:, None], axis=0)
                     p_obj = primal_enet(R, w, alpha, rho)
                     R_acc = y - X @ w_acc
-                    # R_acc = np.sum(last_K_R[:-1] * c[:, None], axis=0)
                     p_obj_acc = primal_enet(R_acc, w_acc, alpha, rho)
                     if p_obj_acc < p_obj:
                         w = w_acc
@@ -384,10 +374,10 @@ def apcg_enet(
         Verbosity.
 
     compute_time : bool, default=False
-        If you want to compoute time or not
+        Whether or not to time the algorithm
 
     tmax : float, default=1000
-        Maximum time you the algorithm to run
+        Maximum time (in seconds) the algorithm is run
 
     Returns
     -------

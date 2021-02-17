@@ -149,10 +149,10 @@ def solver_logreg(
         Verbosity.
 
     compute_time : bool, default=False
-        If you want to compoute time or not
+        If you want to compute timings or not
 
     tmax : float, default=1000
-        Maximum time you the algorithm to run
+        Maximum time (in seconds) the algorithm is allowed to run
 
     Returns
     -------
