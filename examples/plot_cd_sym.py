@@ -15,8 +15,6 @@ from numpy.linalg import norm
 import matplotlib.pyplot as plt
 from scipy.sparse.linalg import cg
 from scipy.optimize import fmin_l_bfgs_b
-from sklearn.datasets import fetch_openml
-from sklearn.preprocessing import label_binarize
 from libsvmdata import fetch_libsvm
 
 from andersoncd.plot_utils import configure_plt
@@ -46,7 +44,7 @@ for pb in ("ols", "logreg"):
 
     f_gap = 10
     tol = 1e-15
-    max_iter = 2000
+    max_iter = 750
 
     # run "best algorithm": conj. grad. for LS, LBFGS for logreg:
     E_optimal = []

@@ -6,23 +6,29 @@ from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.data.real import load_openml
-from andersoncd.lasso import solver_enet, apcg
+from andersoncd.lasso import solver_enet, apcg_enet
 
 
-dataset_names = [
-    "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train', 'news20']
+dataset_names = ["leukemia"]
+# dataset_names = [
+#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train', 'news20']
 
+
+div_alphas = [10, 100, 1000, 5_000]
+div_rhos = [10, 100]
+
+
+n_jobs = 1
 
 algos = [
     ['cd', True, 5],
     ['cd', False, 5],
+    ['apcg', False, 5],
     ['pgd', True, 5],
     ['pgd', False, 5],
     ['fista', False, 5]
 ]
 
-div_alphas = [10, 100, 1000, 5_000]
-div_rhos = [1, 10, 100]
 
 ##################################################
 # If you want to run the file quickly, only choose:
@@ -100,12 +106,13 @@ def parallel_function(dataset_name, algo, div_alpha, div_rho):
     max_iter = dict_maxiter[dataset_name, div_alpha]
 
     if algo_name == 'apcg':
-        w, E, gaps = apcg(
-            X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap)
+        w, E, gaps = apcg_enet(
+            X, y, alpha, alpha/div_rho, max_iter=max_iter, tol=tol,
+            f_gap=f_gap, verbose=True)
     else:
         w, E, gaps = solver_enet(
             X, y, alpha, rho=alpha/div_rho, f_gap=f_gap, max_iter=max_iter,
-            tol=tol, use_acc=use_acc, K=K, algo=algo_name)
+            tol=tol, use_acc=use_acc, K=K, algo=algo_name, verbose=True)
 
     return (
         dataset_name, algo_name, use_acc, K, div_alpha, div_rho, w, E, gaps,
@@ -114,8 +121,7 @@ def parallel_function(dataset_name, algo, div_alpha, div_rho):
 
 print("enter parallel")
 backend = 'loky'
-n_jobs = len(dataset_names) * len(div_alphas) * len(algos) * len(div_rhos)
-n_jobs = min(n_jobs, 15)
+
 
 with parallel_backend("loky", inner_max_num_threads=1):
     results = Parallel(
@@ -135,4 +141,4 @@ for dataset_name in dataset_names:
             (df['div_alpha'] == div_alpha) & (df['div_rho'] == div_rho) &
             (df['dataset'] == dataset_name)]
         df_temp[df_temp['div_alpha'] == div_alpha].to_pickle(
-            "%s_%i_%i.pkl" % (dataset_name, div_alpha, div_rho))
+            "results/%s_%i_%i.pkl" % (dataset_name, div_alpha, div_rho))
