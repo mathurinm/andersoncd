@@ -51,6 +51,6 @@ def test_apcg(sparse_X):
 
     tol = 1e-8
     alpha = np.max(np.abs(X.T @ y)) / 20
-    w, E, gaps = apcg_enet(X, y, alpha, tol=tol, f_gap=50, max_iter=1000000,
-                           verbose=1)
+    w, E, gaps = apcg_enet(
+        X, y, alpha, tol=tol, f_gap=50, max_iter=1000000, verbose=1)
     np.testing.assert_array_less(gaps[-1], tol)

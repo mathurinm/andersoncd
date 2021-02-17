@@ -1,3 +1,4 @@
+import time
 import numpy as np
 
 from scipy import sparse
@@ -96,7 +97,8 @@ def _cd_logreg_sparse(
 
 def solver_logreg(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='cd', reg_amount=None, seed=0, verbose=False):
+        use_acc=False, algo='cd', reg_amount=None, seed=0, verbose=False,
+        compute_time=False, tmax=1000):
     """Solve l1+l2 regularized logistic regression with CD/ISTA/FISTA,
     eventually using Anderson extrapolation.
 
@@ -146,6 +148,12 @@ def solver_logreg(
     verbose : bool, default=False
         Verbosity.
 
+    compute_time : bool, default=False
+        If you want to compute timings or not
+
+    tmax : float, default=1000
+        Maximum time (in seconds) the algorithm is allowed to run
+
     Returns
     -------
     W : array, shape (n_features,)
@@ -165,8 +173,10 @@ def solver_logreg(
     feats = dict(cd=lambda: _range,
                  cd2=lambda: np.hstack((_range, _range)),
                  cdsym=lambda: np.hstack((_range, _range[::-1])),
-                 cdshuf=lambda: np.random.choice(n_features, n_features,
-                                                 replace=False))
+                 cdshuf=lambda: np.random.choice(
+                     n_features, n_features, replace=False),
+                 rcd=lambda: np.random.choice(
+                     n_features, n_features, replace=True))
 
     if not is_sparse and not np.isfortran(X):
         X = np.asfortranarray(X)
@@ -195,12 +205,23 @@ def solver_logreg(
     E = []
     gaps = np.zeros(max_iter // f_gap)
 
+    if compute_time:
+        times = []
+        t_start = time.time()
+
     for it in range(max_iter):
         if it % f_gap == 0:
             if algo == 'fista':
                 Xw = X @ w
             p_obj = primal_logreg(Xw, y, w, alpha, rho)
             E.append(p_obj)
+
+            if compute_time:
+                ellapsed_times = time.time() - t_start
+                times.append(ellapsed_times)
+                print("Ellapsed time: %f " % ellapsed_times)
+                if ellapsed_times > tmax:
+                    break
 
             if alpha != 0:
                 theta = y * sigmoid(-y * Xw) / alpha
@@ -223,7 +244,7 @@ def solver_logreg(
                 if verbose:
                     print("Iteration %d, p_obj::%.10f" % (it, p_obj))
 
-        if algo.startswith('cd'):
+        if algo.startswith(('cd', 'rcd')):
             if is_sparse:
                 _cd_logreg_sparse(X.data, X.indices, X.indptr, w, Xw, y,
                                   alpha, rho, lc, feats[algo]())
@@ -250,13 +271,8 @@ def solver_logreg(
             raise ValueError("Unknown algo %s" % algo)
 
         if use_acc:
-            if it < K + 1:
-                last_K_w[it] = w
-            else:
-                for k in range(K):
-                    last_K_w[k] = last_K_w[k + 1]
-                last_K_w[K] = w
-
+            last_K_w[it % (K + 1)] = w
+            if it % (K + 1) == K:
                 for k in range(K):
                     U[k] = last_K_w[k + 1] - last_K_w[k]
 
@@ -277,8 +293,10 @@ def solver_logreg(
                 except np.linalg.LinAlgError:
                     if verbose:
                         print("----------Linalg error")
-
-    return w, np.array(E), gaps[:it // f_gap + 1]
+    if compute_time:
+        return w, np.array(E), gaps[:it // f_gap + 1], times
+    else:
+        return w, np.array(E), gaps[:it // f_gap + 1]
 
 
 @ njit
