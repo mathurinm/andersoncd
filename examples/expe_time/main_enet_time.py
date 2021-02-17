@@ -6,7 +6,7 @@ from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.data.real import load_openml
-from andersoncd.lasso import solver_enet, apcg
+from andersoncd.lasso import solver_enet, apcg_enet
 
 
 dataset_names = ["leukemia"]
@@ -108,7 +108,7 @@ def parallel_function(dataset_name, algo, div_alpha):
 
     for _ in range(2):
         if algo_name == 'apcg':
-            w, E, gaps, times = apcg(
+            w, E, gaps, times = apcg_enet(
                 X, y, alpha, rho=alpha/100, max_iter=max_iter, tol=tol,
                 f_gap=f_gap, compute_time=True, tmax=tmax, verbose=True)
         else:
