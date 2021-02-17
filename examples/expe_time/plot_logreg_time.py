@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 from libsvmdata import fetch_libsvm
 from andersoncd.plot_utils import configure_plt
 
-from andersoncd.lasso import solver_enet, apcg
-from andersoncd.logreg import solver_logreg
+from andersoncd.logreg import solver_logreg, apcg_logreg
 
 configure_plt()
 
@@ -59,7 +58,7 @@ dict_times = {}
 for algo in all_algos:
     print("Running ", dict_algo_name[algo])
     if algo[0] == 'apcg':
-        _, E, _, times = apcg(
+        _, E, _, times = apcg_logreg(
             X, y, alpha, rho=rho, max_iter=max_iter, tol=tol,
             f_gap=f_gap, verbose=True, compute_time=True, tmax=tmax)
     else:

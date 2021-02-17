@@ -109,7 +109,8 @@ def parallel_function(dataset_name, algo, div_alpha):
     for _ in range(2):
         if algo_name == 'apcg':
             w, E, gaps, times = apcg(
-                X, y, alpha, rho=alpha/100, max_iter=max_iter, tol=tol, f_gap=f_gap, compute_time=True, tmax=tmax, verbose=True)
+                X, y, alpha, rho=alpha/100, max_iter=max_iter, tol=tol,
+                f_gap=f_gap, compute_time=True, tmax=tmax, verbose=True)
         else:
             w, E, gaps, times = solver_enet(
                 X, y, alpha, rho=alpha/100, f_gap=f_gap, max_iter=max_iter,

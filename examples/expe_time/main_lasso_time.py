@@ -166,18 +166,3 @@ with parallel_backend("loky", inner_max_num_threads=1):
             dataset_names, algos, div_alphas))
 
 print('OK finished parallel')
-
-
-# for dataset_name, algo, div_alpha in product(dataset_names, algos, div_alphas):
-#     parallel_function(dataset_name, algo, div_alpha)
-
-# df = pandas.DataFrame(results)
-# df.columns = [
-#     'dataset', 'algo_name', 'use_acc', 'K', 'div_alpha', "optimum", "E",
-#     "gaps", "f_gaps", "times"]
-
-# for dataset_name in dataset_names:
-#     for div_alpha in div_alphas:
-#         df_temp = df[df['dataset'] == dataset_name]
-#         df_temp[df_temp['div_alpha'] == div_alpha].to_pickle(
-#             "results/%s_%i.pkl" % (dataset_name, div_alpha))

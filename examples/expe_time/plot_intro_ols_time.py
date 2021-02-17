@@ -16,7 +16,7 @@ from libsvmdata import fetch_libsvm
 
 from andersoncd.plot_utils import configure_plt
 from andersoncd.lasso import solver_enet, primal_enet, apcg
-from andersoncd.plot_utils import configure_plt, _plot_legend_apart
+from andersoncd.plot_utils import _plot_legend_apart
 
 
 configure_plt()

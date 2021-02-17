@@ -6,7 +6,7 @@ from libsvmdata import fetch_libsvm
 from joblib import Parallel, delayed, parallel_backend
 
 from andersoncd.data.real import load_openml
-from andersoncd.logreg import solver_logreg
+from andersoncd.logreg import solver_logreg, apcg_logreg
 
 
 # to generate the exact fig of the paper:
@@ -117,7 +117,7 @@ def parallel_function(dataset_name, algo, div_alpha):
     # for _ in range(2):
 
     if algo_name == 'apcg':
-        w, E, gaps, times = apcg(
+        w, E, gaps, times = apcg_logreg(
             X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
             compute_time=True, tmax=10, verbose=True)
     else:
@@ -127,7 +127,7 @@ def parallel_function(dataset_name, algo, div_alpha):
             tmax=10, verbose=True, seed=42)
 
     if algo_name == 'apcg':
-        w, E, gaps, times = apcg(
+        w, E, gaps, times = apcg_logreg(
             X, y, alpha, max_iter=max_iter, tol=tol, f_gap=f_gap,
             compute_time=True, tmax=tmax, verbose=True)
     else:
@@ -166,18 +166,3 @@ with parallel_backend("loky", inner_max_num_threads=1):
             dataset_names, algos, div_alphas))
 
 print('OK finished parallel')
-
-
-# for dataset_name, algo, div_alpha in product(dataset_names, algos, div_alphas):
-#     parallel_function(dataset_name, algo, div_alpha)
-
-# df = pandas.DataFrame(results)
-# df.columns = [
-#     'dataset', 'algo_name', 'use_acc', 'K', 'div_alpha', "optimum", "E",
-#     "gaps", "f_gaps", "times"]
-
-# for dataset_name in dataset_names:
-#     for div_alpha in div_alphas:
-#         df_temp = df[df['dataset'] == dataset_name]
-#         df_temp[df_temp['div_alpha'] == div_alpha].to_pickle(
-#             "results/%s_%i.pkl" % (dataset_name, div_alpha))

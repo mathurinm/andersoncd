@@ -18,7 +18,8 @@ div_alphas = [10, 100, 1000]
 # div_alphas = [10, 100, 1000]
 
 
-################## config ####################################################
+######################################################################
+# config
 configure_plt()
 
 algos = [
@@ -156,7 +157,6 @@ for idx1, div_alpha in enumerate(dataset_names):
                     linestyle=dict_linestyle[use_acc, algo_name],
                     color=dict_color[algo_name])
             axarr_times_E[idx1, idx2].tick_params(axis='x', labelsize=35)
-        # plt.tick_params(labelsize=50)
 
         axarr_times_E[0, idx2].set_title(
             r"$\lambda_{\max} / %i  $ " % div_alpha,
@@ -164,7 +164,6 @@ for idx1, div_alpha in enumerate(dataset_names):
         axarr_times_E[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
     axarr_times_E[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
     axarr_times_E[idx1, 0].tick_params(axis='y', labelsize=35)
-    # axarr_times_E[idx1, 0].set_yticklabels(labels=(1e-15, 1e-10, 1e-5, 1), fontsize=25)
 
 axarr_times_E[0, 0].set_ylabel("Lasso \n rcv1", fontsize=fontsize)
 axarr_times_E[1, 0].set_ylabel("Enet \n leuk.", fontsize=fontsize)
