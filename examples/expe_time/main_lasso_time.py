@@ -1,4 +1,5 @@
 from itertools import product
+from collections import defaultdict
 
 import pandas
 import numpy as np
@@ -12,13 +13,15 @@ from andersoncd.lasso import solver_enet, apcg_enet
 # to generate the exact fig of the paper:
 # dataset_names = [
 #     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
-# div_alphas = [10, 100, 1000, 5000]
 
 
 # if you want to run the file quickly choose instead:
 # dataset_names = ["leukemia"]
-dataset_names = ["rcv1_train"]
-div_alphas = [1000]
+# dataset_names = ["rcv1_train"]
+# , "gina_agnostic", "hiva_agnostic"
+dataset_names = ["hiva_agnostic"]
+div_alphas = [5000]
+# div_alphas = [5000]
 
 
 algos = [
@@ -31,46 +34,12 @@ algos = [
     ['cd', True, 5]
 ]
 
+dict_maxiter = defaultdict(lambda: 1_000_000, key=None)
 
-dict_maxiter = {}
-dict_maxiter["leukemia", 10] = 550
-dict_maxiter["mushroom", 10] = 10_000
-dict_maxiter["gina_agnostic", 10] = 1_000
-dict_maxiter["hiva_agnostic", 10] = 10_000
-dict_maxiter["upselling", 10] = 10_000
-dict_maxiter["rcv1_train", 10] = 10_000
-dict_maxiter["news20", 10] = 100_000
-dict_maxiter["kdda_train", 10] = 10_000
-dict_maxiter["finance", 10] = 5_000
-
-dict_maxiter["leukemia", 100] = 5_000
-dict_maxiter["mushroom", 100] = 10_000
-dict_maxiter["gina_agnostic", 100] = 1_000
-dict_maxiter["hiva_agnostic", 100] = 5000
-dict_maxiter["upselling", 100] = 10_000
-dict_maxiter["rcv1_train", 100] = 10_000
-dict_maxiter["news20", 100] = 10_000
-dict_maxiter["kdda_train", 100] = 1_000
-dict_maxiter["finance", 100] = 50_000
-
-dict_maxiter["leukemia", 1000] = 100_000
-dict_maxiter["mushroom", 1000] = 100_000
-dict_maxiter["gina_agnostic", 1000] = 100_000
-dict_maxiter["hiva_agnostic", 1000] = 100_000
-dict_maxiter["upselling", 1000] = 100_000
-dict_maxiter["rcv1_train", 1000] = 100_000
-dict_maxiter["news20", 1000] = 1_000_000
-dict_maxiter["kdda_train", 1000] = 1_000
-dict_maxiter["finance", 1000] = 50_000
-
-dict_maxiter["leukemia", 5_000] = 300_000
-dict_maxiter["mushroom", 5_000] = 300_000
-dict_maxiter["gina_agnostic", 5_000] = 300_000
-dict_maxiter["hiva_agnostic", 5_000] = 300_000
-dict_maxiter["upselling", 5000] = 100_000
-dict_maxiter["rcv1_train", 5000] = 500_000
-dict_maxiter["news20", 5000] = 1_000_000
-dict_maxiter["kdda_train", 5000] = 1_000
+dict_maxiter["leukemia", 10] = 50_000
+dict_maxiter["leukemia", 100] = 1_000_000
+dict_maxiter["leukemia", 1000] = 1_000_000
+dict_maxiter["leukemia", 5_000] = 1_000_000
 
 
 dict_f_gap = {}
@@ -86,13 +55,24 @@ dict_f_gap["finance"] = 50
 
 dict_tmax = {}
 dict_tmax["leukemia", 10] = 10
-dict_tmax["leukemia", 100] = 20
-dict_tmax["leukemia", 1000] = 120
+dict_tmax["leukemia", 100] = 100
+dict_tmax["leukemia", 1000] = 1_000
+dict_tmax["leukemia", 5000] = 3_600
+
+dict_tmax["hiva_agnostic", 10] = 5
+dict_tmax["hiva_agnostic", 100] = 100
+dict_tmax["hiva_agnostic", 1000] = 3_600
+dict_tmax["hiva_agnostic", 5000] = 7_200
+
+dict_tmax["gina_agnostic", 10] = 5
+dict_tmax["gina_agnostic", 100] = 100
+dict_tmax["gina_agnostic", 1000] = 100
+dict_tmax["gina_agnostic", 5000] = 100
 
 dict_tmax["rcv1_train", 10] = 5
 dict_tmax["rcv1_train", 100] = 10
 dict_tmax["rcv1_train", 1000] = 300
-dict_tmax["rcv1_train", 5000] = 600
+dict_tmax["rcv1_train", 5000] = 1500
 
 dict_tmax["news20", 10] = 60
 dict_tmax["news20", 100] = 10
