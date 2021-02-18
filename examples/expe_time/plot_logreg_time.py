@@ -2,6 +2,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from libsvmdata import fetch_libsvm
+from andersoncd.data.real import load_openml
 from andersoncd.plot_utils import configure_plt
 
 from andersoncd.logreg import solver_logreg, apcg_logreg
@@ -15,6 +16,8 @@ configure_plt()
 X, y = fetch_libsvm('news20', normalize=True)
 # X, y = fetch_libsvm('rcv1_train', normalize=True)
 # X = X[:, :n_features]
+
+# X, y = load_openml("gina_agnostic", normalize_y=False)
 
 ###############################################################################
 # Run algorithms:
@@ -32,7 +35,7 @@ max_iter = 20_000
 f_gap = 10
 
 all_algos = [
-    # ('apcg', False),
+    ('apcg', False),
     ('cd', False),
     # ('rcd', False),
     ('cd', True),
@@ -50,7 +53,7 @@ dict_algo_name["cd", True] = "CD - Anderson"
 dict_algo_name["fista", False] = "GD - inertial"
 dict_algo_name["apcg", False] = "CD - inertial"
 
-tmax = 60
+tmax = 30
 # tmax =
 dict_Es = {}
 dict_times = {}
@@ -59,7 +62,7 @@ for algo in all_algos:
     print("Running ", dict_algo_name[algo])
     if algo[0] == 'apcg':
         _, E, _, times = apcg_logreg(
-            X, y, alpha, rho=rho, max_iter=max_iter, tol=tol,
+            X, y, alpha, max_iter=max_iter, tol=tol,
             f_gap=f_gap, verbose=True, compute_time=True, tmax=tmax)
     else:
         _, E, _, times = solver_logreg(
@@ -105,10 +108,6 @@ for algo in all_algos:
     else:
         linestyle = 'solid'
 
-    # if algo[0] == 'rcd':
-    #     marker = "^"
-    # else:
-    #     marker = None
     ax.semilogy(
         f_gap * np.arange(len(E)), E - p_star, label=dict_algo_name[algo],
         color=dict_color[algo[0]], linestyle=linestyle)
