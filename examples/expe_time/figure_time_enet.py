@@ -93,8 +93,10 @@ fig_times_E, axarr_times_E = plt.subplots(
     figsize=[14, 5], constrained_layout=True)
 
 fig_times_gaps, axarr_times_gaps = plt.subplots(
-    len(div_rhos), len(div_alphas), sharex=False, sharey=True,
+    len(div_rhos), len(div_alphas), sharex=False, sharey=False,
     figsize=[14, 5], constrained_layout=True)
+
+all_axarr = [axarr_times_E, axarr_times_gaps]
 
 fontsize = 22
 
@@ -112,8 +114,8 @@ for idx1, div_rho in enumerate(div_rhos):
             pobj_star = min(min(E.min() for E in Es), pobj_star)
 
         df_data_all = pandas.read_pickle(
-            "results/enet_%s_%s_%s%i.pkl" % (
-                dataset_name, 'cd', str(True), div_alpha))
+            "results/enet_%s_%s_%s%i_%i.pkl" % (
+                dataset_name, 'cd', str(True), div_alpha, div_rho))
         E0 = df_data_all['E'][0][0]
 
         for algo in algos:
@@ -140,22 +142,26 @@ for idx1, div_rho in enumerate(div_rhos):
                 label=dict_algo_name[use_acc, algo_name],
                 linestyle=dict_linestyle[use_acc, algo_name],
                 color=dict_color[algo_name])
-        axarr_times_E[idx1, idx2].tick_params(axis='x', labelsize=25)
-        axarr_times_E[idx1, idx2].set_xlim(
-            0, dict_xlim[dataset_name, div_alpha, div_rho])
+        for axarr in all_axarr:
+            axarr[idx1, idx2].tick_params(axis='x', labelsize=25)
+            axarr[idx1, idx2].set_xlim(
+                0, dict_xlim[dataset_name, div_alpha, div_rho])
 
-        axarr_times_E[0, idx2].set_title(
-            r"$\lambda = \lambda_{\max} / %i  $ " % div_alpha,
-            fontsize=fontsize)
-        axarr_times_E[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
-    axarr_times_E[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
-    axarr_times_E[idx1, 0].tick_params(axis='y', labelsize=25)
+            axarr[0, idx2].set_title(
+                r"$\lambda = \lambda_{\max} / %i  $ " % div_alpha,
+                fontsize=fontsize)
+            axarr[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
 
-    axarr_times_E[idx1, 0].set_ylabel(
-        r"$\rho = \lambda / %i  $ " % div_rho, fontsize=fontsize)
+    for axarr in all_axarr:
+        axarr[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
+        axarr[idx1, 0].tick_params(axis='y', labelsize=25)
+
+        axarr[idx1, 0].set_ylabel(
+            r"$\rho = \lambda / %i  $ " % div_rho, fontsize=fontsize)
 
 
 axarr_times_E[0, 0].set_ylim((1e-16, 2))
+# axarr_times_gaps[0, 0].set_ylim((1e-16, 100))
 
 
 if save_fig:
@@ -165,10 +171,14 @@ if save_fig:
         "%senergies_enet_time.pdf" % fig_dir, bbox_inches="tight")
     fig_times_E.savefig(
         "%senergies_enet_time.svg" % fig_dir_svg, bbox_inches="tight")
+    fig_times_gaps.savefig(
+        "%sgaps_enet_time.pdf" % fig_dir, bbox_inches="tight")
+    fig_times_gaps.savefig(
+        "%sgaps_enet_time.svg" % fig_dir_svg, bbox_inches="tight")
     _plot_legend_apart(
         axarr_times_E[0, 0], "%senergies_enet_time_legend.pdf" % fig_dir,
         ncol=4)
 
 
 fig_times_E.show()
-# fig_times_gaps.show()
+fig_times_gaps.show()
