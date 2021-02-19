@@ -82,7 +82,7 @@ dict_xlim["rcv1_train", 5000] = 1500
 dict_xlim["hiva_agnostic", 10] = 1.4
 dict_xlim["hiva_agnostic", 100] = 50
 dict_xlim["hiva_agnostic", 1000] = 1_000
-dict_xlim["hiva_agnostic", 5000] = 3_000
+# dict_xlim["hiva_agnostic", 5000] = 3_000
 
 dict_xlim["gina_agnostic", 10] = 5
 dict_xlim["gina_agnostic", 100] = 10
@@ -106,6 +106,12 @@ dict_xlim["news20", 1000] = 500_000
 fig_times_E, axarr_times_E = plt.subplots(
     len(dataset_names), len(div_alphas), sharex=False, sharey=True,
     figsize=[14, 8], constrained_layout=True)
+
+fig_times_gaps, axarr_times_gaps = plt.subplots(
+    len(dataset_names), len(div_alphas), sharex=False, sharey='row',
+    figsize=[14, 8], constrained_layout=True)
+
+all_axarr = [axarr_times_E, axarr_times_gaps]
 
 fontsize = 22
 
@@ -133,33 +139,36 @@ for idx1, dataset_name in enumerate(dataset_names):
                 "results/%s_%s_%s%i.pkl" % (
                     dataset_name, algo_name, str(use_acc), div_alpha))
 
-            use_accs = df_data_all['use_acc']
-            algo_names = df_data_all['algo_name']
-            all_times = df_data_all['times']
-            Es = df_data_all['E']
+            use_acc = df_data_all['use_acc'].to_numpy()[0]
+            algo_name = df_data_all['algo_name'].to_numpy()[0]
+            times = df_data_all['times'].to_numpy()[0]
+            E = df_data_all['E'].to_numpy()[0]
+            gaps = df_data_all['gaps'].to_numpy()[0]
 
-            for E, times, use_acc, algo_name in zip(
-                    Es, all_times, use_accs, algo_names):
-                axarr_times_E[idx1, idx2].semilogy(
-                    times, (E - pobj_star) / E0,
-                    label=dict_algo_name[use_acc, algo_name],
-                    linestyle=dict_linestyle[use_acc, algo_name],
-                    color=dict_color[algo_name])
-        axarr_times_E[idx1, idx2].tick_params(axis='x', labelsize=25)
-        axarr_times_E[idx1, idx2].set_xlim(
-            0, dict_xlim[dataset_name, div_alpha])
+            axarr_times_E[idx1, idx2].semilogy(
+                times, (E - pobj_star) / E0,
+                label=dict_algo_name[use_acc, algo_name],
+                linestyle=dict_linestyle[use_acc, algo_name],
+                color=dict_color[algo_name])
 
-        axarr_times_E[0, idx2].set_title(
-            r"$\lambda_{\max} / %i  $ " % div_alpha,
-            fontsize=fontsize)
-        axarr_times_E[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
-    axarr_times_E[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
-    axarr_times_E[idx1, 0].tick_params(axis='y', labelsize=25)
+            axarr_times_gaps[idx1, idx2].semilogy(
+                times, gaps,
+                label=dict_algo_name[use_acc, algo_name],
+                linestyle=dict_linestyle[use_acc, algo_name],
+                color=dict_color[algo_name])
 
-    axarr_times_E[idx1, 0].set_ylabel(
-        dataset_title[dataset_name], fontsize=fontsize)
-# axarr_times_E[1, 0].set_ylabel("Enet \n leuk.", fontsize=fontsize)
-# axarr_times_E[2, 0].set_ylabel("Logreg \n news20", fontsize=fontsize)
+        for axarr in all_axarr:
+            axarr[idx1, idx2].tick_params(axis='x', labelsize=25)
+            axarr[idx1, idx2].set_xlim(
+                0, dict_xlim[dataset_name, div_alpha])
+            axarr[0, idx2].set_title(
+                r"$\lambda_{\max} / %i  $ " % div_alpha,
+                fontsize=fontsize)
+            axarr[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
+            axarr[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
+            axarr[idx1, 0].tick_params(axis='y', labelsize=25)
+            axarr[idx1, 0].set_ylabel(
+                dataset_title[dataset_name], fontsize=fontsize)
 
 axarr_times_E[0, 0].set_ylim((1e-16, 2))
 
@@ -171,8 +180,13 @@ if save_fig:
         "%senergies_lasso_time.pdf" % fig_dir, bbox_inches="tight")
     fig_times_E.savefig(
         "%senergies_lasso_time.svg" % fig_dir_svg, bbox_inches="tight")
+    fig_times_gaps.savefig(
+        "%sgaps_lasso_time.pdf" % fig_dir, bbox_inches="tight")
+    fig_times_gaps.savefig(
+        "%sgaps_lasso_time.svg" % fig_dir_svg, bbox_inches="tight")
     _plot_legend_apart(
         axarr_times_E[0, 0], "%senergies_time_legend.pdf" % fig_dir, ncol=4)
 
 
 fig_times_E.show()
+fig_times_gaps.show()

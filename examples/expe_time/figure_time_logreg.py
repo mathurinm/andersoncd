@@ -12,12 +12,12 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 #     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
 # div_alphas = [10, 100, 1000, 5000]
 
-save_fig = False
-# save_fig = True
+# save_fig = False
+save_fig = True
 
 # if you want to run the expe quickly choose instead:
-dataset_names = ["gina_agnostic", "rcv1_train"]
-# dataset_names = ["gina_agnostic", "rcv1_train", "news20"]
+# dataset_names = ["gina_agnostic", "rcv1_train"]
+dataset_names = ["gina_agnostic", "rcv1_train", "news20"]
 # dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", "rcv1_train"]
 # div_alphas = [10, 100]
 div_alphas = [10, 100, 1000]
@@ -76,32 +76,9 @@ dataset_title["finance"] = "finance"
 
 dict_xlim = defaultdict(lambda: None, key=None)
 dict_xlim["rcv1_train", 10] = 5.2
-# dict_xlim["rcv1_train", 100] = 8
-# dict_xlim["rcv1_train", 1000] = 280
-# dict_xlim["rcv1_train", 5000] = 1500
-
-# dict_xlim["hiva_agnostic", 10] = 1.4
-# dict_xlim["hiva_agnostic", 100] = 50
-# dict_xlim["hiva_agnostic", 1000] = 1_000
-# dict_xlim["hiva_agnostic", 5000] = 3_000
-
 dict_xlim["gina_agnostic", 10] = 25
 dict_xlim["gina_agnostic", 100] = 72
 dict_xlim["gina_agnostic", 1000] = 500
-# dict_xlim["gina_agnostic", 5000] = 100
-
-# dict_xlim["leukemia", 10] = 0.25
-# dict_xlim["leukemia", 100] = 9
-# dict_xlim["leukemia", 1000] = 36
-# dict_xlim["leukemia", 5000] = 130
-
-# dict_xlim["news20", 10] = 400
-# dict_xlim["news20", 100] = 5000
-# dict_xlim["news20", 1000] = 500_000
-
-# dict_xlim["finance", 10] = 1000
-# dict_xlim["news20", 100] = 5000
-# dict_xlim["news20", 1000] = 500_000
 ###############################################################################
 
 fig_times_E, axarr_times_E = plt.subplots(
@@ -159,8 +136,6 @@ for idx1, dataset_name in enumerate(dataset_names):
 
     axarr_times_E[idx1, 0].set_ylabel(
         dataset_title[dataset_name], fontsize=fontsize)
-# axarr_times_E[1, 0].set_ylabel("Enet \n leuk.", fontsize=fontsize)
-# axarr_times_E[2, 0].set_ylabel("Logreg \n news20", fontsize=fontsize)
 
 axarr_times_E[0, 0].set_ylim((1e-16, 2))
 
@@ -169,11 +144,12 @@ if save_fig:
     fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
     fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
     fig_times_E.savefig(
-        "%senergies_lasso_time.pdf" % fig_dir, bbox_inches="tight")
+        "%senergies_logreg_time.pdf" % fig_dir, bbox_inches="tight")
     fig_times_E.savefig(
-        "%senergies_lasso_time.svg" % fig_dir_svg, bbox_inches="tight")
+        "%senergies_logreg_time.svg" % fig_dir_svg, bbox_inches="tight")
     _plot_legend_apart(
-        axarr_times_E[0, 0], "%senergies_time_legend.pdf" % fig_dir, ncol=4)
+        axarr_times_E[0, 0], "%senergies_logreg_time_legend.pdf" % fig_dir,
+        ncol=4)
 
 
 fig_times_E.show()
