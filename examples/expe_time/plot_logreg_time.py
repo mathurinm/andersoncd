@@ -2,7 +2,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from libsvmdata import fetch_libsvm
-from andersoncd.data.real import load_openml
+# from andersoncd.data.real import load_openml
 from andersoncd.plot_utils import configure_plt
 
 from andersoncd.logreg import solver_logreg, apcg_logreg
