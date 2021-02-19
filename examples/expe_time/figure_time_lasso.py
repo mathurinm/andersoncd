@@ -152,7 +152,7 @@ for idx1, dataset_name in enumerate(dataset_names):
                 color=dict_color[algo_name])
 
             axarr_times_gaps[idx1, idx2].semilogy(
-                times, gaps,
+                times[:-1], gaps[:-1],
                 label=dict_algo_name[use_acc, algo_name],
                 linestyle=dict_linestyle[use_acc, algo_name],
                 color=dict_color[algo_name])

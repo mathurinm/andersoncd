@@ -12,8 +12,8 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 #     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
 # div_alphas = [10, 100, 1000, 5000]
 
-# save_fig = False
-save_fig = True
+save_fig = False
+# save_fig = True
 
 # if you want to run the expe quickly choose instead:
 # dataset_names = ["rcv1_train", "rcv1_train"]
@@ -93,7 +93,7 @@ fig_times_E, axarr_times_E = plt.subplots(
     figsize=[14, 5], constrained_layout=True)
 
 fig_times_gaps, axarr_times_gaps = plt.subplots(
-    len(div_rhos), len(div_alphas), sharex=False, sharey=False,
+    len(div_rhos), len(div_alphas), sharex=False, sharey=True,
     figsize=[14, 5], constrained_layout=True)
 
 all_axarr = [axarr_times_E, axarr_times_gaps]
@@ -130,15 +130,13 @@ for idx1, div_rho in enumerate(div_rhos):
             Es = df_data_all['E'].to_numpy()[0]
             gaps = df_data_all['gaps'].to_numpy()[0]
 
-            # for E, gap, times, use_acc, algo_name in zip(
-            #         Es, gaps, all_times, use_accs, algo_names):
             axarr_times_E[idx1, idx2].semilogy(
-                times, (Es - pobj_star),
+                times, (Es - pobj_star) / E0,
                 label=dict_algo_name[use_acc, algo_name],
                 linestyle=dict_linestyle[use_acc, algo_name],
                 color=dict_color[algo_name])
             axarr_times_gaps[idx1, idx2].semilogy(
-                times, gaps,
+                times[:-1], gaps[:-1],
                 label=dict_algo_name[use_acc, algo_name],
                 linestyle=dict_linestyle[use_acc, algo_name],
                 color=dict_color[algo_name])
@@ -153,7 +151,7 @@ for idx1, div_rho in enumerate(div_rhos):
             axarr[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
 
     for axarr in all_axarr:
-        axarr[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
+        axarr[idx1, 0].set_yticks((1e-20, 1e-15, 1e-10, 1e-5, 1))
         axarr[idx1, 0].tick_params(axis='y', labelsize=25)
 
         axarr[idx1, 0].set_ylabel(
