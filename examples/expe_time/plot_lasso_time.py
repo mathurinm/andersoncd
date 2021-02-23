@@ -109,11 +109,6 @@ for algo in all_algos:
         linestyle = (0, (3, 5, 1, 5, 1, 5))
     else:
         linestyle = 'solid'
-
-    # if algo[0] == 'rcd':
-    #     marker = "^"
-    # else:
-    #     marker = None
     ax.semilogy(
         f_gap * np.arange(len(E)), E - p_star, label=dict_algo_name[algo],
         color=dict_color[algo[0]], linestyle=linestyle)
