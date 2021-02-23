@@ -1,3 +1,4 @@
+import time
 import numpy as np
 
 from scipy import sparse
@@ -32,14 +33,16 @@ def BST_vec(x, u, grp_size):
 
 
 # @njit
-def _bcd(X, w, R, alpha, lc):
+def _bcd(X, w, R, alpha, lc, groups):
     grp_size = w.shape[0] // lc.shape[0]
-    for g in range(lc.shape[0]):
+    for g in groups:
+        # for g in range(lc.shape[0]):
         grp = slice(g * grp_size, (g + 1) * grp_size)
         Xg = X[:, grp]
         old_w_g = w[grp].copy()
         w[grp] = BST(old_w_g + Xg.T @ R / lc[g], alpha / lc[g])
         if norm(w[grp] - old_w_g) != 0:
+            # R += ((old_w_g - w[grp]) * Xg).sum(axis=1)
             R += ((old_w_g - w[grp])[None, :] * Xg).sum(axis=1)
 
 
@@ -67,16 +70,24 @@ def _bcd_sparse(
 
 def solver_group(
         X, y, alpha, grp_size, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='bcd'):
+        use_acc=False, algo='bcd', compute_time=False, tmax=np.infty):
     """Solve the GroupLasso with BCD/ISTA/FISTA, eventually with extrapolation.
 
     Groups are contiguous, of size grp_size.
     Objective:
     norm(y - Xw, ord=2)**2 / 2 + alpha * sum_g ||w_{[g]}||_2
 
+    TODO: filled docstring
+
     Parameters:
     algo: string
         'bcd', 'pgd', 'fista'
+
+    compute_time : bool, default=False
+        If you want to compute timings or not
+
+    tmax : float, default=1000
+        Maximum time (in seconds) the algorithm is allowed to run
 
     alpha: strength of the group penalty
     """
@@ -86,6 +97,12 @@ def solver_group(
     if n_features % grp_size != 0:
         raise ValueError("n_features is not a multiple of group size")
     n_groups = n_features // grp_size
+
+    _range = np.arange(n_groups)
+    groups = dict(
+        bcd=lambda: _range,
+        bcdshuf=lambda: np.random.choice(n_groups, n_groups, replace=False),
+        rbcd=lambda: np.random.choice(n_groups, n_groups, replace=True))
 
     if not is_sparse and not np.isfortran(X):
         X = np.asfortranarray(X)
@@ -117,6 +134,10 @@ def solver_group(
     E = []
     gaps = np.zeros(max_iter // f_gap)
 
+    if compute_time:
+        times = []
+        t_start = time.time()
+
     for it in range(max_iter):
         if it % f_gap == 0:
             if algo == 'fista':
@@ -124,6 +145,13 @@ def solver_group(
             p_obj = primal_grp(R, w, alpha, grp_size)
             E.append(p_obj)
             theta = R / alpha
+
+            if compute_time:
+                ellapsed_times = time.time() - t_start
+                times.append(ellapsed_times)
+                print("Ellapsed time: %f " % ellapsed_times)
+                if ellapsed_times > tmax:
+                    break
 
             d_norm_theta = np.max(
                 norm((X.T @ theta).reshape(-1, grp_size), axis=1))
@@ -140,12 +168,12 @@ def solver_group(
                 print("Early exit")
                 break
 
-        if algo == 'bcd':
+        if algo.endswith('bcd'):
             if is_sparse:
                 _bcd_sparse(
                     X.data, X.indices, X.indptr, w, R, alpha, lc)
             else:
-                _bcd(X, w, R, alpha, lc)
+                _bcd(X, w, R, alpha, lc, groups[algo]())
         elif algo == 'pgd':
             w[:] = BST_vec(w + 1. / L * X.T @ R, alpha / L, grp_size)
             R[:] = y - X @ w
@@ -184,4 +212,6 @@ def solver_group(
                 except np.linalg.LinAlgError:
                     print("----------Linalg error")
 
+    if compute_time:
+        return w, np.array(E), gaps[:it // f_gap + 1], times
     return w, np.array(E), gaps[:it // f_gap + 1]
