@@ -82,7 +82,7 @@ dict_xlim["rcv1_train", 5000] = 1500
 dict_xlim["hiva_agnostic", 10] = 1.4
 dict_xlim["hiva_agnostic", 100] = 50
 dict_xlim["hiva_agnostic", 1000] = 1_000
-# dict_xlim["hiva_agnostic", 5000] = 3_000
+dict_xlim["hiva_agnostic", 5000] = 7200
 
 dict_xlim["gina_agnostic", 10] = 5
 dict_xlim["gina_agnostic", 100] = 10

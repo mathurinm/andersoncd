@@ -101,7 +101,6 @@ for E in dict_Es.values():
 
 ###############################################################################
 # Plot convergence curves:
-
 plt.close('all')
 fig, ax = plt.subplots(figsize=(9, 6))
 fig_times, ax_times = plt.subplots(figsize=(9, 4))
@@ -144,9 +143,9 @@ ax_times.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 
 ax.set_title("Convergence on Least Squares")
 
-fontsize = 30
+fontsize = 25
 # ax_times.set_ylabel("OLS \n rcv1", fontsize=fontsize)
-ax_times.set_ylabel(r"$f(x^{(k)}) - f(x^{*})$")
+ax_times.set_ylabel(r"Suboptimality", fontsize=fontsize)
 ax_times.set_xlabel("Time (s)", fontsize=fontsize)
 ax_times.set_xlim((0, tmax))
 ax_times.set_ylim((1e-16, 1))

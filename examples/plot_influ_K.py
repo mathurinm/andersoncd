@@ -16,6 +16,8 @@ from libsvmdata import fetch_libsvm
 from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 from andersoncd.lasso import solver_enet
 
+# save_fig = False
+save_fig = True
 
 configure_plt()
 
@@ -24,7 +26,7 @@ configure_plt()
 
 dataset = "rcv1_train"
 X, y = fetch_libsvm(dataset, normalize=True)
-X = X[:, :2000]
+X = X[:, :5000]
 
 X.multiply(1 / sparse.linalg.norm(X, axis=0))
 y -= y.mean()
@@ -36,7 +38,7 @@ y /= norm(y)
 
 alpha = 0
 tol = 1e-15
-max_iter = 1000
+max_iter = 5_000
 f_gap = 10
 
 K_list = [0, 2, 3, 4, 5, 10, 20]
@@ -49,7 +51,7 @@ for K in K_list:
     use_acc = K != 0
     _, E, _, times = solver_enet(
         X, y, alpha=alpha, f_gap=f_gap, max_iter=max_iter, tol=tol,
-        algo="cd", use_acc=use_acc, K=K, compute_time=True)
+        algo="cd", use_acc=use_acc, K=K, compute_time=True, verbose=True)
     dict_Es[K] = E
     dict_times[K] = times
 
@@ -82,13 +84,10 @@ for i, K in enumerate(K_list):
 
 ax.set_xlabel(r"Times (s)")
 ax.set_yticks((1e-15, 1e-10, 1e-5, 1))
-ax.set_ylabel(r"$f(x^{(k)}) - f(x^*)$")
-plt.xlim((0, 0.5))
+ax.set_ylabel(r"Suboptimality")
+plt.xlim((0, 6))
+plt.ylim(1e-15, 1)
 plt.tight_layout()
-
-
-# save_fig = False
-save_fig = True
 
 if save_fig:
     fig_dir = "../../extrapol_cd/tex/aistats20/prebuiltimages/"

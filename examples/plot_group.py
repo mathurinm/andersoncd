@@ -90,8 +90,8 @@ ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 
 fontsize = 30
 # ax_times.set_ylabel("OLS \n rcv1", fontsize=fontsize)
-ax.set_ylabel(r"$f(x^{(k)}) - f(x^{*})$")
-ax.set_xlabel("Time (s)", fontsize=fontsize)
+ax.set_ylabel(r"Suboptimality")
+ax.set_xlabel(r"Time (s)", fontsize=fontsize)
 ax.set_xlim((0, 100))
 ax.set_ylim((1e-15, 1))
 ax.tick_params(axis='x', labelsize=35)

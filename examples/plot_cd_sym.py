@@ -165,8 +165,8 @@ for pb in ("ols", "logreg"):
     str_info = "%s (%i st columns)" % (dataset, n_features)
     title = pb + str_info
 
-    plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
-    plt.xlabel("Time (s)")
+    plt.ylabel(r"Suboptimality")
+    plt.xlabel(r"Time (s)")
     plt.xlim((0, tmax))
     plt.ylim((1e-10, None))
     plt.tight_layout()

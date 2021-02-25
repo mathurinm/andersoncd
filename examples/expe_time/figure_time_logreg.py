@@ -76,9 +76,14 @@ dataset_title["finance"] = "finance"
 
 dict_xlim = defaultdict(lambda: None, key=None)
 dict_xlim["rcv1_train", 10] = 5.2
+dict_xlim["rcv1_train", 100] = 250
+dict_xlim["rcv1_train", 1000] = 6000
 dict_xlim["gina_agnostic", 10] = 25
 dict_xlim["gina_agnostic", 100] = 72
 dict_xlim["gina_agnostic", 1000] = 500
+dict_xlim["news20", 10] = 200
+dict_xlim["news20", 100] = 5_000
+dict_xlim["news20", 1000] = 30_000
 ###############################################################################
 
 fig_times_E, axarr_times_E = plt.subplots(

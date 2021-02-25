@@ -13,6 +13,9 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 from andersoncd.logreg import solver_logreg
 
 
+save_fig = True
+# save_fig = False
+
 configure_plt()
 
 ###############################################################################
@@ -88,15 +91,13 @@ for i, reg_amount in enumerate(reg_amount_list):
 
 
 ax.set_yticks((1e-15, 1e-10, 1e-5, 1))
-plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
+plt.ylabel(r"Suboptimality")
 plt.xlabel(r"Time (s)")
 plt.xlim(0, 15)
 plt.ylim(1e-15, 1)
 plt.tight_layout()
 
 
-save_fig = True
-# save_fig = False
 if save_fig:
     fig_dir = "../"
     fig_dir_svg = "../"
