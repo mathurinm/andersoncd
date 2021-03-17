@@ -5,14 +5,14 @@
 
 Computation times
 =================
-**04:28.884** total execution time for **auto_examples** files:
+**05:13.468** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_influ_reg.py` (``plot_influ_reg.py``) | 02:13.574 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_influ_reg.py` (``plot_influ_reg.py``) | 02:25.011 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_cd_sym.py` (``plot_cd_sym.py``)       | 01:52.301 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_cd_sym.py` (``plot_cd_sym.py``)       | 02:19.297 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_intro_ols.py` (``plot_intro_ols.py``) | 00:16.824 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_intro_ols.py` (``plot_intro_ols.py``) | 00:21.545 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_influ_K.py` (``plot_influ_K.py``)     | 00:06.185 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_influ_K.py` (``plot_influ_K.py``)     | 00:07.614 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
