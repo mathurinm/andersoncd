@@ -11,7 +11,7 @@ from andersoncd.logreg import solver_logreg, apcg_logreg
 
 # to generate the exact fig of the paper:
 # dataset_names = [
-#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1.binary']
 # div_alphas = [10, 100, 1000, 5000]
 
 
@@ -100,7 +100,7 @@ dict_tmax["news20.binary", 1000] = 40_000
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
+            'rcv1.binary', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
     else:
         X, y = load_openml(dataset_name)

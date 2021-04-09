@@ -10,12 +10,12 @@ from andersoncd.lasso import solver_enet, apcg_enet
 
 
 # to generate the exact fig of the paper:
-dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1.binary']
 div_alphas = [10, 100, 1000, 5000]
 
 
 # if you want to run the file quickly choose instead:
-# dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+# dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1.binary']
 # div_alphas = [10, 100]
 
 
@@ -88,7 +88,7 @@ dict_f_gap["finance"] = 50
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
+            'rcv1.binary', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
         y /= np.linalg.norm(y)
     else:

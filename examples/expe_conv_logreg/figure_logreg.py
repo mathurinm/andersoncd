@@ -54,7 +54,7 @@ dict_xlim["news20.binary", 10] = 3_000
 dict_xlim["news20.binary", 100] = 10_000
 dict_xlim["news20.binary", 1000] = 150_000
 
-dataset_names = ["gina_agnostic", 'rcv1_train', "news20.binary"]
+dataset_names = ["gina_agnostic", 'rcv1.binary', "news20.binary"]
 div_alphas = [10, 100, 1_000]
 
 fig, axarr = plt.subplots(

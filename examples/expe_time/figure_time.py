@@ -8,7 +8,7 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 # to generate the exact fig_gaps of the paper:
 # dataset_names = [
-#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1.binary']
 # div_alphas = [10, 100, 1000, 5000]
 
 

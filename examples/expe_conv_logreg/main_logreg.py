@@ -10,7 +10,7 @@ from andersoncd.logreg import solver_logreg, apcg_logreg
 
 
 # to reproduce the fig of the paper (long)
-dataset_names = ["gina_agnostic", 'rcv1_train', 'news20.binary']
+dataset_names = ["gina_agnostic", 'rcv1.binary', 'news20.binary']
 div_alphas = [10, 100, 1000]
 
 # to be fast:
@@ -91,7 +91,7 @@ dict_f_gap["finance"] = 50
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
+            'rcv1.binary', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
     else:
         X, y = load_openml(dataset_name, normalize_y=False)

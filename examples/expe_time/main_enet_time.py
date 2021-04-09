@@ -90,7 +90,7 @@ dict_tmax["rcv1.binary", 5000] = 600
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
+            'rcv1.binary', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
         y -= y.mean()
         y /= np.linalg.norm(y)

@@ -23,7 +23,8 @@ dict_rayleighs = {}
 def parallel_function(dataset, k):
     print(dataset, k)
     if dataset.startswith((
-            'real-sim', 'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
+            'real-sim', 'rcv1.binary', 'news20.binary', 'kdda_train',
+            'finance')):
         X, y = fetch_libsvm(dataset)
         X = X[:, :1000]
     else:
