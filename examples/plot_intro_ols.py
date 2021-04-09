@@ -21,8 +21,8 @@ configure_plt()
 ###############################################################################
 # Load the data:
 
-n_features = 1000
-X, y = fetch_libsvm('rcv1_train', normalize=True)
+n_features = 2_000
+X, y = fetch_libsvm('rcv1.binary', normalize=True)
 X = X[:, :n_features]
 
 y -= y.mean()
@@ -50,24 +50,27 @@ E_cg = np.array(E_cg)
 alpha = 0  # Least Squares
 tol = 1e-13
 max_iter = 2000
+# max_iter = 300
 f_gap = 10
 
 all_algos = [
     ('pgd', False),
     ('cd', False),
-    ('pgd', True),
-    ('cd', True),
-    ('fista', False),
-    ('apcg', False)
+    ('rcd', False)
+    # ('pgd', True),
+    # ('cd', True),
+    # ('fista', False),
+    # ('apcg', False)
 ]
 
 dict_algo_name = {}
 dict_algo_name["pgd", False] = "GD"
-dict_algo_name["cd", False] = "CD"
-dict_algo_name["pgd", True] = "GD - Anderson"
-dict_algo_name["cd", True] = "CD - Anderson"
-dict_algo_name["fista", False] = "GD - inertial"
-dict_algo_name["apcg", False] = "CD - inertial"
+dict_algo_name["cd", False] = "CD - cyclic"
+dict_algo_name["rcd", False] = "CD - random"
+# dict_algo_name["pgd", True] = "GD - Anderson"
+# dict_algo_name["cd", True] = "CD - Anderson"
+# dict_algo_name["fista", False] = "GD - inertial"
+# dict_algo_name["apcg", False] = "CD - inertial"
 
 
 dict_Es = {}
@@ -90,6 +93,7 @@ dict_color = {}
 dict_color["pgd"] = current_palette[0]
 dict_color["fista"] = current_palette[0]
 dict_color["cd"] = current_palette[1]
+dict_color["rcd"] = current_palette[2]
 dict_color["apcg"] = current_palette[1]
 
 
@@ -121,10 +125,10 @@ for i, algo in enumerate(all_algos):
     else:
         linestyle = 'solid'
 
-    if i == 2:
-        ax.semilogy(
-            np.arange(len(E_cg)), E_cg - p_star, label="conjugate grad.",
-            color='black', linestyle='dashdot')
+    # if i == 2:
+    #     ax.semilogy(
+    #         np.arange(len(E_cg)), E_cg - p_star, label="conjugate grad.",
+    #         color='black', linestyle='dashdot')
     ax.semilogy(
         f_gap * np.arange(len(E)), E - p_star,
         label=dict_algo_name[algo],
