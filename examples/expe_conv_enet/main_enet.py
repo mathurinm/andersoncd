@@ -11,7 +11,7 @@ from andersoncd.lasso import solver_enet, apcg_enet
 
 dataset_names = ["leukemia"]
 # dataset_names = [
-#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train',
+#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1.binary',
 #     'news20.binary']
 
 
