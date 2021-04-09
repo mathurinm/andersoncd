@@ -104,10 +104,10 @@ for E in dict_Es.values():
 ###############################################################################
 # Plot convergence curves:
 
-save_fig = False
-# save_fig = True
+# save_fig = False
+save_fig = True
 if save_fig:
-    figsize = (8, 3)
+    figsize = (5, 3.)
 else:
     figsize = (10, 5)
 
@@ -152,6 +152,6 @@ if save_fig:
     fig = _plot_legend_apart(
         ax, "%sintro_ols_legend.pdf" % fig_dir, ncol=3)
 
-plt.title("Convergence on Least Squares")
+# plt.title("Convergence on Least Squares")
 plt.legend()
 plt.show(block=False)
