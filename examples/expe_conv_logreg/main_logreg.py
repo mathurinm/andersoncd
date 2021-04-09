@@ -10,7 +10,7 @@ from andersoncd.logreg import solver_logreg, apcg_logreg
 
 
 # to reproduce the fig of the paper (long)
-dataset_names = ["gina_agnostic", 'rcv1_train', 'news20']
+dataset_names = ["gina_agnostic", 'rcv1_train', 'news20.binary']
 div_alphas = [10, 100, 1000]
 
 # to be fast:
@@ -38,8 +38,8 @@ dict_maxiter["mushroom", 10] = 10_000
 dict_maxiter["gina_agnostic", 10] = 2_500
 dict_maxiter["hiva_agnostic", 10] = 10_000
 dict_maxiter["upselling", 10] = 10_000
-dict_maxiter["rcv1_train", 10] = 1_000
-dict_maxiter["news20", 10] = 3_000
+dict_maxiter["rcv1.binary", 10] = 1_000
+dict_maxiter["news20.binary", 10] = 3_000
 dict_maxiter["kdda_train", 10] = 1_000
 dict_maxiter["finance", 10] = 5_000
 
@@ -48,8 +48,8 @@ dict_maxiter["mushroom", 100] = 10_000
 dict_maxiter["gina_agnostic", 100] = 3_000
 dict_maxiter["hiva_agnostic", 100] = 10_000
 dict_maxiter["upselling", 100] = 10_000
-dict_maxiter["rcv1_train", 100] = 5_000
-dict_maxiter["news20", 100] = 10_000
+dict_maxiter["rcv1.binary", 100] = 5_000
+dict_maxiter["news20.binary", 100] = 10_000
 dict_maxiter["kdda_train", 100] = 5_000
 dict_maxiter["finance", 100] = 50_000
 
@@ -58,8 +58,8 @@ dict_maxiter["mushroom", 1000] = 100_000
 dict_maxiter["gina_agnostic", 1000] = 100_000
 dict_maxiter["hiva_agnostic", 1000] = 100_000
 dict_maxiter["upselling", 1000] = 100_000
-dict_maxiter["rcv1_train", 1000] = 200_000
-dict_maxiter["news20", 1000] = 150_000
+dict_maxiter["rcv1.binary", 1000] = 200_000
+dict_maxiter["news20.binary", 1000] = 150_000
 dict_maxiter["kdda_train", 1000] = 1_000
 dict_maxiter["finance", 1000] = 50_000
 
@@ -68,8 +68,8 @@ dict_maxiter["mushroom", 5_000] = 300_000
 dict_maxiter["gina_agnostic", 5_000] = 300_000
 dict_maxiter["hiva_agnostic", 5_000] = 300_000
 dict_maxiter["upselling", 5000] = 100_000
-dict_maxiter["rcv1_train", 5000] = 100_000
-dict_maxiter["news20", 5000] = 1_000_000
+dict_maxiter["rcv1.binary", 5000] = 100_000
+dict_maxiter["news20.binary", 5000] = 1_000_000
 dict_maxiter["kdda_train", 5000] = 1_000
 
 
@@ -79,8 +79,8 @@ dict_f_gap["mushroom"] = 10
 dict_f_gap["gina_agnostic"] = 10
 dict_f_gap["hiva_agnostic"] = 10
 dict_f_gap["upselling"] = 10
-dict_f_gap["rcv1_train"] = 10
-dict_f_gap["news20"] = 10
+dict_f_gap["rcv1.binary"] = 10
+dict_f_gap["news20.binary"] = 10
 dict_f_gap["kdda_train"] = 10
 dict_f_gap["finance"] = 50
 
@@ -91,7 +91,7 @@ dict_f_gap["finance"] = 50
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20', 'kdda_train', 'finance')):
+            'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
     else:
         X, y = load_openml(dataset_name, normalize_y=False)

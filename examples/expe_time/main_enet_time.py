@@ -30,8 +30,8 @@ dict_maxiter["mushroom", 10] = 10_000
 dict_maxiter["gina_agnostic", 10] = 1_000
 dict_maxiter["hiva_agnostic", 10] = 10_000
 dict_maxiter["upselling", 10] = 10_000
-dict_maxiter["rcv1_train", 10] = 10_000
-dict_maxiter["news20", 10] = 10_000
+dict_maxiter["rcv1.binary", 10] = 10_000
+dict_maxiter["news20.binary", 10] = 10_000
 dict_maxiter["kdda_train", 10] = 10_000
 dict_maxiter["finance", 10] = 5_000
 
@@ -40,8 +40,8 @@ dict_maxiter["mushroom", 100] = 10_000
 dict_maxiter["gina_agnostic", 100] = 1_000
 dict_maxiter["hiva_agnostic", 100] = 5000
 dict_maxiter["upselling", 100] = 10_000
-dict_maxiter["rcv1_train", 100] = 10_000
-dict_maxiter["news20", 100] = 10_000
+dict_maxiter["rcv1.binary", 100] = 10_000
+dict_maxiter["news20.binary", 100] = 10_000
 dict_maxiter["kdda_train", 100] = 1_000
 dict_maxiter["finance", 100] = 50_000
 
@@ -50,8 +50,8 @@ dict_maxiter["mushroom", 1000] = 100_000
 dict_maxiter["gina_agnostic", 1000] = 100_000
 dict_maxiter["hiva_agnostic", 1000] = 100_000
 dict_maxiter["upselling", 1000] = 100_000
-dict_maxiter["rcv1_train", 1000] = 100_000
-dict_maxiter["news20", 1000] = 1_000_000
+dict_maxiter["rcv1.binary", 1000] = 100_000
+dict_maxiter["news20.binary", 1000] = 1_000_000
 dict_maxiter["kdda_train", 1000] = 1_000
 dict_maxiter["finance", 1000] = 50_000
 
@@ -60,8 +60,8 @@ dict_maxiter["mushroom", 5_000] = 300_000
 dict_maxiter["gina_agnostic", 5_000] = 300_000
 dict_maxiter["hiva_agnostic", 5_000] = 300_000
 dict_maxiter["upselling", 5000] = 100_000
-dict_maxiter["rcv1_train", 5000] = 500_000
-dict_maxiter["news20", 5000] = 1_000_000
+dict_maxiter["rcv1.binary", 5000] = 500_000
+dict_maxiter["news20.binary", 5000] = 1_000_000
 dict_maxiter["kdda_train", 5000] = 1_000
 
 
@@ -71,8 +71,8 @@ dict_f_gap["mushroom"] = 10
 dict_f_gap["gina_agnostic"] = 10
 dict_f_gap["hiva_agnostic"] = 10
 dict_f_gap["upselling"] = 10
-dict_f_gap["rcv1_train"] = 10
-dict_f_gap["news20"] = 10
+dict_f_gap["rcv1.binary"] = 10
+dict_f_gap["news20.binary"] = 10
 dict_f_gap["kdda_train"] = 10
 dict_f_gap["finance"] = 50
 
@@ -81,16 +81,16 @@ dict_tmax["leukemia", 10] = 2
 dict_tmax["leukemia", 100] = 20
 dict_tmax["leukemia", 1000] = 50
 
-dict_tmax["rcv1_train", 10] = 5
-dict_tmax["rcv1_train", 100] = 10
-dict_tmax["rcv1_train", 1000] = 120
-dict_tmax["rcv1_train", 5000] = 600
+dict_tmax["rcv1.binary", 10] = 5
+dict_tmax["rcv1.binary", 100] = 10
+dict_tmax["rcv1.binary", 1000] = 120
+dict_tmax["rcv1.binary", 5000] = 600
 
 
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20', 'kdda_train', 'finance')):
+            'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
         y -= y.mean()
         y /= np.linalg.norm(y)
@@ -125,7 +125,7 @@ def parallel_function(dataset_name, algo, div_alpha):
         'dataset', 'algo_name', 'use_acc', 'K', 'div_alpha', "optimum", "E",
         "gaps", "f_gaps", "times"]
     str_results = "results/enet_%s_%s_%s%i.pkl" % (
-                dataset_name, algo_name, str(use_acc), div_alpha)
+        dataset_name, algo_name, str(use_acc), div_alpha)
     df.to_pickle(str_results)
 
 

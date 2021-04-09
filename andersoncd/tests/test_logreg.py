@@ -28,7 +28,7 @@ def test_logreg_solver(algo, use_acc, pCmin):
         C=C, verbose=1, solver='liblinear', penalty='l1', fit_intercept=False,
         tol=tol)
     estimator.fit(X, y)
-    coef_celer = estimator.coef_.ravel()
+    coef_sklearn = estimator.coef_.ravel()
 
     if algo == "apcg":
         coef_ours, _, _ = apcg_logreg(
@@ -37,7 +37,7 @@ def test_logreg_solver(algo, use_acc, pCmin):
         coef_ours = solver_logreg(
             X, y, alpha=1/C,
             tol=tol, algo=algo, use_acc=use_acc, max_iter=20000)[0]
-    np.testing.assert_allclose(coef_ours, coef_celer, atol=1e-7)
+    np.testing.assert_allclose(coef_ours, coef_sklearn, atol=1e-7)
 
 
 def test_apcg():

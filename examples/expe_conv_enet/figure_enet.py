@@ -37,17 +37,17 @@ dataset_title["leukemia"] = "leukemia"
 dataset_title["gina_agnostic"] = "gina agnostic"
 dataset_title["hiva_agnostic"] = "hiva agnostic"
 dataset_title["upselling"] = "upselling"
-dataset_title["rcv1_train"] = "rcv1"
-dataset_title["news20"] = "news20"
+dataset_title["rcv1.binary"] = "rcv1"
+dataset_title["news20.binary"] = "news20"
 dataset_title["kdda_train"] = "kdd"
 dataset_title["finance"] = "finance"
 
 dict_xlim = {}
 
-dict_xlim["rcv1_train", 10] = 200
-dict_xlim["rcv1_train", 100] = 1000
-dict_xlim["rcv1_train", 1000] = 10000
-dict_xlim["rcv1_train", 5000] = 100_000
+dict_xlim["rcv1.binary", 10] = 200
+dict_xlim["rcv1.binary", 100] = 1000
+dict_xlim["rcv1.binary", 1000] = 10000
+dict_xlim["rcv1.binary", 5000] = 100_000
 
 dict_xlim["gina_agnostic", 10] = 1000
 dict_xlim["gina_agnostic", 100] = 1000
@@ -64,13 +64,13 @@ dict_xlim["leukemia", 100] = 5000
 dict_xlim["leukemia", 1000] = 100_000
 dict_xlim["leukemia", 5000] = 100_000
 
-dict_xlim["news20", 10] = 400
-dict_xlim["news20", 100] = 5000
-dict_xlim["news20", 1000] = 500_000
+dict_xlim["news20.binary", 10] = 400
+dict_xlim["news20.binary", 100] = 5000
+dict_xlim["news20.binary", 1000] = 500_000
 
 dict_xlim["finance", 10] = 1000
-dict_xlim["news20", 100] = 5000
-dict_xlim["news20", 1000] = 500_000
+dict_xlim["news20.binary", 100] = 5000
+dict_xlim["news20.binary", 1000] = 500_000
 
 
 ####################################

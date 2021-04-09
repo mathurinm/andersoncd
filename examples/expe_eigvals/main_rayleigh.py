@@ -13,7 +13,7 @@ from andersoncd.data.real import load_openml
 
 
 datasets = [
-    "gina_agnostic", "rcv1_train", "real-sim", "news20"]
+    "gina_agnostic", "rcv1.binary", "real-sim", "news20.binary"]
 
 list_k = [0, 5, 6, 7, 8, 9, 10]
 
@@ -23,7 +23,7 @@ dict_rayleighs = {}
 def parallel_function(dataset, k):
     print(dataset, k)
     if dataset.startswith((
-            'real-sim', 'rcv1_train', 'news20', 'kdda_train', 'finance')):
+            'real-sim', 'rcv1_train', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset)
         X = X[:, :1000]
     else:

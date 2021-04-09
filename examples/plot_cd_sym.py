@@ -135,7 +135,7 @@ for pb in ("ols", "logreg"):
         label=label_opt, color='black', linestyle='dashdot')
 
     dict_dataset = {}
-    dict_dataset["rcv1_train"] = "rcv1"
+    dict_dataset["rcv1.binary"] = "rcv1"
     dict_dataset["real-sim"] = "real_sim"  # use _ not - for latex
     dict_dataset["leukemia"] = "leukemia"
 

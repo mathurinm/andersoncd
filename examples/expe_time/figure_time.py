@@ -13,7 +13,7 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 
 # if you want to run the expe quickly choose instead:
-dataset_names = ["rcv1_train", "leukemia", "news20"]
+dataset_names = ["rcv1.binary", "leukemia", "news20.binary"]
 div_alphas = [10, 100, 1000]
 # div_alphas = [10, 100, 1000]
 
@@ -64,17 +64,17 @@ dataset_title["leukemia"] = "leukemia"
 dataset_title["gina_agnostic"] = "gina agnostic"
 dataset_title["hiva_agnostic"] = "hiva agnostic"
 dataset_title["upselling"] = "upselling"
-dataset_title["rcv1_train"] = "rcv1"
-dataset_title["news20"] = "news20"
+dataset_title["rcv1.binary"] = "rcv1"
+dataset_title["news20.binary"] = "news20"
 dataset_title["kdda_train"] = "kdd"
 dataset_title["finance"] = "finance"
 
 dict_xlim = {}
 
-dict_xlim["rcv1_train", 10] = 200
-dict_xlim["rcv1_train", 100] = 1000
-dict_xlim["rcv1_train", 1000] = 10000
-dict_xlim["rcv1_train", 5000] = 100_000
+dict_xlim["rcv1.binary", 10] = 200
+dict_xlim["rcv1.binary", 100] = 1000
+dict_xlim["rcv1.binary", 1000] = 10000
+dict_xlim["rcv1.binary", 5000] = 100_000
 
 dict_xlim["gina_agnostic", 10] = 1000
 dict_xlim["gina_agnostic", 100] = 1000
@@ -91,13 +91,13 @@ dict_xlim["leukemia", 100] = 5000
 dict_xlim["leukemia", 1000] = 100_000
 dict_xlim["leukemia", 5000] = 100_000
 
-dict_xlim["news20", 10] = 400
-dict_xlim["news20", 100] = 5000
-dict_xlim["news20", 1000] = 500_000
+dict_xlim["news20.binary", 10] = 400
+dict_xlim["news20.binary", 100] = 5000
+dict_xlim["news20.binary", 1000] = 500_000
 
 dict_xlim["finance", 10] = 1000
-dict_xlim["news20", 100] = 5000
-dict_xlim["news20", 1000] = 500_000
+dict_xlim["news20.binary", 100] = 5000
+dict_xlim["news20.binary", 1000] = 500_000
 ###############################################################################
 
 fig_times_E, axarr_times_E = plt.subplots(
@@ -115,7 +115,7 @@ for idx1, div_alpha in enumerate(dataset_names):
             if idx1 == 0:
                 df_data_all = pandas.read_pickle(
                     "results/%s_%s_%s%i.pkl" % (
-                        "rcv1_train", algo_name, str(use_acc), div_alpha))
+                        "rcv1.binary", algo_name, str(use_acc), div_alpha))
             if idx1 == 1:
                 df_data_all = pandas.read_pickle(
                     "results/enet_%s_%s_%s%i.pkl" % (
@@ -123,7 +123,7 @@ for idx1, div_alpha in enumerate(dataset_names):
             if idx1 == 2:
                 df_data_all = pandas.read_pickle(
                     "results/logreg_%s_%s_%s%i.pkl" % (
-                        "news20", algo_name, str(use_acc), div_alpha))
+                        "news20.binary", algo_name, str(use_acc), div_alpha))
             Es = df_data_all['E']
             pobj_star = min(min(E.min() for E in Es), pobj_star)
 
@@ -132,7 +132,7 @@ for idx1, div_alpha in enumerate(dataset_names):
             if idx1 == 0:
                 df_data_all = pandas.read_pickle(
                     "results/%s_%s_%s%i.pkl" % (
-                        "rcv1_train", algo_name, str(use_acc), div_alpha))
+                        "rcv1.binary", algo_name, str(use_acc), div_alpha))
             if idx1 == 1:
                 df_data_all = pandas.read_pickle(
                     "results/enet_%s_%s_%s%i.pkl" % (
@@ -140,7 +140,7 @@ for idx1, div_alpha in enumerate(dataset_names):
             if idx1 == 2:
                 df_data_all = pandas.read_pickle(
                     "results/logreg_%s_%s_%s%i.pkl" % (
-                        "news20", algo_name, str(use_acc), div_alpha))
+                        "news20.binary", algo_name, str(use_acc), div_alpha))
                 # if div_alpha == 1000:
                 #     import ipdb; ipdb.set_trace()
 
@@ -167,7 +167,7 @@ for idx1, div_alpha in enumerate(dataset_names):
 
 axarr_times_E[0, 0].set_ylabel("Lasso \n rcv1", fontsize=fontsize)
 axarr_times_E[1, 0].set_ylabel("Enet \n leuk.", fontsize=fontsize)
-axarr_times_E[2, 0].set_ylabel("Logreg \n news20", fontsize=fontsize)
+axarr_times_E[2, 0].set_ylabel("Logreg \n news20.binary", fontsize=fontsize)
 
 axarr_times_E[0, 0].set_ylim((1e-16, 2))
 
