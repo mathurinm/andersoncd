@@ -66,7 +66,7 @@ Load the data:
 .. code-block:: default
 
 
-    dataset = "rcv1_train"
+    dataset = "rcv1.binary"
     X, y = fetch_libsvm(dataset)
     X = X[:, :1000]
 
@@ -85,7 +85,7 @@ Load the data:
 
  .. code-block:: none
 
-    Dataset: rcv1_train
+    Dataset: rcv1.binary
 
 
 
@@ -190,7 +190,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.614 seconds)
+   **Total running time of the script:** ( 0 minutes  8.940 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_influ_K.py:
