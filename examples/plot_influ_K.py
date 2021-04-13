@@ -22,7 +22,7 @@ configure_plt()
 ###############################################################################
 # Load the data:
 
-dataset = "rcv1_train"
+dataset = "rcv1.binary"
 X, y = fetch_libsvm(dataset)
 X = X[:, :1000]
 

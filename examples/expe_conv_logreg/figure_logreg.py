@@ -37,8 +37,8 @@ dataset_title["leukemia"] = "leukemia"
 dataset_title["gina_agnostic"] = "gina agnostic"
 dataset_title["hiva_agnostic"] = "hiva agnostic"
 dataset_title["upselling"] = "upselling"
-dataset_title["rcv1_train"] = "rcv1"
-dataset_title["news20"] = "news20"
+dataset_title["rcv1.binary"] = "rcv1"
+dataset_title["news20.binary"] = "news20"
 dataset_title["kdda_train"] = "kdd"
 dataset_title["finance"] = "finance"
 
@@ -47,14 +47,14 @@ dict_xlim = {}
 dict_xlim["gina_agnostic", 10] = 2500
 dict_xlim["gina_agnostic", 100] = 3000
 dict_xlim["gina_agnostic", 1000] = 10_000
-dict_xlim["rcv1_train", 10] = 1_000
-dict_xlim["rcv1_train", 100] = 5_000
-dict_xlim["rcv1_train", 1000] = 200_000
-dict_xlim["news20", 10] = 3_000
-dict_xlim["news20", 100] = 10_000
-dict_xlim["news20", 1000] = 150_000
+dict_xlim["rcv1.binary", 10] = 1_000
+dict_xlim["rcv1.binary", 100] = 5_000
+dict_xlim["rcv1.binary", 1000] = 200_000
+dict_xlim["news20.binary", 10] = 3_000
+dict_xlim["news20.binary", 100] = 10_000
+dict_xlim["news20.binary", 1000] = 150_000
 
-dataset_names = ["gina_agnostic", 'rcv1_train', "news20"]
+dataset_names = ["gina_agnostic", 'rcv1.binary', "news20.binary"]
 div_alphas = [10, 100, 1_000]
 
 fig, axarr = plt.subplots(
