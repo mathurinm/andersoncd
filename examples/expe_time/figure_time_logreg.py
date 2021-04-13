@@ -14,13 +14,18 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 
 # save_fig = False
 save_fig = True
+poster = True
 
 # if you want to run the expe quickly choose instead:
 # dataset_names = ["gina_agnostic", "rcv1_train"]
 dataset_names = ["gina_agnostic", "rcv1_train", "news20"]
 # dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", "rcv1_train"]
 # div_alphas = [10, 100]
-div_alphas = [10, 100, 1000]
+
+if poster:
+    div_alphas = [10, 100]
+else:
+    div_alphas = [10, 100, 1000]
 
 
 ######################################################################
@@ -66,7 +71,8 @@ dict_algo_name[False, "apcg"] = "PCD - inertial"
 
 dataset_title = {}
 dataset_title["leukemia"] = "leukemia"
-dataset_title["gina_agnostic"] = "gina agnostic"
+dataset_title["gina_agnostic"] = "gina"
+# dataset_title["gina_agnostic"] = "gina agnostic"
 dataset_title["hiva_agnostic"] = "hiva agnostic"
 dataset_title["upselling"] = "upselling"
 dataset_title["rcv1_train"] = "rcv1"
@@ -96,7 +102,13 @@ fig_times_gaps, axarr_times_gaps = plt.subplots(
 
 all_axarr = [axarr_times_E, axarr_times_gaps]
 
-fontsize = 22
+
+if poster:
+    fontsize = 40
+    labelsize = 40
+else:
+    fontsize = 22
+    labelsize = 25
 
 
 for idx1, dataset_name in enumerate(dataset_names):
@@ -141,7 +153,7 @@ for idx1, dataset_name in enumerate(dataset_names):
                 color=dict_color[algo_name])
 
         for axarr in all_axarr:
-            axarr[idx1, idx2].tick_params(axis='x', labelsize=25)
+            axarr[idx1, idx2].tick_params(axis='x', labelsize=labelsize)
             axarr[idx1, idx2].set_xlim(
                 0, dict_xlim[dataset_name, div_alpha])
 
@@ -151,7 +163,7 @@ for idx1, dataset_name in enumerate(dataset_names):
             axarr_times_E[-1, idx2].set_xlabel("Time (s)", fontsize=fontsize)
     for axarr in all_axarr:
         axarr[idx1, 0].set_yticks((1e-15, 1e-10, 1e-5, 1))
-        axarr[idx1, 0].tick_params(axis='y', labelsize=25)
+        axarr[idx1, 0].tick_params(axis='y', labelsize=labelsize)
 
         axarr[idx1, 0].set_ylabel(
             dataset_title[dataset_name], fontsize=fontsize)
@@ -160,8 +172,12 @@ axarr_times_E[0, 0].set_ylim((1e-16, 2))
 
 
 if save_fig:
-    fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
-    fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
+    if poster:
+        fig_dir = "../../../extrapol_cd/tex/poster/prebuiltimages/"
+        fig_dir_svg = "../../../extrapol_cd/tex/poster/images/"
+    else:
+        fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
+        fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
     fig_times_E.savefig(
         "%senergies_logreg_time.pdf" % fig_dir, bbox_inches="tight")
     fig_times_E.savefig(

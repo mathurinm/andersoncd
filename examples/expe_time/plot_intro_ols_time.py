@@ -16,9 +16,19 @@ from libsvmdata import fetch_libsvm
 
 from andersoncd.lasso import solver_enet, primal_enet, apcg_enet
 from andersoncd.plot_utils import (
-    configure_plt, _plot_legend_apart, dict_algo_name, dict_color)
+    configure_plt, _plot_legend_apart, dict_color)
 
-
+dict_algo_name = {}
+dict_algo_name["pgd", False] = "GD (Gradient Descent)"
+dict_algo_name["cd", False] = "CD (Coordinate Descent)"
+dict_algo_name["bcd", False] = "BCD"
+dict_algo_name["pgd", True] = "GD - Anderson"
+dict_algo_name["cd", True] = "CD - Anderson"
+dict_algo_name["bcd", True] = "BCD - Anderson"
+dict_algo_name["rcd", False] = "RCD (Randomized)"
+dict_algo_name["rbcd", False] = "RBCD"
+dict_algo_name["fista", False] = "GD - inertial"
+dict_algo_name["apcg", False] = "CD - inertial"
 # save_fig = False
 save_fig = True
 
@@ -78,7 +88,7 @@ all_algos = [
 dict_Es = {}
 dict_times = {}
 
-tmax = 50
+tmax = 2
 
 for algo in all_algos:
     print("Running ", dict_algo_name[algo])
@@ -130,11 +140,11 @@ for algo in all_algos:
         color=dict_color[algo[0]], linestyle=linestyle)
 
 ax.semilogy(
-    np.arange(len(E_cg)), E_cg - p_star, label="conjugate grad.",
+    np.arange(len(E_cg)), E_cg - p_star, label="Conjugate Gradient",
     color='black', linestyle='dashdot')
 
 ax_times.semilogy(
-    times_cg, E_cg - p_star, label="conjugate grad.",
+    times_cg, E_cg - p_star, label="Conjugate Gradient",
     color='black', linestyle='dashdot')
 
 
@@ -156,14 +166,23 @@ fig.tight_layout()
 fig_times.tight_layout()
 
 if save_fig:
-    fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
-    fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
-    fig_times.savefig(
-        "%senergies_time_ols.pdf" % fig_dir, bbox_inches="tight")
-    fig_times.savefig(
-        "%senergies_time_ols.svg" % fig_dir_svg, bbox_inches="tight")
-    _plot_legend_apart(
-        ax_times, "%senergies_time_ols_legend.pdf" % fig_dir, ncol=3)
+    all_fig_dir = [
+        "../../../extrapol_cd/tex/slides/prebuiltimages/",
+        "../../../extrapol_cd/tex/poster/prebuiltimages/"
+    ]
+    # fig_dir = "../../../extrapol_cd/tex/slides/prebuiltimages/"
+    # fig_dir_svg = "../../../extrapol_cd/tex/slides/images/"
+    # fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
+    # fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
+    # fig_times.savefig(
+    #     "%senergies_time_ols.pdf" % fig_dir, bbox_inches="tight")
+    # fig_times.savefig(
+    #     "%senergies_time_ols.svg" % fig_dir_svg, bbox_inches="tight")
+    for fig_dir in all_fig_dir:
+        _plot_legend_apart(
+            ax_times, "%senergies_time_ols_legend.pdf" % fig_dir, ncol=3)
+        _plot_legend_apart(
+            ax_times, "%senergies_time_ols_legend.svg" % fig_dir, ncol=3)
 
 
 fig.show()
