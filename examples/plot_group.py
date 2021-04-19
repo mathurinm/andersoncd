@@ -1,3 +1,12 @@
+"""
+====================================
+Plot Anderson CD for the group Lasso
+====================================
+
+This example shows the performance of Anderson acceleration
+of coordinate descent for the group Lasso.
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.linalg import norm
