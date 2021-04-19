@@ -28,8 +28,8 @@ dict_algo_name["rcd", False] = "RCD (Randomized)"
 dict_algo_name["rbcd", False] = "RBCD"
 dict_algo_name["fista", False] = "GD - inertial"
 dict_algo_name["apcg", False] = "CD - inertial"
-# save_fig = False
-save_fig = True
+
+save_fig = False
 
 configure_plt()
 
@@ -166,17 +166,9 @@ fig_times.tight_layout()
 
 if save_fig:
     all_fig_dir = [
-        "../../../extrapol_cd/tex/slides/prebuiltimages/",
-        "../../../extrapol_cd/tex/poster/prebuiltimages/"
+        "",
+        ""
     ]
-    # fig_dir = "../../../extrapol_cd/tex/slides/prebuiltimages/"
-    # fig_dir_svg = "../../../extrapol_cd/tex/slides/images/"
-    # fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
-    # fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
-    # fig_times.savefig(
-    #     "%senergies_time_ols.pdf" % fig_dir, bbox_inches="tight")
-    # fig_times.savefig(
-    #     "%senergies_time_ols.svg" % fig_dir_svg, bbox_inches="tight")
     for fig_dir in all_fig_dir:
         _plot_legend_apart(
             ax_times, "%senergies_time_ols_legend.pdf" % fig_dir, ncol=3)

@@ -13,8 +13,8 @@ from andersoncd.plot_utils import configure_plt, _plot_legend_apart
 from andersoncd.logreg import solver_logreg
 
 
-save_fig = True
-# save_fig = False
+# save_fig = True
+save_fig = False
 
 configure_plt()
 
@@ -101,8 +101,6 @@ plt.tight_layout()
 if save_fig:
     fig_dir = "../"
     fig_dir_svg = "../"
-    fig_dir = "../../extrapol_cd/tex/aistats20/prebuiltimages/"
-    fig_dir_svg = "../../extrapol_cd/tex/aistats20/images/"
     fig.savefig(
         "%sinflu_reg_amount_logreg_time.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(

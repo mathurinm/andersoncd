@@ -24,8 +24,8 @@ from andersoncd.lasso import solver_enet, primal_enet
 from andersoncd.logreg import solver_logreg, primal_logreg
 
 
-# save_fig = False
-save_fig = True
+save_fig = False
+# save_fig = True
 
 configure_plt()
 
@@ -172,8 +172,8 @@ for pb in ("ols", "logreg"):
     plt.tight_layout()
 
     if save_fig:
-        fig_dir = "../../extrapol_cd/tex/aistats20/prebuiltimages/"
-        fig_dir_svg = "../../extrapol_cd/tex/aistats20/images/"
+        fig_dir = ""
+        fig_dir_svg = ""
         fig.savefig(
             "%senergies_cdsym_%s_time.pdf" % (fig_dir, pb),
             bbox_inches="tight")
