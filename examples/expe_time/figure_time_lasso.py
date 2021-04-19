@@ -36,7 +36,8 @@ elif document == 'slides':
 else:
     fig_dir = "../../../extrapol_cd/tex/aistats20/prebuiltimages/"
     fig_dir_svg = "../../../extrapol_cd/tex/aistats20/images/"
-    dataset_names = ["leukemia", "gina_agnostic", "hiva_agnostic", "rcv1_train"]
+    dataset_names = [
+        "leukemia", "gina_agnostic", "hiva_agnostic", "rcv1_train"]
     div_alphas = [10, 100, 1000, 5000]
     fontsize = 22
     labelsize = 25

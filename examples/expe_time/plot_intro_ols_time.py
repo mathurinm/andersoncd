@@ -7,7 +7,6 @@ outperforms inertial acceleration.
 """
 import time
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy import sparse
 from numpy.linalg import norm
