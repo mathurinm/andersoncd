@@ -106,7 +106,8 @@ if save_fig:
     fig.savefig(
         "%sinflu_reg_amount_logreg_time.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(
-        "%sinflu_reg_amount_logreg_time.svg" % fig_dir_svg, bbox_inches="tight")
+        "%sinflu_reg_amount_logreg_time.svg" % fig_dir_svg,
+        bbox_inches="tight")
     fig = _plot_legend_apart(
         ax, "%sinflu_reg_amount_logreg_legend.pdf" % fig_dir, ncol=3)
 
