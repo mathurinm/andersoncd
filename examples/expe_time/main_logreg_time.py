@@ -12,14 +12,13 @@ from andersoncd.logreg import solver_logreg, apcg_logreg
 
 # to generate the exact fig of the paper:
 # dataset_names = [
-#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1_train']
+#     "leukemia", "gina_agnostic", "hiva_agnostic", 'rcv1.binary']
 # div_alphas = [10, 100, 1000, 5000]
 
 
 # if you want to run the file quickly choose instead:
 # dataset_names = ["leukemia"]
-# dataset_names = ["gina_agnostic"]
-dataset_names = ["news20"]
+dataset_names = ["news20.binary"]
 div_alphas = [1000]
 # div_alphas = [10, 100, 1000, 5000]
 
@@ -43,8 +42,8 @@ dict_f_gap["mushroom"] = 10
 dict_f_gap["gina_agnostic"] = 10
 dict_f_gap["hiva_agnostic"] = 10
 dict_f_gap["upselling"] = 10
-dict_f_gap["rcv1_train"] = 10
-dict_f_gap["news20"] = 10
+dict_f_gap["rcv1.binary"] = 10
+dict_f_gap["news20.binary"] = 10
 dict_f_gap["kdda_train"] = 10
 dict_f_gap["finance"] = 50
 
@@ -55,19 +54,19 @@ dict_tmax["gina_agnostic", 100] = 200
 dict_tmax["gina_agnostic", 1000] = 1000
 dict_tmax["gina_agnostic", 5000] = 3600
 
-dict_tmax["rcv1_train", 10] = 10
-dict_tmax["rcv1_train", 100] = 250
-dict_tmax["rcv1_train", 1000] = 6250
+dict_tmax["rcv1_train.binary", 10] = 10
+dict_tmax["rcv1_train.binary", 100] = 250
+dict_tmax["rcv1_train.binary", 1000] = 6250
 
-dict_tmax["news20", 10] = 200
-dict_tmax["news20", 100] = 7000
-dict_tmax["news20", 1000] = 30_000
+dict_tmax["news20.binary", 10] = 200
+dict_tmax["news20.binary", 100] = 7000
+dict_tmax["news20.binary", 1000] = 30_000
 
 
 def parallel_function(dataset_name, algo, div_alpha):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20', 'kdda_train', 'finance')):
+            'rcv1.binary', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
     else:
         X, y = load_openml(dataset_name, normalize_y=False)
@@ -114,7 +113,7 @@ def parallel_function(dataset_name, algo, div_alpha):
         'dataset', 'algo_name', 'use_acc', 'K', 'div_alpha', "optimum", "E",
         "gaps", "f_gaps", "times"]
     str_results = "results/logreg_%s_%s_%s%i.pkl" % (
-                dataset_name, algo_name, str(use_acc), div_alpha)
+        dataset_name, algo_name, str(use_acc), div_alpha)
     df.to_pickle(str_results)
 
 

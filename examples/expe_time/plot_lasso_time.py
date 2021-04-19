@@ -14,8 +14,8 @@ configure_plt()
 # Load the data:
 
 # n_features = 1000
-# X, y = fetch_libsvm('rcv1_train', normalize=True)
-# # X = X[:, :n_features]
+X, y = fetch_libsvm("rcv1.binary", normalize=True)
+# X = X[:, :n_features]
 
 # y -= y.mean()
 # y /= norm(y)

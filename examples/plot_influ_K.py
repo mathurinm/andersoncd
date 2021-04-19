@@ -24,9 +24,9 @@ configure_plt()
 ###############################################################################
 # Load the data:
 
-dataset = "rcv1_train"
-X, y = fetch_libsvm(dataset, normalize=True)
-X = X[:, :5000]
+dataset = "rcv1.binary"
+X, y = fetch_libsvm(dataset)
+X = X[:, :1000]
 
 X.multiply(1 / sparse.linalg.norm(X, axis=0))
 y -= y.mean()

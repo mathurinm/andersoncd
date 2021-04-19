@@ -7,7 +7,7 @@ from andersoncd.plot_utils import configure_plt
 configure_plt()
 
 datasets = [
-    "gina_agnostic", "rcv1_train", "real-sim", "news20"]
+    "gina_agnostic", "rcv1.binary", "real-sim", "news20.binary"]
 
 
 dataset_title = {}
@@ -15,8 +15,8 @@ dataset_title["leukemia"] = "leukemia"
 dataset_title["gina_agnostic"] = "gina agnostic"
 dataset_title["hiva_agnostic"] = "hiva agnostic"
 dataset_title["upselling"] = "upselling"
-dataset_title["rcv1_train"] = "rcv1"
-dataset_title["news20"] = "news20"
+dataset_title["rcv1.binary"] = "rcv1"
+dataset_title["news20.binary"] = "news20"
 dataset_title["kdda_train"] = "kdd"
 dataset_title["real-sim"] = "real-sim"
 dataset_title["finance"] = "finance"

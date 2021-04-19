@@ -33,8 +33,8 @@ dict_f_gap["mushroom"] = 10
 dict_f_gap["gina_agnostic"] = 10
 dict_f_gap["hiva_agnostic"] = 10
 dict_f_gap["upselling"] = 10
-dict_f_gap["rcv1_train"] = 10
-dict_f_gap["news20"] = 10
+dict_f_gap["rcv1.binary"] = 10
+dict_f_gap["news20.binary"] = 10
 dict_f_gap["kdda_train"] = 10
 dict_f_gap["finance"] = 50
 
@@ -44,16 +44,16 @@ dict_tmax["leukemia", 100] = 30
 dict_tmax["leukemia", 1000] = 100
 dict_tmax["leukemia", 5000] = 200
 
-dict_tmax["rcv1_train", 10] = 5
-dict_tmax["rcv1_train", 100] = 10
-dict_tmax["rcv1_train", 1000] = 120
-dict_tmax["rcv1_train", 5000] = 600
+dict_tmax["rcv1.binary", 10] = 5
+dict_tmax["rcv1.binary", 100] = 10
+dict_tmax["rcv1.binary", 1000] = 120
+dict_tmax["rcv1.binary", 5000] = 600
 
 
 def parallel_function(dataset_name, algo, div_alpha, div_rho):
     algo_name, use_acc, K = algo
     if dataset_name.startswith((
-            'rcv1_train', 'news20', 'kdda_train', 'finance')):
+            'rcv1.binary', 'news20.binary', 'kdda_train', 'finance')):
         X, y = fetch_libsvm(dataset_name, normalize=True)
         y -= y.mean()
         y /= np.linalg.norm(y)
