@@ -20,21 +20,17 @@ from andersoncd.plot_utils import (
 from extra.utils import fetch_leukemia
 from scipy import sparse
 
-save_fig = True
-# save_fig = False
+save_fig = False
 
 configure_plt()
 
 X, y, = fetch_leukemia()
 X = X[:, :7120]
-# np.random.seed(0)
-# X = np.random.randn(30, 50)
 if not sparse.issparse(X):
     y -= y.mean()
     X -= np.mean(X, axis=0)[None, :]
     X /= norm(X, axis=0)[None, :]
 else:
-    # pass
     X.multiply(1 / sparse.linalg.norm(X, axis=0))
     y -= y.mean()
     y /= norm(y)
@@ -50,10 +46,6 @@ alpha = alpha_max / 10
 tol = 1e-32
 
 max_iter = 500
-# solver_group(
-#     X, y, alpha, grp_size, max_iter=max_iter, tol=tol, algo="pgd", f_gap=100,
-#     use_acc=True)
-
 
 E = defaultdict(lambda: dict())
 dict_times = defaultdict(lambda: dict())
@@ -80,7 +72,6 @@ E0 = E["bcd"][True][0]
 plt.close('all')
 plt.figure()
 fig, ax = plt.subplots(figsize=(9, 4))
-# for algo in algos:
 for algo in all_algos:
     acc = algo[1]
     if acc:
@@ -98,7 +89,6 @@ for algo in all_algos:
 ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 
 fontsize = 30
-# ax_times.set_ylabel("OLS \n rcv1", fontsize=fontsize)
 ax.set_ylabel(r"Suboptimality")
 ax.set_xlabel(r"Time (s)", fontsize=fontsize)
 ax.set_xlim((0, 100))
@@ -108,8 +98,8 @@ ax.tick_params(axis='y', labelsize=35)
 fig.tight_layout()
 
 if save_fig:
-    fig_dir = "../../extrapol_cd/tex/aistats20/prebuiltimages/"
-    fig_dir_svg = "../../extrapol_cd/tex/aistats20/images/"
+    fig_dir = ""
+    fig_dir_svg = ""
     fig.savefig(
         "%senergies_group_time.pdf" % fig_dir, bbox_inches="tight")
     fig.savefig(
