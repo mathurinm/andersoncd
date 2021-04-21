@@ -24,11 +24,12 @@ Convergence of CD, pseudo-symmetric CD, and their Anderson versions
 On least squares and logistic regression, performance of pseudo-symmetric
 coordinate descent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-28
+.. GENERATED FROM PYTHON SOURCE LINES 9-32
 
 .. code-block:: default
 
     from collections import defaultdict
+    import time
 
     import numpy as np
     import seaborn as sns
@@ -39,11 +40,14 @@ coordinate descent.
     from scipy.optimize import fmin_l_bfgs_b
     from libsvmdata import fetch_libsvm
 
-    from andersoncd.plot_utils import configure_plt
+    from andersoncd.plot_utils import configure_plt, _plot_legend_apart
     from andersoncd.utils import power_method
     from andersoncd.lasso import solver_enet, primal_enet
     from andersoncd.logreg import solver_logreg, primal_logreg
 
+
+    save_fig = False
+    # save_fig = True
 
     configure_plt()
 
@@ -86,11 +90,11 @@ coordinate descent.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Load the data:
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-38
+.. GENERATED FROM PYTHON SOURCE LINES 34-42
 
 .. code-block:: default
 
@@ -119,11 +123,11 @@ Load the data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
 Generate figures for both Least Squares and Logistic regression
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-153
+.. GENERATED FROM PYTHON SOURCE LINES 44-189
 
 .. code-block:: default
 
@@ -134,18 +138,24 @@ Generate figures for both Least Squares and Logistic regression
 
         f_gap = 10
         tol = 1e-15
-        max_iter = 750
+        max_iter = 1000
 
+        t_start = time.time()
+        t_optimal = []
         # run "best algorithm": conj. grad. for LS, LBFGS for logreg:
         E_optimal = []
         if pb == "logreg":
             rho = power_method(X) ** 2 / 100_000  # a bit of enet regularization
             E_optimal.append(np.log(2) * len(y))
+            t_optimal.append(0)
             label_opt = "L-BFGS"
+            tmax = 20
+            t_start = time.time()
 
             def callback(x):
                 pobj = primal_logreg(X @ x, y, x, 0, rho)
                 E_optimal.append(pobj)
+                t_optimal.append(time.time() - t_start)
 
             def obj(x):
                 return np.log(1 + np.exp(- y * (X @ x))).sum() + rho * x @ x / 2
@@ -160,11 +170,16 @@ Generate figures for both Least Squares and Logistic regression
             alpha = 0
             rho = 0  # no elastic net
             E_optimal.append(norm(y) ** 2 / 2)
+            t_optimal.append(0)
             label_opt = "conjugate grad."
+            t_start = time.time()
+            tmax = 3
 
             def callback(x):
                 pobj = primal_enet(y - X @ x, x, alpha)
                 E_optimal.append(pobj)
+                t_optimal.append(time.time() - t_start)
+
             cg(X.T @ X, X.T @ y, callback=callback, maxiter=max_iter, tol=1e-32)
         E_optimal = np.array(E_optimal)
 
@@ -173,36 +188,41 @@ Generate figures for both Least Squares and Logistic regression
             ('cd', True),
             ('cdsym', False),
             ('cdsym', True),
+            ('rcd', False),
         ]
 
         dict_coef = defaultdict(lambda: 1)
         dict_coef['cdsym'] = 2
         algo_names = {}
         algo_names["cd", False] = "CD"
+        algo_names["rcd", False] = "RCD"
         algo_names["cdsym", False] = "CD sym"
         algo_names["cd", True] = "CD - Anderson"
         algo_names["cdsym", True] = "CD sym - Anderson"
 
         dict_Es = {}
+        dict_times = {}
 
         for algo in all_algos:
             print("Running %s" % algo_names[algo])
             if pb == "ols":
-                w, E, _ = solver_enet(
+                _, E, _, times = solver_enet(
                     X, y, alpha=alpha, f_gap=f_gap,
                     max_iter=int(max_iter/dict_coef[algo[0]]), tol=tol,
-                    algo=algo[0], use_acc=algo[1])
+                    algo=algo[0], use_acc=algo[1], compute_time=True, tmax=tmax)
             elif pb == "logreg":
-                w, E, _ = solver_logreg(
+                _, E, _, times = solver_logreg(
                     X, y, alpha=alpha, rho=rho, f_gap=f_gap,
                     max_iter=max_iter//dict_coef[algo[0]], tol=tol,
-                    algo=algo[0], use_acc=algo[1])
+                    algo=algo[0], use_acc=algo[1], compute_time=True, tmax=tmax)
             dict_Es[algo] = E
+            dict_times[algo] = times
 
         current_palette = sns.color_palette("colorblind")
         dict_color = {}
         dict_color["cd"] = current_palette[1]
         dict_color['cdsym'] = current_palette[2]
+        dict_color["rcd"] = current_palette[3]
 
         p_star = E_optimal[-1]
         for E in dict_Es.values():
@@ -210,18 +230,21 @@ Generate figures for both Least Squares and Logistic regression
 
         plt.close('all')
         fig, ax = plt.subplots(figsize=(10, 5))
-        for i, algo in enumerate(all_algos):
+        for algo in all_algos:
             E = dict_Es[algo]
             use_acc = algo[1]
             linestyle = 'dashed' if use_acc else 'solid'
-
             ax.semilogy(
-                dict_coef[algo[0]] * f_gap * np.arange(len(E)), E - p_star,
+                dict_times[algo],
+                # dict_coef[algo[0]] * f_gap * np.arange(len(E)),
+                E - p_star,
                 label=algo_names[algo],
                 color=dict_color[algo[0]], linestyle=linestyle)
 
         ax.semilogy(
-            np.arange(len(E_optimal)), E_optimal - p_star,
+            t_optimal,
+            # np.arange(len(E_optimal)),
+            E_optimal - p_star,
             label=label_opt, color='black', linestyle='dashdot')
 
         dict_dataset = {}
@@ -232,10 +255,23 @@ Generate figures for both Least Squares and Logistic regression
         str_info = "%s (%i st columns)" % (dataset, n_features)
         title = pb + str_info
 
-        plt.ylabel(r"$f(x^{(k)}) - f(x^{*})$")
-        plt.xlabel("nb gradient calls")
+        plt.ylabel(r"Suboptimality")
+        plt.xlabel(r"Time (s)")
+        plt.xlim((0, tmax))
         plt.ylim((1e-10, None))
         plt.tight_layout()
+
+        if save_fig:
+            fig_dir = ""
+            fig_dir_svg = ""
+            fig.savefig(
+                "%senergies_cdsym_%s_time.pdf" % (fig_dir, pb),
+                bbox_inches="tight")
+            fig.savefig(
+                "%senergies_cdsym_%s_time.svg" % (fig_dir, pb),
+                bbox_inches="tight")
+            _plot_legend_apart(
+                ax, "%senergies_cdsym_%s_legend.pdf" % (fig_dir, pb), ncol=4)
 
         plt.legend()
         plt.title(title.replace('_', ' '))
@@ -258,10 +294,271 @@ Generate figures for both Least Squares and Logistic regression
     Running CD - Anderson
     Running CD sym
     Running CD sym - Anderson
+    Running RCD
     Running CD
+    elapsed time: 0.000694 
+    elapsed time: 0.597634 
+    elapsed time: 0.902789 
+    elapsed time: 1.216829 
+    elapsed time: 1.534009 
+    elapsed time: 1.828877 
+    elapsed time: 2.136982 
+    elapsed time: 2.456678 
+    elapsed time: 2.766063 
+    elapsed time: 3.101616 
+    elapsed time: 3.405039 
+    elapsed time: 3.707134 
+    elapsed time: 4.021865 
+    elapsed time: 4.335528 
+    elapsed time: 4.665823 
+    elapsed time: 4.983811 
+    elapsed time: 5.288312 
+    elapsed time: 5.607402 
+    elapsed time: 5.913680 
+    elapsed time: 6.267961 
+    elapsed time: 6.574798 
+    elapsed time: 6.890353 
+    elapsed time: 7.195048 
+    elapsed time: 7.498693 
+    elapsed time: 7.815607 
+    elapsed time: 8.143786 
+    elapsed time: 8.462679 
+    elapsed time: 8.775636 
+    elapsed time: 9.082301 
+    elapsed time: 9.387960 
+    elapsed time: 9.698674 
+    elapsed time: 10.010381 
+    elapsed time: 10.311784 
+    elapsed time: 10.623412 
+    elapsed time: 10.927904 
+    elapsed time: 11.238560 
+    elapsed time: 11.542783 
+    elapsed time: 11.864769 
+    elapsed time: 12.164901 
+    elapsed time: 12.477211 
+    elapsed time: 12.782711 
+    elapsed time: 13.084122 
+    elapsed time: 13.398383 
+    elapsed time: 13.708681 
+    elapsed time: 14.024605 
+    elapsed time: 14.327208 
+    elapsed time: 14.639637 
+    elapsed time: 14.960694 
+    elapsed time: 15.264452 
+    elapsed time: 15.565533 
+    elapsed time: 15.874391 
+    elapsed time: 16.178631 
+    elapsed time: 16.487257 
+    elapsed time: 16.798898 
+    elapsed time: 17.099859 
+    elapsed time: 17.412950 
+    elapsed time: 17.712450 
+    elapsed time: 18.019732 
+    elapsed time: 18.356039 
+    elapsed time: 18.673423 
+    elapsed time: 18.986182 
+    elapsed time: 19.298573 
+    elapsed time: 19.615953 
+    elapsed time: 19.923356 
+    elapsed time: 20.243770 
     Running CD - Anderson
+    elapsed time: 0.000982 
+    elapsed time: 0.321909 
+    elapsed time: 0.642131 
+    elapsed time: 0.972878 
+    elapsed time: 1.289567 
+    elapsed time: 1.608745 
+    elapsed time: 1.935936 
+    elapsed time: 2.268523 
+    elapsed time: 2.585157 
+    elapsed time: 2.903221 
+    elapsed time: 3.220495 
+    elapsed time: 3.548871 
+    elapsed time: 3.916376 
+    elapsed time: 4.221350 
+    elapsed time: 4.561613 
+    elapsed time: 4.878388 
+    elapsed time: 5.192957 
+    elapsed time: 5.513025 
+    elapsed time: 5.824233 
+    elapsed time: 6.134467 
+    elapsed time: 6.460149 
+    elapsed time: 6.776306 
+    elapsed time: 7.089809 
+    elapsed time: 7.411684 
+    elapsed time: 7.724384 
+    elapsed time: 8.031294 
+    elapsed time: 8.341999 
+    elapsed time: 8.644021 
+    elapsed time: 8.954033 
+    elapsed time: 9.266302 
+    elapsed time: 9.578008 
+    elapsed time: 9.876417 
+    elapsed time: 10.190645 
+    elapsed time: 10.497629 
+    elapsed time: 10.797843 
+    elapsed time: 11.101765 
+    elapsed time: 11.415753 
+    elapsed time: 11.719393 
+    elapsed time: 12.030561 
+    elapsed time: 12.355776 
+    elapsed time: 12.661552 
+    elapsed time: 12.978383 
+    elapsed time: 13.293192 
+    elapsed time: 13.597463 
+    elapsed time: 13.917089 
+    elapsed time: 14.249958 
+    elapsed time: 14.569824 
+    elapsed time: 14.888428 
+    elapsed time: 15.199190 
+    elapsed time: 15.518310 
+    elapsed time: 15.831291 
+    elapsed time: 16.147205 
+    elapsed time: 16.468243 
+    elapsed time: 16.798094 
+    elapsed time: 17.113385 
+    elapsed time: 17.423508 
+    elapsed time: 17.745848 
+    elapsed time: 18.076450 
+    elapsed time: 18.390460 
+    elapsed time: 18.711057 
+    elapsed time: 19.035311 
+    elapsed time: 19.359676 
+    elapsed time: 19.689478 
+    elapsed time: 20.009642 
     Running CD sym
+    elapsed time: 0.001071 
+    elapsed time: 0.641905 
+    elapsed time: 1.264086 
+    elapsed time: 1.878061 
+    elapsed time: 2.519953 
+    elapsed time: 3.123832 
+    elapsed time: 3.742539 
+    elapsed time: 4.372576 
+    elapsed time: 5.011686 
+    elapsed time: 5.648953 
+    elapsed time: 6.274669 
+    elapsed time: 6.911125 
+    elapsed time: 7.557972 
+    elapsed time: 8.181780 
+    elapsed time: 8.801146 
+    elapsed time: 9.433264 
+    elapsed time: 10.056952 
+    elapsed time: 10.697342 
+    elapsed time: 11.322685 
+    elapsed time: 11.914204 
+    elapsed time: 12.552527 
+    elapsed time: 13.173123 
+    elapsed time: 13.802610 
+    elapsed time: 14.432261 
+    elapsed time: 15.035403 
+    elapsed time: 15.643397 
+    elapsed time: 16.250014 
+    elapsed time: 16.885834 
+    elapsed time: 17.499328 
+    elapsed time: 18.125569 
+    elapsed time: 18.765794 
+    elapsed time: 19.398678 
+    elapsed time: 20.043304 
     Running CD sym - Anderson
+    elapsed time: 0.000700 
+    elapsed time: 0.622703 
+    elapsed time: 1.255111 
+    elapsed time: 1.901163 
+    elapsed time: 2.518607 
+    elapsed time: 3.149846 
+    elapsed time: 3.774860 
+    elapsed time: 4.399688 
+    elapsed time: 5.014066 
+    elapsed time: 5.663604 
+    elapsed time: 6.306113 
+    elapsed time: 6.957877 
+    elapsed time: 7.590865 
+    elapsed time: 8.229254 
+    elapsed time: 8.864462 
+    elapsed time: 9.528480 
+    elapsed time: 10.201694 
+    elapsed time: 10.843022 
+    elapsed time: 11.491122 
+    elapsed time: 12.163048 
+    elapsed time: 12.788138 
+    elapsed time: 13.431561 
+    elapsed time: 14.100417 
+    elapsed time: 14.757147 
+    elapsed time: 15.383727 
+    elapsed time: 16.034541 
+    elapsed time: 16.670663 
+    elapsed time: 17.295357 
+    elapsed time: 17.944071 
+    elapsed time: 18.592056 
+    elapsed time: 19.254809 
+    elapsed time: 19.919572 
+    elapsed time: 20.567677 
+    Running RCD
+    elapsed time: 0.000682 
+    elapsed time: 0.340919 
+    elapsed time: 0.675941 
+    elapsed time: 1.016961 
+    elapsed time: 1.357330 
+    elapsed time: 1.663816 
+    elapsed time: 1.985675 
+    elapsed time: 2.290790 
+    elapsed time: 2.602782 
+    elapsed time: 2.925827 
+    elapsed time: 3.251224 
+    elapsed time: 3.566897 
+    elapsed time: 3.884418 
+    elapsed time: 4.205625 
+    elapsed time: 4.528835 
+    elapsed time: 4.860308 
+    elapsed time: 5.171173 
+    elapsed time: 5.479401 
+    elapsed time: 5.795814 
+    elapsed time: 6.100455 
+    elapsed time: 6.408930 
+    elapsed time: 6.737997 
+    elapsed time: 7.054827 
+    elapsed time: 7.358073 
+    elapsed time: 7.661797 
+    elapsed time: 7.971503 
+    elapsed time: 8.270350 
+    elapsed time: 8.579502 
+    elapsed time: 8.883163 
+    elapsed time: 9.211414 
+    elapsed time: 9.553418 
+    elapsed time: 9.860513 
+    elapsed time: 10.194551 
+    elapsed time: 10.511323 
+    elapsed time: 10.834603 
+    elapsed time: 11.159492 
+    elapsed time: 11.470946 
+    elapsed time: 11.793332 
+    elapsed time: 12.115924 
+    elapsed time: 12.451344 
+    elapsed time: 12.776918 
+    elapsed time: 13.099183 
+    elapsed time: 13.414575 
+    elapsed time: 13.735270 
+    elapsed time: 14.038245 
+    elapsed time: 14.359293 
+    elapsed time: 14.683102 
+    elapsed time: 15.002002 
+    elapsed time: 15.310271 
+    elapsed time: 15.638345 
+    elapsed time: 15.954101 
+    elapsed time: 16.259475 
+    elapsed time: 16.561276 
+    elapsed time: 16.893531 
+    elapsed time: 17.245175 
+    elapsed time: 17.559453 
+    elapsed time: 17.876188 
+    elapsed time: 18.193964 
+    elapsed time: 18.507878 
+    elapsed time: 18.827364 
+    elapsed time: 19.178811 
+    elapsed time: 19.497012 
+    elapsed time: 19.817533 
+    elapsed time: 20.136817 
 
 
 
@@ -269,7 +566,7 @@ Generate figures for both Least Squares and Logistic regression
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  4.688 seconds)
+   **Total running time of the script:** ( 2 minutes  11.116 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_cd_sym.py:

@@ -38,6 +38,27 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example shows the superiority of Anderson acceleration of block coordinate descent for the...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_group_thumb.png
+     :alt: Anderson Block Coordinate Descent for the group Lasso
+
+     :ref:`sphx_glr_auto_examples_plot_group.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_group
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Why regularizing the linear system seems to hurt Anderson performance.">
 
 .. only:: html
