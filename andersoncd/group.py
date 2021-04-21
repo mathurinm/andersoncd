@@ -32,7 +32,7 @@ def BST_vec(x, u, grp_size):
     return (x.reshape(-1, grp_size) * scaling[:, None]).reshape(x.shape[0])
 
 
-# @njit
+@njit
 def _bcd(X, w, R, alpha, lc, groups):
     grp_size = w.shape[0] // lc.shape[0]
     for g in groups:
@@ -43,7 +43,7 @@ def _bcd(X, w, R, alpha, lc, groups):
         w[grp] = BST(old_w_g + Xg.T @ R / lc[g], alpha / lc[g])
         if norm(w[grp] - old_w_g) != 0:
             # R += ((old_w_g - w[grp]) * Xg).sum(axis=1)
-            R += ((old_w_g - w[grp])[None, :] * Xg).sum(axis=1)
+            R += np.sum((old_w_g - w[grp]) * Xg, axis=1)
 
 
 @njit
