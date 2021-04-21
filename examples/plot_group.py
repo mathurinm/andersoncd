@@ -7,44 +7,39 @@ This example shows the performance of Anderson acceleration
 of coordinate descent for the group Lasso.
 """
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 from collections import defaultdict
 from numpy.linalg import norm
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.datasets import fetch_openml
-from scipy import sparse
 
 from andersoncd.group import solver_group
-from andersoncd.plot_utils import (
-    configure_plt, _plot_legend_apart, dict_algo_name, dict_color)
+from andersoncd.plot_utils import (configure_plt, dict_algo_name, dict_color)
 
 save_fig = False
 
-configure_plt(fontsize=12)
+configure_plt(fontsize=14, poster=False)
 
 X, y = fetch_openml("leukemia", return_X_y=True)
 X, y = X.to_numpy(), y.to_numpy()
-X = X[:, :7120]
+X = X[:, :3_000]
 y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
-if not sparse.issparse(X):
-    y -= y.mean()
-    X -= np.mean(X, axis=0)[None, :]
-    X /= norm(X, axis=0)[None, :]
-else:
-    X.multiply(1 / sparse.linalg.norm(X, axis=0))
-    y -= y.mean()
-    y /= norm(y)
+
+y -= y.mean()
+X -= np.mean(X, axis=0)[None, :]
+X /= norm(X, axis=0)[None, :]
+
 
 grp_size = 5
 y = X @ np.random.randn(X.shape[1])
 
 
 alpha_max = np.max(norm((X.T @ y).reshape(-1, grp_size), axis=1))
-alpha = alpha_max / 100
+alpha = alpha_max / 50
 
 
-tol = 1e-32
+tol = 1e-10
 
 max_iter = 10_000
 
@@ -60,59 +55,41 @@ all_algos = [
     ('fista', False),
 ]
 
-for algo in all_algos:
-    acc = algo[1]
-    # blank run
+for name, use_acc in all_algos:
+    print(f"Algo: {name}, use Anderson: {use_acc}")
+    # dry run for numba compilation:
     solver_group(
-        X, y, alpha, grp_size, max_iter=max_iter, tol=tol, algo=algo[0],
-        f_gap=5, use_acc=algo[1], compute_time=True, tmax=1)
-    _, E[algo[0]][algo[1]], _, dict_times[algo[0]][algo[1]] = solver_group(
-        X, y, alpha, grp_size, max_iter=max_iter, tol=tol, algo=algo[0],
-        f_gap=5, use_acc=algo[1], compute_time=True, tmax=5)
+        X, y, alpha, grp_size, max_iter=2, tol=tol, algo=name,
+        f_gap=1, use_acc=use_acc, tmax=1, verbose=False)
+    _, E[name][use_acc], _, dict_times[name][use_acc] = solver_group(
+        X, y, alpha, grp_size, max_iter=max_iter, tol=tol, algo=name,
+        f_gap=5, use_acc=use_acc, compute_time=True, tmax=3.5, verbose=False)
 
 p_star = np.inf
-for algo, use_acc in all_algos:
-    p_star = min(p_star, E[algo][use_acc][-1])
+for name, use_acc in all_algos:
+    p_star = min(p_star, E[name][use_acc][-1])
 
 plt.close('all')
-plt.figure()
-fig, ax = plt.subplots(figsize=(9, 4))
-for algo in all_algos:
-    acc = algo[1]
-    if acc:
+fig, ax = plt.subplots(figsize=(7.5, 2.6), constrained_layout=True)
+for name, use_acc in all_algos:
+    if use_acc:
         linestyle = 'dashed'
-    elif algo[0].startswith(('fista', 'apcg')):
+    elif name.startswith(('fista', 'apcg')):
         linestyle = 'dotted'
-    elif algo[0].startswith('rbcd'):
+    elif name.startswith('rbcd'):
         linestyle = '-'
     else:
         linestyle = 'solid'
     ax.semilogy(
-        dict_times[algo[0]][algo[1]],
-        (E[algo[0]][acc] - p_star),
-        label=dict_algo_name[algo],
-        color=dict_color[algo[0]], linestyle=linestyle)
+        dict_times[name][use_acc],
+        (E[name][use_acc] - p_star),
+        label=dict_algo_name[(name, use_acc)],
+        color=dict_color[name], linestyle=linestyle)
 
-# ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
+ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
 
 ax.set_ylabel(r"Suboptimality")
 ax.set_xlabel(r"Time (s)")
-# ax.set_xlim((0, 100))
-# ax.set_ylim((1e-15, 1))
-ax.tick_params(axis='x')
-ax.tick_params(axis='y')
-fig.tight_layout()
 
-if save_fig:
-    fig_dir = ""
-    fig_dir_svg = ""
-    fig.savefig(
-        "%senergies_group_time.pdf" % fig_dir, bbox_inches="tight")
-    fig.savefig(
-        "%senergies_group_time.svg" % fig_dir_svg, bbox_inches="tight")
-    _plot_legend_apart(
-        ax, "%senergies_group_time_legend.pdf" % fig_dir, ncol=3)
-
-
-plt.legend()
+plt.legend(ncol=2)
 plt.show(block=False)

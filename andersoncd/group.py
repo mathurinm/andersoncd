@@ -70,7 +70,8 @@ def _bcd_sparse(
 
 def solver_group(
         X, y, alpha, grp_size, max_iter=10000, tol=1e-4, f_gap=10, K=5,
-        use_acc=False, algo='bcd', compute_time=False, tmax=np.infty):
+        use_acc=False, algo='bcd', compute_time=False, tmax=np.infty,
+        verbose=True):
     """Solve the GroupLasso with BCD/ISTA/FISTA, eventually with extrapolation.
 
     Groups are contiguous, of size grp_size.
@@ -147,10 +148,11 @@ def solver_group(
             theta = R / alpha
 
             if compute_time:
-                ellapsed_times = time.time() - t_start
-                times.append(ellapsed_times)
-                print("Ellapsed time: %f " % ellapsed_times)
-                if ellapsed_times > tmax:
+                elapsed_times = time.time() - t_start
+                times.append(elapsed_times)
+                if verbose:
+                    print("elapsed time: %f " % elapsed_times)
+                if elapsed_times > tmax:
                     break
 
             d_norm_theta = np.max(
@@ -161,8 +163,9 @@ def solver_group(
 
             gap = p_obj - d_obj
 
-            print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
-                  (it, p_obj, d_obj, gap))
+            if verbose:
+                print("Iteration %d, p_obj::%.5f, d_obj::%.5f, gap::%.2e" %
+                      (it, p_obj, d_obj, gap))
             gaps[it // f_gap] = gap
             if gap < tol:
                 print("Early exit")
@@ -210,7 +213,8 @@ def solver_group(
                         w = w_acc
                         R = R_acc
                 except np.linalg.LinAlgError:
-                    print("----------Linalg error")
+                    if verbose:
+                        print("----------Linalg error")
 
     if compute_time:
         return w, np.array(E), gaps[:it // f_gap + 1], times

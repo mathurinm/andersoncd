@@ -217,10 +217,10 @@ def solver_logreg(
             E.append(p_obj)
 
             if compute_time:
-                ellapsed_times = time.time() - t_start
-                times.append(ellapsed_times)
-                print("Ellapsed time: %f " % ellapsed_times)
-                if ellapsed_times > tmax:
+                elapsed_times = time.time() - t_start
+                times.append(elapsed_times)
+                print("elapsed time: %f " % elapsed_times)
+                if elapsed_times > tmax:
                     break
 
             if alpha != 0:
@@ -419,10 +419,10 @@ def apcg_logreg(
             E.append(p_obj)
 
             if compute_time:
-                ellapsed_times = time.time() - t_start
-                times.append(ellapsed_times)
-                print("Ellapsed time: %f " % ellapsed_times)
-                if ellapsed_times > tmax:
+                elapsed_times = time.time() - t_start
+                times.append(elapsed_times)
+                print("elapsed time: %f " % elapsed_times)
+                if elapsed_times > tmax:
                     break
 
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
