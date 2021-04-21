@@ -1,10 +1,10 @@
 """
-====================================
-Plot Anderson CD for the group Lasso
-====================================
+=====================================================
+Anderson Block Coordinate Descent for the group Lasso
+=====================================================
 
-This example shows the performance of Anderson acceleration
-of coordinate descent for the group Lasso.
+This example shows the superiority of Anderson acceleration
+of block coordinate descent for the group Lasso.
 """
 
 import numpy as np
