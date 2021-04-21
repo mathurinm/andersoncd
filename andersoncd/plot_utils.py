@@ -42,3 +42,27 @@ def _plot_legend_apart(ax, figname, ncol=None):
     fig.savefig(figname, bbox_inches="tight")
     os.system("pdfcrop %s %s" % (figname, figname))
     return fig
+
+
+dict_algo_name = {}
+dict_algo_name["pgd", False] = "GD"
+dict_algo_name["cd", False] = "CD"
+dict_algo_name["bcd", False] = "BCD"
+dict_algo_name["pgd", True] = "GD - Anderson"
+dict_algo_name["cd", True] = "CD - Anderson"
+dict_algo_name["bcd", True] = "BCD - Anderson"
+dict_algo_name["rcd", False] = "RCD"
+dict_algo_name["rbcd", False] = "RBCD"
+dict_algo_name["fista", False] = "GD - inertial"
+dict_algo_name["apcg", False] = "CD - inertial"
+
+
+current_palette = sns.color_palette("colorblind")
+dict_color = {}
+dict_color["pgd"] = current_palette[0]
+dict_color["fista"] = current_palette[0]
+dict_color["cd"] = current_palette[1]
+dict_color["bcd"] = current_palette[1]
+dict_color["rcd"] = current_palette[4]
+dict_color["rbcd"] = current_palette[4]
+dict_color["apcg"] = current_palette[1]

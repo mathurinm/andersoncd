@@ -217,10 +217,10 @@ def solver_logreg(
             E.append(p_obj)
 
             if compute_time:
-                ellapsed_times = time.time() - t_start
-                times.append(ellapsed_times)
-                print("Ellapsed time: %f " % ellapsed_times)
-                if ellapsed_times > tmax:
+                elapsed_times = time.time() - t_start
+                times.append(elapsed_times)
+                print("elapsed time: %f " % elapsed_times)
+                if elapsed_times > tmax:
                     break
 
             if alpha != 0:
@@ -341,8 +341,9 @@ def _apcg_sparse(
     return tau, tau_old
 
 
-def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0,
-                verbose=False):
+def apcg_logreg(
+        X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0, verbose=False,
+        compute_time=False, tmax=1000):
     """Solve the l1 regularized logistic regression with with accelerated
     proximal coordinate gradient.
 
@@ -364,7 +365,11 @@ def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0,
         Seed for randomness.
     verbose : bool, default=False
         Verbosity.
+    compute_time : bool, default=False
+        If you want to compute timings or not
 
+    tmax : float, default=1000
+        Maximum time (in seconds) the algorithm is allowed to run
 
     Returns
     -------
@@ -385,6 +390,10 @@ def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0,
         lc = sparse.linalg.norm(X, axis=0) ** 2 / 4.
     else:
         lc = (X ** 2).sum(axis=0) / 4.
+
+    if compute_time:
+        times = []
+        t_start = time.time()
 
     w = np.zeros(n_features)
     u = np.zeros(n_features)
@@ -409,6 +418,13 @@ def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0,
             p_obj = primal_logreg(Xw, y, w, alpha)
             E.append(p_obj)
 
+            if compute_time:
+                elapsed_times = time.time() - t_start
+                times.append(elapsed_times)
+                print("elapsed time: %f " % elapsed_times)
+                if elapsed_times > tmax:
+                    break
+
             if np.abs(p_obj) > np.abs(E[0] * 1e3):
                 break
 
@@ -432,5 +448,8 @@ def apcg_logreg(X, y, alpha, max_iter=10000, tol=1e-4, f_gap=10, seed=0,
             else:
                 if verbose:
                     print("Iteration %d, p_obj::%.10f" % (it, p_obj))
+
+    if compute_time:
+        return w, np.array(E), gaps[:it // f_gap + 1], times
 
     return w, np.array(E), gaps[:it // f_gap + 1]

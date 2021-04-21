@@ -1,4 +1,5 @@
 from itertools import product
+from collections import defaultdict
 
 import pandas
 import numpy as np
@@ -31,6 +32,7 @@ algos = [
     ['cd', True, 5]
 ]
 
+dict_maxiter = defaultdict(lambda: 1_000_000, key=None)
 
 dict_maxiter = {}
 dict_maxiter["leukemia", 10] = 550
@@ -86,13 +88,24 @@ dict_f_gap["finance"] = 50
 
 dict_tmax = {}
 dict_tmax["leukemia", 10] = 10
-dict_tmax["leukemia", 100] = 20
-dict_tmax["leukemia", 1000] = 120
+dict_tmax["leukemia", 100] = 100
+dict_tmax["leukemia", 1000] = 1_000
+dict_tmax["leukemia", 5000] = 3_600
+
+dict_tmax["hiva_agnostic", 10] = 5
+dict_tmax["hiva_agnostic", 100] = 100
+dict_tmax["hiva_agnostic", 1000] = 3_600
+dict_tmax["hiva_agnostic", 5000] = 7_200
+
+dict_tmax["gina_agnostic", 10] = 5
+dict_tmax["gina_agnostic", 100] = 100
+dict_tmax["gina_agnostic", 1000] = 100
+dict_tmax["gina_agnostic", 5000] = 100
 
 dict_tmax["rcv1.binary", 10] = 5
 dict_tmax["rcv1.binary", 100] = 10
 dict_tmax["rcv1.binary", 1000] = 300
-dict_tmax["rcv1.binary", 5000] = 600
+dict_tmax["rcv1.binary", 5000] = 1500
 
 dict_tmax["news20.binary", 10] = 60
 dict_tmax["news20.binary", 100] = 10
