@@ -4,7 +4,6 @@ import seaborn as sns
 from scipy.sparse import issparse
 
 from numpy.linalg import norm
-from scipy.linalg import toeplitz
 
 
 C_LIST = sns.color_palette()
