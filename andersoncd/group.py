@@ -3,10 +3,9 @@ import numpy as np
 
 from scipy import sparse
 from numba import njit
-
 from numpy.linalg import norm
+from scipy.sparse.linalg import svds
 
-from andersoncd.utils import power_method
 from andersoncd.lasso import dual_lasso
 
 
@@ -25,7 +24,6 @@ def BST(x, u):
         return (1 - u / norm_x) * x
 
 
-# @njit
 def BST_vec(x, u, grp_size):
     norm_grp = norm(x.reshape(-1, grp_size), axis=1)
     scaling = np.maximum(1 - u / norm_grp, 0)
@@ -36,13 +34,11 @@ def BST_vec(x, u, grp_size):
 def _bcd(X, w, R, alpha, lc, groups):
     grp_size = w.shape[0] // lc.shape[0]
     for g in groups:
-        # for g in range(lc.shape[0]):
         grp = slice(g * grp_size, (g + 1) * grp_size)
         Xg = X[:, grp]
         old_w_g = w[grp].copy()
         w[grp] = BST(old_w_g + Xg.T @ R / lc[g], alpha / lc[g])
         if norm(w[grp] - old_w_g) != 0:
-            # R += ((old_w_g - w[grp]) * Xg).sum(axis=1)
             R += np.sum((old_w_g - w[grp]) * Xg, axis=1)
 
 
@@ -113,7 +109,7 @@ def solver_group(
 
     if algo in ('pgd', 'fista'):
         if is_sparse:
-            L = power_method(X, max_iter=1000) ** 2
+            L = svds(X, k=1)[1][0] ** 2
         else:
             L = norm(X, ord=2) ** 2
 
@@ -178,7 +174,7 @@ def solver_group(
             else:
                 _bcd(X, w, R, alpha, lc, groups[algo]())
         elif algo == 'pgd':
-            w[:] = BST_vec(w + 1. / L * X.T @ R, alpha / L, grp_size)
+            w[:] = BST_vec(w + X.T @ R / L, alpha / L, grp_size)
             R[:] = y - X @ w
         elif algo == 'fista':
             w_old = w.copy()

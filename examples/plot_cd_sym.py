@@ -14,12 +14,11 @@ import seaborn as sns
 from scipy import sparse
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
-from scipy.sparse.linalg import cg
+from scipy.sparse.linalg import cg, svds
 from scipy.optimize import fmin_l_bfgs_b
 from libsvmdata import fetch_libsvm
 
 from andersoncd.plot_utils import configure_plt, _plot_legend_apart
-from andersoncd.utils import power_method
 from andersoncd.lasso import solver_enet, primal_enet
 from andersoncd.logreg import solver_logreg, primal_logreg
 
@@ -55,7 +54,7 @@ for pb in ("ols", "logreg"):
     # run "best algorithm": conj. grad. for LS, LBFGS for logreg:
     E_optimal = []
     if pb == "logreg":
-        rho = power_method(X) ** 2 / 100_000  # a bit of enet regularization
+        rho = svds(X, k=1)[1][0] ** 2 / 100_000  # a bit of enet regularization
         E_optimal.append(np.log(2) * len(y))
         t_optimal.append(0)
         label_opt = "L-BFGS"
