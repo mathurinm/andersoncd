@@ -5,8 +5,7 @@ from scipy import sparse
 from numba import njit
 
 from numpy.linalg import norm
-
-from andersoncd.utils import power_method
+from scipy.sparse.linalg import svds
 
 
 def primal_enet(R, w, alpha, rho=0):
@@ -186,7 +185,7 @@ def solver_enet(
 
     if algo == 'pgd' or algo == 'fista':
         if is_sparse:
-            L = power_method(X, max_iter=1000) ** 2
+            L = svds(X, k=1)[1][0] ** 2
         else:
             L = norm(X, ord=2) ** 2
 
@@ -257,9 +256,9 @@ def solver_enet(
                 _cd_enet(X, w, R, alpha, rho, lc, feats[algo]())
 
         elif algo == 'pgd':
-            w[:] = ST_vec(w + 1. / L * X.T @ R, alpha / L)
+            w[:] = ST_vec(w + X.T @ R / L, alpha / L)
             if rho != 0:
-                w = w / (1. + rho / L)
+                w /= (1. + rho / L)
             R[:] = y - X @ w
 
         elif algo == 'fista':

@@ -3,10 +3,9 @@ import numpy as np
 
 from scipy import sparse
 from numba import njit
-
 from numpy.linalg import norm
+from scipy.sparse.linalg import svds
 
-from andersoncd.utils import power_method
 from andersoncd.lasso import ST, ST_vec
 
 
@@ -187,7 +186,7 @@ def solver_logreg(
 
     if algo == 'pgd' or algo == 'fista':
         if is_sparse:
-            L = power_method(X, max_iter=1000) ** 2 / 4
+            L = svds(X, k=1)[1][0] / 4
         else:
             L = norm(X, ord=2) ** 2 / 4
 
@@ -252,8 +251,7 @@ def solver_logreg(
                 _cd_logreg(X, w, Xw, y, alpha, rho, lc, feats[algo]())
 
         elif algo == 'pgd':
-            w[:] = ST_vec(
-                w + 1. / L * X.T @ (y / (1. + np.exp(y * Xw))), alpha / L)
+            w[:] = ST_vec(w + X.T @ (y / (1. + np.exp(y * Xw))) / L, alpha / L)
             if rho != 0:
                 w /= 1. + rho / L
             Xw[:] = X @ w
