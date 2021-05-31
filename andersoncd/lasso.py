@@ -96,7 +96,7 @@ def _cd_enet_sparse(
 def solver_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
         use_acc=True, algo='cd', reg_amount=None, seed=0, verbose=False,
-        compute_time=False, tmax=1000):
+        compute_time=False, tmax=1000, w0=None):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
     The minimized objective is:
@@ -195,12 +195,17 @@ def solver_enet(
     else:
         lc = (X ** 2).sum(axis=0)
 
-    w = np.zeros(n_features)
+    if w0 is None:
+        w = np.zeros(n_features)
+        R = y.copy()
+    else:
+        w = w0.copy()
+        R = y - X @ w
     if algo == 'fista':
         z = np.zeros(n_features)
         t_new = 1
 
-    R = y.copy()
+
     E = []
     gaps = np.zeros(max_iter // f_gap)
 
