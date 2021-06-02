@@ -262,11 +262,10 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
         sol = celer_primal(
             X, y, alpha, w, R, norms_X_col, weights,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            # use_acc=False, K=5, verbose=verbose)
             use_acc=True, K=5, verbose=verbose)
 
-        coefs[:, t] = sol[0].copy()
-        # coefs[:, t] = w.copy()
+        assert np.allclose(sol[0], w)
+        coefs[:, t] = w.copy()
         kkt_maxs[t] = sol[-1]
         # TODO sol[0], sol[1], sol[2][-1]
         if return_n_iter:
@@ -343,8 +342,8 @@ def celer_primal(
                         R_acc = y - X @ w_acc
                         p_obj_acc = primal_wlasso(R_acc, w_acc, alpha, weights)
                         if p_obj_acc < p_obj:
-                            w = w_acc
-                            R = R_acc
+                            w[:] = w_acc
+                            R[:] = R_acc
                     except np.linalg.LinAlgError:
                         if max(verbose - 1, 0):
                             print("----------Linalg error")
