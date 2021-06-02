@@ -262,7 +262,7 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
         sol = celer_primal(
             X, y, alpha, w, R, norms_X_col, weights,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            prune=prune, verbose=verbose)
+            verbose=verbose)
 
         coefs[:, t] = w.copy()
         kkt_maxs[t] = sol[-1]
@@ -287,60 +287,83 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
 
 def celer_primal(
         X, y, alpha, w, R, norms_X_col, weights,
-        max_iter=50, max_epochs=50_000, p0=10, tol=1e-4, prune=True,
+        max_iter=50, max_epochs=50_000, p0=10, tol=1e-4,
         verbose=0):
     n_samples, n_features = X.shape
-    # pen = weights > 0
-    # unpen = ~pen
+    pen = weights > 0
+    unpen = ~pen
+    n_unpen = unpen.sum()
+    print(n_unpen)
+    p0 = max(p0, n_unpen)
     grad = np.zeros(n_features)
     obj_out = []
     lc = norms_X_col ** 2
-    XtR = X.T @ R
+    # XtR = X.T @ R
 
     for t in range(max_iter):
-        # 1) select features
-        for j in range(n_features):
-            if weights[j]:
-                grad[j] = np.abs(XtR[j]) / weights[j]
-            else:
-                grad[j] = np.inf  # always include unpenalized features
-
-        # TODO finer policy needed here, x2 only the nnz which are penalized
-        # TODO implement pruning
-        # ws_size = min(2 * (w != 0).sum(), n_features)
-        ws_size = n_features
-        ws = np.argsort(grad)[-ws_size:]
-
-        if verbose:
-            print(f'Iteration {t}, {ws_size} feats in subpb.')
-
-        # 2) do iterations on smaller problem
-        obj_in = []
-        for epoch in range(max_epochs):
-            # 1 / 0
-            _cd_wlasso(X, w, R, alpha, weights, lc, ws)
-
-            if epoch % 1 == 0:
-                # todo maybe we can improve here by restricting to ws
-                p_obj = primal_wlasso(R, w, alpha, weights)
-                obj_in.append(p_obj)
-                if max(verbose - 1, 0):
-                    print(f'    Epoch {epoch}, objective {p_obj:.10f}')
-                if epoch > 0 and obj_in[-2] - obj_in[-1] <= tol * obj_in[-2]:
-                    if max(verbose - 1, 0):
-                        print("    Early exit")
-                    break
-        obj_out.append(p_obj)
         # TODO stop crit outer: objective decrease or gradient norm ?
-        XtR = X.T @ R
-        kkt = np.maximum(0, np.abs(XtR) / n_samples - alpha * weights)
+        kkt = _kkt_violation(w, X, R, weights, alpha, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
         if kkt_max <= tol:
             break
+        # 1) select features
+        # for j in range(n_features):
+        #     if weights[j]:
+        #         grad[j] = np.abs(XtR[j]) / weights[j]
+        #     else:
+        #         grad[j] = np.inf  # always include unpenalized features
+
+        # double the number of penalized features included:
+        ws_size = max(p0,
+                      min(2 * (w != 0).sum() - n_unpen, n_features))
+        kkt[unpen] = np.inf  # always include unpenalized features
+        ws = np.argsort(kkt)[-ws_size:]
+
+        if verbose:
+            print(f'Iteration {t}, {ws_size} feats in subpb.')
+
+        # 2) do iterations on smaller problem
+        # obj_in = []
+        for epoch in range(max_epochs):
+            # 1 / 0
+            _cd_wlasso(X, w, R, alpha, weights, lc, ws)
+
+            if epoch % 10 == 0:
+                # todo maybe we can improve here by restricting to ws
+                p_obj = primal_wlasso(R, w, alpha, weights)
+                # obj_in.append(p_obj)
+
+                kkt_ws = _kkt_violation(w, X, R, weights, alpha, ws)
+                kkt_ws_max = np.max(kkt_ws)
+                if max(verbose - 1, 0):
+                    print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
+                          f"kkt {kkt_ws_max:.2e}")
+                # if epoch > 0 and obj_in[-2] - obj_in[-1] <= tol * obj_in[-2]:
+                if kkt_ws_max < tol:
+                    if max(verbose - 1, 0):
+                        print("    Early exit")
+                    break
+        obj_out.append(p_obj)
 
     return w, np.array(obj_out), kkt_max
+
+
+@njit
+def _kkt_violation(w, X, R, weights, alpha, ws):
+    n_samples = X.shape[0]
+    kkt = np.zeros(ws.shape[0])
+    for idx in range(ws.shape[0]):
+        j = ws[idx]
+        grad_j = X[:, j].T @ R / n_samples
+        if w[j] == 0:
+            # distance of grad_j to alpha * weight * [-1, 1]
+            kkt[idx] = max(0, np.abs(grad_j) - alpha * weights[j])
+        else:
+            # distance of grad_j to alpha * weight * sign(w[j])
+            kkt[idx] = np.abs(np.abs(grad_j) - alpha * weights[j])
+    return kkt
 
 
 @njit

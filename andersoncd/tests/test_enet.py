@@ -82,32 +82,31 @@ def test_wlasso():
 
 
 if __name__ == '__main__':
-    X, y = simu_linreg(n_samples=100, n_features=40)
-    # X /= norm(X, axis=0)
+    X, y = simu_linreg(n_samples=50, n_features=200)
     y /= norm(y) / np.sqrt(len(y))
     alpha_max = np.max(np.abs(X.T @ y)) / len(y)
-    alpha = alpha_max / 100
+    alpha = alpha_max / 10
 
     # Lasso:
     clf = WeightedLasso(
         alpha=alpha, weights=np.ones(X.shape[1]),
-        fit_intercept=False, tol=1e-10, verbose=1).fit(X, y)
-    lasso = Lasso(alpha=alpha, tol=1e-12, fit_intercept=False).fit(X, y)
+        fit_intercept=False, tol=1e-14, verbose=2).fit(X, y)
+    lasso = Lasso(alpha=alpha, tol=1e-14, fit_intercept=False).fit(X, y)
     np.testing.assert_allclose(clf.coef_, lasso.coef_, rtol=1e-5, atol=1e-5)
 
     clf = WeightedLasso(
         alpha=alpha,
         weights=np.zeros(X.shape[1]),
         max_epochs=200,
-        max_iter=20, verbose=1, tol=1e-12, fit_intercept=False).fit(X, y)
+        max_iter=20, verbose=2, tol=1e-12, fit_intercept=False).fit(X, y)
 
-    linreg = LinearRegression(fit_intercept=False).fit(X, y)
-    np.testing.assert_allclose(clf.coef_, linreg.coef_)
+    np.testing.assert_allclose(0, norm(y - clf.predict(X)), atol=1e-8)
 
-    # weights[:10] = 0
-
-    # clf = WeightedLasso(
-    #     alpha=alpha,
-    #     weights=weights,
-    #     max_epochs=50,
-    #     max_iter=10, verbose=2, fit_intercept=False).fit(X, y)
+    weights = np.abs(np.random.randn(X.shape[1]))
+    alpha_max = np.max(np.abs(X[:, weights != 0].T @ y)) / len(y)
+    weights = np.maximum(0, weights)
+    alpha = alpha_max / 10
+    weights[:10] = 0
+    clf = WeightedLasso(
+        alpha=alpha, weights=weights, fit_intercept=False,
+        verbose=2, tol=1e-12).fit(X, y)
