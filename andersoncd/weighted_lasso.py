@@ -345,7 +345,7 @@ def celer_primal(
                             w = w_acc
                             R = R_acc
                     except np.linalg.LinAlgError:
-                        if verbose:
+                        if max(verbose - 1, 0):
                             print("----------Linalg error")
 
             if epoch % 10 == 0:
