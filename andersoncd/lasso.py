@@ -91,11 +91,26 @@ def _cd_enet_sparse(
             for ix in range(X_indptr[j], X_indptr[j + 1]):
                 R[X_indices[ix]] += (old_w_j - w[j]) * X_data[ix]
 
+@njit
+def _1Lcd_enet_sparse(
+        X_data, X_indices, X_indptr, w, R, alpha, rho, L, feats):
+    for j in feats:
+        tmp = 0.
+        for ix in range(X_indptr[j], X_indptr[j + 1]):
+            tmp += X_data[ix] * R[X_indices[ix]]
+        old_w_j = w[j]
+        w[j] = ST(old_w_j + tmp / L, alpha / L)
+        if rho != 0:
+            w[j] /= 1 + rho / L
+        if w[j] != old_w_j:
+            for ix in range(X_indptr[j], X_indptr[j + 1]):
+                R[X_indices[ix]] += (old_w_j - w[j]) * X_data[ix]
+
 
 def solver_enet(
         X, y, alpha, rho=0, max_iter=10000, tol=1e-4, f_gap=10, K=5,
         use_acc=True, algo='cd', reg_amount=None, seed=0, verbose=False,
-        compute_time=False, tmax=1000, w0=None):
+        compute_time=False, tmax=1000, w0=None, step_size=1):
     """Solve the Lasso/Enet with CD/ISTA/FISTA, eventually with extrapolation.
 
     The minimized objective is:
@@ -183,7 +198,7 @@ def solver_enet(
         last_K_w = np.zeros([K + 1, n_features])
         U = np.zeros([K, n_features])
 
-    if algo == 'pgd' or algo == 'fista':
+    if algo == 'pgd' or algo == 'fista' or algo == "1Lcd":
         if is_sparse:
             L = svds(X, k=1)[1][0] ** 2
         else:
@@ -254,6 +269,14 @@ def solver_enet(
                                 R, alpha, rho, lc, feats[algo]())
             else:
                 _cd_enet(X, w, R, alpha, rho, lc, feats[algo]())
+
+        elif algo == "1Lcd":
+            if is_sparse:
+                _1Lcd_enet_sparse(
+                    X.data, X.indices, X.indptr, w,
+                    R, alpha, rho, step_size, feats['cd']())
+            else:
+                _1Lcd_enet(X, w, R, alpha, rho, step_size, feats['cd']())
 
         elif algo == 'pgd':
             w[:] = ST_vec(w + X.T @ R / L, alpha / L)
