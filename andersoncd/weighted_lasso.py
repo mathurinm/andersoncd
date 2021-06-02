@@ -262,7 +262,8 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
         sol = celer_primal(
             X, y, alpha, w, R, norms_X_col, weights,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            verbose=verbose)
+            # use_acc=False, K=5, verbose=verbose)
+            use_acc=True, K=5, verbose=verbose)
 
         coefs[:, t] = w.copy()
         kkt_maxs[t] = sol[-1]
@@ -297,11 +298,8 @@ def celer_primal(
     obj_out = []
     lc = norms_X_col ** 2
 
-    if use_acc:
-        last_K_w = np.zeros([K + 1, n_features])
-        U = np.zeros([K, n_features])
-
     for t in range(max_iter):
+
         kkt = _kkt_violation(w, X, R, weights, alpha, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
@@ -313,6 +311,10 @@ def celer_primal(
                       min(2 * (w != 0).sum() - n_unpen, n_features))
         kkt[unpen] = np.inf  # always include unpenalized features
         ws = np.argsort(kkt)[-ws_size:]
+
+        if use_acc:
+            last_K_w = np.zeros([K + 1, n_features])
+        U = np.zeros([K, ws_size])
 
         if verbose:
             print(f'Iteration {t}, {ws_size} feats in subpb.')
@@ -326,16 +328,19 @@ def celer_primal(
 
                 if epoch % (K + 1) == K:
                     for k in range(K):
-                        U[k] = last_K_w[k + 1] - last_K_w[k]
+                        U[k] = last_K_w[k + 1][ws] - last_K_w[k][ws]
                     C = np.dot(U, U.T)
 
                     try:
                         z = np.linalg.solve(C, np.ones(K))
                         c = z / z.sum()
-                        w_acc = np.sum(last_K_w[:-1] * c[:, None], axis=0)
+                        w_acc = np.zeros(n_features)
+                        w_acc[ws] = np.sum(
+                            last_K_w[:-1] * c[:, None], axis=0)[ws]
                         p_obj = primal_wlasso(R, w, alpha, weights)
                         R_acc = y - X @ w_acc
                         p_obj_acc = primal_wlasso(R_acc, w_acc, alpha, weights)
+                        # import ipdb; ipdb.set_trace()
                         if p_obj_acc < p_obj:
                             w = w_acc
                             R = R_acc
