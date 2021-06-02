@@ -54,6 +54,4 @@ def test_apcg():
 
 
 if __name__ == '__main__':
-    for pCmin in pCmins:
-        for algo, use_acc in algos:
-            test_logreg_solver(algo, use_acc, pCmin)
+    pass
