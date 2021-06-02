@@ -60,10 +60,12 @@ def test_apcg(sparse_X):
 # def test_wlasso():
 if __name__ == '__main__':
     X, y = simu_linreg(n_samples=100, n_features=40)
+    # X /= norm(X, axis=0)
     y /= norm(y) / np.sqrt(len(y))
-    alpha_max = np.max(np.abs(X.T @ y)) / len(y)
     weights = np.ones(X.shape[1])
-    clf = WeightedLasso(alpha=alpha_max,
+    alpha_max = np.max(np.abs(X.T @ y)) / len(y)
+    alpha = alpha_max / 2
+    clf = WeightedLasso(alpha=alpha,
                         weights=weights,
-                        max_epochs=100,
+                        max_epochs=3,
                         max_iter=3, verbose=2, fit_intercept=False).fit(X, y)

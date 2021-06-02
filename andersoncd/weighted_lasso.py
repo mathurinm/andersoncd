@@ -286,7 +286,7 @@ def celer_primal(
     # unpen = ~pen
     grad = np.zeros(n_features)
     obj_out = []
-    lc = 1 / norms_X_col ** 2
+    lc = norms_X_col ** 2
     XtR = X.T @ R
 
     for t in range(max_iter):
@@ -317,10 +317,10 @@ def celer_primal(
                 p_obj = primal_wlasso(R, w, alpha, weights)
                 obj_in.append(p_obj)
                 if max(verbose - 1, 0):
-                    print(f'Epoch {epoch}, objective {p_obj:.10f}')
+                    print(f'    Epoch {epoch}, objective {p_obj:.10f}')
                 if epoch > 0 and obj_in[-2] - obj_in[-1] <= tol * obj_in[-2]:
                     if max(verbose - 1, 0):
-                        print("Early exit")
+                        print("    Early exit")
                     break
         obj_out.append(p_obj)
         # TODO stop crit outer: objective decrease or gradient norm ?
