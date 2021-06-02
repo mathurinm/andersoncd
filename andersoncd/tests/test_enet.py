@@ -50,24 +50,24 @@ def test_wlasso():
     lasso = Lasso(alpha=alpha, tol=1e-14, fit_intercept=False).fit(X, y)
     np.testing.assert_allclose(clf.coef_, lasso.coef_, rtol=1e-5, atol=1e-5)
 
-    # # Linear regression, check that residuals vanish
-    # clf = WeightedLasso(
-    #     alpha=alpha,
-    #     weights=np.zeros(X.shape[1]),
-    #     max_epochs=200,
-    #     max_iter=20, verbose=2, tol=1e-12, fit_intercept=False).fit(X, y)
+    # Linear regression, check that residuals vanish
+    clf = WeightedLasso(
+        alpha=alpha,
+        weights=np.zeros(X.shape[1]),
+        max_epochs=200,
+        max_iter=20, verbose=2, tol=1e-12, fit_intercept=False).fit(X, y)
 
-    # np.testing.assert_allclose(0, norm(y - clf.predict(X)), atol=1e-8)
+    np.testing.assert_allclose(0, norm(y - clf.predict(X)), atol=1e-8)
 
-    # # test mixture of both zero and non zero weights
-    # weights = np.abs(np.random.randn(X.shape[1]))
-    # alpha_max = np.max(np.abs(X[:, weights != 0].T @ y)) / len(y)
-    # alpha = alpha_max / 10
-    # weights[:10] = 0
-    # clf = WeightedLasso(
-    #     alpha=alpha, weights=weights, fit_intercept=False,
-    #     verbose=2, tol=1e-12).fit(X, y)
-    # # TODO design test, with KKT?
+    # test mixture of both zero and non zero weights
+    weights = np.abs(np.random.randn(X.shape[1]))
+    alpha_max = np.max(np.abs(X[:, weights != 0].T @ y)) / len(y)
+    alpha = alpha_max / 10
+    weights[:10] = 0
+    clf = WeightedLasso(
+        alpha=alpha, weights=weights, fit_intercept=False,
+        verbose=2, tol=1e-12).fit(X, y)
+    # TODO design test, with KKT?
 
 
 if __name__ == '__main__':
