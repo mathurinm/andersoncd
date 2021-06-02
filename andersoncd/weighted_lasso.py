@@ -9,7 +9,7 @@ from andersoncd.lasso import ST
 
 
 class WeightedLasso(Lasso_sklearn):
-    """
+    r"""
     WeightedLasso estimator based on Celer solver and primal extrapolation.
     Supports weights equal to 0, i.e. unpenalized features.
 
@@ -233,14 +233,13 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
     n_alphas = len(alphas)
 
     coefs = np.zeros((n_features, n_alphas), order='F', dtype=X.dtype)
-    objectives = np.zeros(n_alphas)
+    grad_norms = np.zeros(n_alphas)
 
     if return_n_iter:
         n_iters = np.zeros(n_alphas, dtype=int)
 
     norms_X_col = norm(X, axis=0)
 
-    # do not skip alphas[0], it is not always alpha_max
     for t in range(n_alphas):
         alpha = alphas[t]
         if verbose:
@@ -255,7 +254,6 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
             if coef_init is not None:
                 w = coef_init.copy()
                 p0 = max((w != 0.).sum(), p0)
-                # y - Xw for Lasso, Xw for Logreg:
                 R = y - X @ w
             else:
                 w = np.zeros(n_features, dtype=X.dtype)
@@ -264,15 +262,15 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
         sol = celer_primal(
             X, y, alpha, w, R, norms_X_col, weights,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            prune=prune,
-            verbose=verbose, )
+            prune=prune, verbose=verbose)
 
         coefs[:, t] = w.copy()
+        grad_norms[t] = sol[-1]
         # TODO sol[0], sol[1], sol[2][-1]
         if return_n_iter:
             n_iters[t] = len(sol[2])
 
-    results = alphas, coefs, dual_gaps
+    results = alphas, coefs, grad_norms
     if return_n_iter:
         results += (n_iters,)
 
@@ -284,20 +282,21 @@ def celer_primal(
         max_iter=50, max_epochs=50_000, p0=10, tol=1e-4, prune=True,
         verbose=0):
     n_features = X.shape[1]
-    penalized = weights > 0
+    # penalized = weights > 0
     grad = np.zeros(n_features)
-    all_obj = []
+    obj_out = []
     lc = 1 / norms_X_col
+    XtR = X.T @ R
 
     for t in range(max_iter):
         # 1) select features
         for j in range(n_features):
             if weights[j]:
-                grad = np.abs(X[:, j].T @ R) / weights[j]
+                grad[j] = np.abs(XtR[j]) / weights[j]
             else:
-                grad = np.inf  # always include unpenalized features
+                grad[j] = np.inf  # always include unpenalized features
 
-        # TODO finer policy needed here, double only the nnz which are penalized
+        # TODO finer policy needed here, x2 only the nnz which are penalized
         # TODO implement pruning
         ws_size = min(2 * (w != 0).sum(), n_features)
         ws = np.argsort(grad)[-ws_size:]
@@ -306,19 +305,30 @@ def celer_primal(
             print(f'Iteration {t}, {ws_size} feats in subpb.')
 
         # 2) do iterations on smaller problem
+        obj_in = []
         for epoch in range(max_epochs):
             _cd_wlasso(X, w, R, alpha, weights, lc, ws)
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws
                 p_obj = primal_wlasso(R, w, alpha, weights)
-                all_obj.append(p_obj)
+                obj_in.append(p_obj)
                 if max(verbose - 1, 0):
                     print(f'Epoch {epoch}, objective {p_obj:.10f}')
-                if epoch > 0 and all_obj[-2] - all_obj[-1] < tol * all_obj[-2]:
+                if epoch > 0 and obj_in[-2] - obj_in[-1] < tol * obj_in[-2]:
                     if max(verbose - 1, 0):
                         print("Early exit")
                     break
+        obj_out[t] = p_obj
+        # TODO stop crit outer: objective decrease or gradient norm ?
+        XtR = X.T @ R
+        grad_norm = norm(XtR, ord=np.inf)
+        if verbose:
+            print(f"Gradient norm {grad_norm:.2e}")
+        if grad_norm <= tol:
+            break
+
+    return w, obj_out, grad_norm
 
 
 @njit
