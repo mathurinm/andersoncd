@@ -1,12 +1,11 @@
 import pytest
 import numpy as np
-from scipy import sparse
 from numpy.linalg import norm
 
 from sklearn.linear_model import ElasticNet, Lasso
 
 from andersoncd import WeightedLasso
-from andersoncd.lasso import solver_enet, apcg_enet
+from andersoncd.lasso import solver_enet
 from andersoncd.data.synthetic import simu_linreg
 
 

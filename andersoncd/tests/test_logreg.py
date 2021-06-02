@@ -4,7 +4,7 @@ from numpy.linalg import norm
 
 from sklearn.linear_model import LogisticRegression
 
-from andersoncd.logreg import solver_logreg, apcg_logreg
+from andersoncd.logreg import solver_logreg
 
 
 pCmins = [2, 5, 10]
