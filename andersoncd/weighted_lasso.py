@@ -286,9 +286,8 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
 
 
 def celer_primal(
-        X, y, alpha, w, R, norms_X_col, weights,
-        max_iter=50, max_epochs=50_000, p0=10, tol=1e-4,
-        verbose=0):
+        X, y, alpha, w, R, norms_X_col, weights, max_iter=50,
+        max_epochs=50_000, p0=10, tol=1e-4, use_acc=False, K=5, verbose=0):
     n_samples, n_features = X.shape
     pen = weights > 0
     unpen = ~pen
@@ -297,6 +296,10 @@ def celer_primal(
     p0 = max(p0, n_unpen)
     obj_out = []
     lc = norms_X_col ** 2
+
+    if use_acc:
+        last_K_w = np.zeros([K + 1, n_features])
+        U = np.zeros([K, n_features])
 
     for t in range(max_iter):
         kkt = _kkt_violation(w, X, R, weights, alpha, np.arange(n_features))
@@ -317,6 +320,28 @@ def celer_primal(
         # 2) do iterations on smaller problem
         for epoch in range(max_epochs):
             _cd_wlasso(X, w, R, alpha, weights, lc, ws)
+
+            if use_acc:
+                last_K_w[epoch % (K + 1)] = w
+
+                if epoch % (K + 1) == K:
+                    for k in range(K):
+                        U[k] = last_K_w[k + 1] - last_K_w[k]
+                    C = np.dot(U, U.T)
+
+                    try:
+                        z = np.linalg.solve(C, np.ones(K))
+                        c = z / z.sum()
+                        w_acc = np.sum(last_K_w[:-1] * c[:, None], axis=0)
+                        p_obj = primal_wlasso(R, w, alpha, weights)
+                        R_acc = y - X @ w_acc
+                        p_obj_acc = primal_wlasso(R_acc, w_acc, alpha, weights)
+                        if p_obj_acc < p_obj:
+                            w = w_acc
+                            R = R_acc
+                    except np.linalg.LinAlgError:
+                        if verbose:
+                            print("----------Linalg error")
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws

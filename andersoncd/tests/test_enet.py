@@ -70,5 +70,9 @@ def test_wlasso():
     # TODO design test, with KKT?
 
 
+def test_primal_celer():
+    # TODO
+    pass
+
 if __name__ == '__main__':
     pass
