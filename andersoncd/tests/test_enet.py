@@ -57,7 +57,30 @@ def test_apcg(sparse_X):
     np.testing.assert_array_less(gaps[-1], tol)
 
 
-# def test_wlasso():
+def test_wlasso():
+    X, y = simu_linreg(n_samples=100, n_features=40)
+    # X /= norm(X, axis=0)
+    y /= norm(y) / np.sqrt(len(y))
+    alpha_max = np.max(np.abs(X.T @ y)) / len(y)
+    alpha = alpha_max / 20
+
+    # Lasso:
+    clf = WeightedLasso(
+        alpha=alpha, weights=np.ones(X.shape[1]),
+        fit_intercept=False, tol=1e-10).fit(X, y)
+    lasso = Lasso(alpha=alpha, tol=1e-10, fit_intercept=False).fit(X, y)
+    np.testing.assert_allclose(clf.coef_, lasso.coef_, rtol=1e-5)
+
+    clf = WeightedLasso(
+        alpha=alpha,
+        weights=np.zeros(X.shape[1]),
+        max_epochs=200,
+        max_iter=20, verbose=1, fit_intercept=False).fit(X, y)
+
+    linreg = LinearRegression(fit_intercept=False).fit(X, y)
+    np.testing.assert_allclose(clf.coef_, linreg.coef_)
+
+
 if __name__ == '__main__':
     X, y = simu_linreg(n_samples=100, n_features=40)
     # X /= norm(X, axis=0)
@@ -68,9 +91,9 @@ if __name__ == '__main__':
     # Lasso:
     clf = WeightedLasso(
         alpha=alpha, weights=np.ones(X.shape[1]),
-        fit_intercept=False, tol=1e-8).fit(X, y)
-    lasso = Lasso(alpha=alpha, fit_intercept=False).fit(X, y)
-    np.testing.assert_allclose(clf.coef_, lasso.coef_)
+        fit_intercept=False, tol=1e-10).fit(X, y)
+    lasso = Lasso(alpha=alpha, tol=1e-10, fit_intercept=False).fit(X, y)
+    np.testing.assert_allclose(clf.coef_, lasso.coef_, rtol=1e-5)
 
     clf = WeightedLasso(
         alpha=alpha,

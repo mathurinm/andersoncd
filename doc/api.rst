@@ -4,12 +4,19 @@
 API Documentation
 =================
 
+Scikit-learn like estimators
+============================
+
 .. currentmodule:: andersoncd
 
-andersoncd
-==========
+.. autosummary::
+   :toctree: generated/
+
+   WeightedLasso
+
 
 Functions
+=========
 
 .. autosummary::
    :toctree: generated/
