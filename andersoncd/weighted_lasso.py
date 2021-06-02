@@ -233,7 +233,7 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
     n_alphas = len(alphas)
 
     coefs = np.zeros((n_features, n_alphas), order='F', dtype=X.dtype)
-    grad_norms = np.zeros(n_alphas)
+    kkt_maxs = np.zeros(n_alphas)
 
     if return_n_iter:
         n_iters = np.zeros(n_alphas, dtype=int)
@@ -265,12 +265,12 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
             prune=prune, verbose=verbose)
 
         coefs[:, t] = w.copy()
-        grad_norms[t] = sol[-1]
+        kkt_maxs[t] = sol[-1]
         # TODO sol[0], sol[1], sol[2][-1]
         if return_n_iter:
-            n_iters[t] = len(sol[2])
+            n_iters[t] = len(sol[1])
 
-    results = alphas, coefs, grad_norms
+    results = alphas, coefs, kkt_maxs
     if return_n_iter:
         results += (n_iters,)
 
@@ -281,11 +281,12 @@ def celer_primal(
         X, y, alpha, w, R, norms_X_col, weights,
         max_iter=50, max_epochs=50_000, p0=10, tol=1e-4, prune=True,
         verbose=0):
-    n_features = X.shape[1]
-    # penalized = weights > 0
+    n_samples, n_features = X.shape
+    # pen = weights > 0
+    # unpen = ~pen
     grad = np.zeros(n_features)
     obj_out = []
-    lc = 1 / norms_X_col
+    lc = 1 / norms_X_col ** 2
     XtR = X.T @ R
 
     for t in range(max_iter):
@@ -298,7 +299,8 @@ def celer_primal(
 
         # TODO finer policy needed here, x2 only the nnz which are penalized
         # TODO implement pruning
-        ws_size = min(2 * (w != 0).sum(), n_features)
+        # ws_size = min(2 * (w != 0).sum(), n_features)
+        ws_size = n_features
         ws = np.argsort(grad)[-ws_size:]
 
         if verbose:
@@ -307,40 +309,49 @@ def celer_primal(
         # 2) do iterations on smaller problem
         obj_in = []
         for epoch in range(max_epochs):
+            # 1 / 0
             _cd_wlasso(X, w, R, alpha, weights, lc, ws)
 
-            if epoch % 10 == 0:
+            if epoch % 1 == 0:
                 # todo maybe we can improve here by restricting to ws
                 p_obj = primal_wlasso(R, w, alpha, weights)
                 obj_in.append(p_obj)
                 if max(verbose - 1, 0):
                     print(f'Epoch {epoch}, objective {p_obj:.10f}')
-                if epoch > 0 and obj_in[-2] - obj_in[-1] < tol * obj_in[-2]:
+                if epoch > 0 and obj_in[-2] - obj_in[-1] <= tol * obj_in[-2]:
                     if max(verbose - 1, 0):
                         print("Early exit")
                     break
-        obj_out[t] = p_obj
+        obj_out.append(p_obj)
         # TODO stop crit outer: objective decrease or gradient norm ?
         XtR = X.T @ R
-        grad_norm = norm(XtR, ord=np.inf)
+        kkt_max = 0
+        for j in range(n_features):
+            if weights[j] > 0:
+                kkt_max = max(kkt_max,
+                              max(0, XtR[j] / n_samples - alpha))
+            else:
+                kkt_max = max(kkt_max, np.abs(XtR[j]))
         if verbose:
-            print(f"Gradient norm {grad_norm:.2e}")
-        if grad_norm <= tol:
+            print(f"KKT max violation: {kkt_max:.2e}")
+        if kkt_max <= tol:
             break
 
-    return w, obj_out, grad_norm
+    return w, np.array(obj_out), kkt_max
 
 
 @njit
 def _cd_wlasso(X, w, R, alpha, weights, lc, feats):
     # we apply ST even when weights[j] == 0
+    n_samples = len(R)
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
-        w[j] = ST(old_w_j + np.dot(Xj, R) / lc[j], alpha * weights[j] / lc[j])
+        w[j] = ST(old_w_j + np.dot(Xj, R) / lc[j],
+                  n_samples * alpha * weights[j] / lc[j])
         if w[j] != old_w_j:
             R += (old_w_j - w[j]) * Xj
 
 
 def primal_wlasso(R, w, alpha, weights):
-    return 0.5 * norm(R) ** 2 + alpha * norm(weights * w, ord=1)
+    return 0.5 * norm(R) ** 2 / len(R) + alpha * norm(weights * w, ord=1)

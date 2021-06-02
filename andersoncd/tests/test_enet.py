@@ -5,6 +5,7 @@ from numpy.linalg import norm
 
 from sklearn.linear_model import ElasticNet
 
+from andersoncd import WeightedLasso
 from andersoncd.lasso import solver_enet, apcg_enet
 from andersoncd.data.synthetic import simu_linreg
 
@@ -54,3 +55,15 @@ def test_apcg(sparse_X):
     w, E, gaps = apcg_enet(
         X, y, alpha, tol=tol, f_gap=50, max_iter=1000000, verbose=1)
     np.testing.assert_array_less(gaps[-1], tol)
+
+
+# def test_wlasso():
+if __name__ == '__main__':
+    X, y = simu_linreg(n_samples=100, n_features=40)
+    y /= norm(y) / np.sqrt(len(y))
+    alpha_max = np.max(np.abs(X.T @ y)) / len(y)
+    weights = np.ones(X.shape[1])
+    clf = WeightedLasso(alpha=alpha_max,
+                        weights=weights,
+                        max_epochs=100,
+                        max_iter=3, verbose=2, fit_intercept=False).fit(X, y)
