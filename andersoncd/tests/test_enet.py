@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from numpy.linalg import norm
 
-from sklearn.linear_model import ElasticNet, Lasso
+from sklearn.linear_model import ElasticNet, Lasso, lasso_path
 
 from andersoncd import WeightedLasso
 from andersoncd.lasso import solver_enet
@@ -70,5 +70,22 @@ def test_wlasso():
     # TODO design test, with KKT?
 
 
+def test_path():
+    X, y = simu_linreg(n_samples=50, n_features=200)
+    y /= norm(y) / np.sqrt(len(y))
+    alpha_max = np.max(np.abs(X.T @ y)) / len(y)
+    # alpha = alpha_max / 10
+    alphas = np.geomspace(alpha_max, alpha_max / 10, num=10)
+
+    # Compare Lasso to sklearn:
+    _, coef_path_ours, _, _ = WeightedLasso(
+        weights=np.ones(X.shape[1]), fit_intercept=False,
+        tol=1e-14, verbose=2).path(X, y, alphas=alphas)
+
+    _, coef_path, _ = lasso_path(
+        X, y, alphas=alphas, fit_intercept=False, tol=1e-14)
+    np.testing.assert_allclose(coef_path, coef_path_ours)
+
+
 if __name__ == '__main__':
-    test_wlasso()
+    test_path()
