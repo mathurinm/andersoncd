@@ -277,6 +277,14 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
     return results
 
 
+# def _kkt_violation(XtR, weights, alpha):
+#     for j in range(n_features):
+#         if weights[j] > 0:
+#             kkt[j] = max(0, np.abs(XtR[j]) / n_samples - alpha * weights[j]))
+#         else:
+#                 kkt_max=max(kkt_max, np.abs(XtR[j]))
+
+
 def celer_primal(
         X, y, alpha, w, R, norms_X_col, weights,
         max_iter=50, max_epochs=50_000, p0=10, tol=1e-4, prune=True,
@@ -325,13 +333,8 @@ def celer_primal(
         obj_out.append(p_obj)
         # TODO stop crit outer: objective decrease or gradient norm ?
         XtR = X.T @ R
-        kkt_max = 0
-        for j in range(n_features):
-            if weights[j] > 0:
-                kkt_max = max(kkt_max,
-                              max(0, XtR[j] / n_samples - alpha))
-            else:
-                kkt_max = max(kkt_max, np.abs(XtR[j]))
+        kkt = np.maximum(0, np.abs(XtR) / n_samples - alpha * weights)
+        kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
         if kkt_max <= tol:
