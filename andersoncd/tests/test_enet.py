@@ -74,7 +74,6 @@ def test_path():
     X, y = simu_linreg(n_samples=50, n_features=200)
     y /= norm(y) / np.sqrt(len(y))
     alpha_max = np.max(np.abs(X.T @ y)) / len(y)
-    # alpha = alpha_max / 10
     alphas = np.geomspace(alpha_max, alpha_max / 10, num=10)
 
     # Compare Lasso to sklearn:
@@ -84,7 +83,7 @@ def test_path():
 
     _, coef_path, _ = lasso_path(
         X, y, alphas=alphas, fit_intercept=False, tol=1e-14)
-    np.testing.assert_allclose(coef_path, coef_path_ours)
+    np.testing.assert_allclose(coef_path_ours, coef_path, atol=1e-7, rtol=1e-5)
 
 
 if __name__ == '__main__':
