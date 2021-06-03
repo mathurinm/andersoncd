@@ -16,17 +16,24 @@ from sklearn.datasets import fetch_openml
 
 from andersoncd import WeightedLasso
 from andersoncd.plot_utils import configure_plt
+from andersoncd.data.synthetic import simu_linreg
 
 configure_plt(fontsize=14, poster=False)
 
-X, y = fetch_openml("leukemia", return_X_y=True)
-X, y = X.to_numpy(), y.to_numpy()
-n_features = 100
-X /= norm(X, axis=0)
-X = X[:, :n_features]
-y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
+dataset = "simu"
 
-weights = np.empty(100)
+if dataset == "simu":
+    n_features = 100
+    X, y = simu_linreg(n_samples=100, n_features=n_features, corr=0.9)
+else:
+    X, y = fetch_openml("leukemia", return_X_y=True)
+    X, y = X.to_numpy(), y.to_numpy()
+    n_features = 100
+    X /= norm(X, axis=0)
+    X = X[:, :n_features]
+    y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
+
+weights = np.empty(n_features)
 # unpenalize the first 10 features:
 weights[:10] = 0
 # put large penalty on the 10-50 features
