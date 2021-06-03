@@ -293,8 +293,6 @@ def celer_primal(
     pen = weights > 0
     unpen = ~pen
     n_unpen = unpen.sum()
-    print(n_unpen)
-    p0 = max(p0, n_unpen)
     obj_out = []
     lc = norms_X_col ** 2
 
@@ -306,7 +304,7 @@ def celer_primal(
             print(f"KKT max violation: {kkt_max:.2e}")
         if kkt_max <= tol:
             break
-        # 1) select features
+        # 1) select features : all unpenalized, + 2 * (nnz and penalized)
         ws_size = max(p0 + n_unpen,
                       min(2 * (w != 0).sum() - n_unpen, n_features))
         kkt[unpen] = np.inf  # always include unpenalized features
@@ -325,7 +323,7 @@ def celer_primal(
 
             # TODO optimize computation using ws
             if use_acc:
-                last_K_w[epoch % (K + 1)] = w.copy()
+                last_K_w[epoch % (K + 1)] = w
 
                 if epoch % (K + 1) == K:
                     for k in range(K):

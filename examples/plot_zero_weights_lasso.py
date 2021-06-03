@@ -37,7 +37,7 @@ weights[50:] = 1
 alpha_max = np.max(np.abs(
     X[:, weights != 0].T @ y / weights[weights != 0])) / len(y)
 clf = WeightedLasso(alpha=alpha_max/30, weights=weights,
-                    fit_intercept=False, verbose=2).fit(X, y)
+                    fit_intercept=False, verbose=1).fit(X, y)
 
 
 plt.figure(figsize=(5, 4))
