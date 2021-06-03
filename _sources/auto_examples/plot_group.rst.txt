@@ -25,7 +25,7 @@ Anderson Block Coordinate Descent for the group Lasso
 This example shows the superiority of Anderson acceleration
 of block coordinate descent for the group Lasso.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-96
+.. GENERATED FROM PYTHON SOURCE LINES 9-101
 
 
 
@@ -48,6 +48,7 @@ of block coordinate descent for the group Lasso.
       warnings.warn(NumbaPerformanceWarning(msg))
     Early exit
     Algo: pgd, use Anderson: True
+    Early exit
     Algo: bcd, use Anderson: False
     Algo: pgd, use Anderson: False
     Algo: rbcd, use Anderson: False
@@ -72,15 +73,20 @@ of block coordinate descent for the group Lasso.
 
     from andersoncd.group import solver_group
     from andersoncd.plot_utils import (configure_plt, dict_algo_name, dict_color)
+    from andersoncd.data.synthetic import simu_linreg
 
     save_fig = False
-
     configure_plt(fontsize=14, poster=False)
 
-    X, y = fetch_openml("leukemia", return_X_y=True)
-    X, y = X.to_numpy(), y.to_numpy()
-    X = X[:, :3_000]
-    y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
+    dataset = "simu"
+
+    if dataset == "simu":
+        X, y = simu_linreg(n_samples=100, n_features=1000, corr=0.9)
+    else:
+        X, y = fetch_openml("leukemia", return_X_y=True)
+        X, y = X.to_numpy(), y.to_numpy()
+        X = X[:, :3_000]
+        y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
 
     y -= y.mean()
     X -= np.mean(X, axis=0)[None, :]
@@ -153,7 +159,7 @@ of block coordinate descent for the group Lasso.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  29.257 seconds)
+   **Total running time of the script:** ( 0 minutes  18.809 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_group.py:

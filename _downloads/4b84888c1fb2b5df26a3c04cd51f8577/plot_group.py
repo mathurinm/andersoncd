@@ -16,15 +16,20 @@ from sklearn.datasets import fetch_openml
 
 from andersoncd.group import solver_group
 from andersoncd.plot_utils import (configure_plt, dict_algo_name, dict_color)
+from andersoncd.data.synthetic import simu_linreg
 
 save_fig = False
-
 configure_plt(fontsize=14, poster=False)
 
-X, y = fetch_openml("leukemia", return_X_y=True)
-X, y = X.to_numpy(), y.to_numpy()
-X = X[:, :3_000]
-y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
+dataset = "simu"
+
+if dataset == "simu":
+    X, y = simu_linreg(n_samples=100, n_features=1000, corr=0.9)
+else:
+    X, y = fetch_openml("leukemia", return_X_y=True)
+    X, y = X.to_numpy(), y.to_numpy()
+    X = X[:, :3_000]
+    y = LabelBinarizer().fit_transform(y)[:, 0].astype(float)
 
 y -= y.mean()
 X -= np.mean(X, axis=0)[None, :]

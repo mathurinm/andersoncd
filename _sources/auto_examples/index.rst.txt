@@ -17,6 +17,27 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to use a weighted lasso with some vanishing weights. The fast Cel...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_zero_weights_lasso_thumb.png
+     :alt: Weighted Lasso with some zero weights
+
+     :ref:`sphx_glr_auto_examples_plot_zero_weights_lasso.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_zero_weights_lasso
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="How many points must be extrapolated for optimal performance?">
 
 .. only:: html
