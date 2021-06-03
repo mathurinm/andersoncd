@@ -1,7 +1,7 @@
 """
-====================================
-Weighted Lasso wit some zero weights
-====================================
+=====================================
+Weighted Lasso with some zero weights
+=====================================
 
 This example demonstrates how to use a weighted lasso with some vanishing
 weights. The fast Celer solver is adapted to use primal Anderson acceleration,

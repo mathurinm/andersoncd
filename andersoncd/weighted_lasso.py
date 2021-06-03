@@ -81,7 +81,7 @@ class WeightedLasso(Lasso_sklearn):
     References
     ----------
     .. [1] M. Massias, A. Gramfort, J. Salmon
-      "Celer: a Fast Solver for the Lasso wit Dual Extrapolation", ICML 2018,
+      "Celer: a Fast Solver for the Lasso with Dual Extrapolation", ICML 2018,
       http://proceedings.mlr.press/v80/massias18a.html
 
     .. [2] Q. Bertrand, M. Massias
