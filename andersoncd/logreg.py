@@ -6,7 +6,7 @@ from numba import njit
 from numpy.linalg import norm
 from scipy.sparse.linalg import svds
 
-from andersoncd.lasso import ST, ST_vec
+from andersoncd.utils import ST, ST_vec
 
 
 def primal_logreg(Xw, y, w, alpha, rho=0):

@@ -1,12 +1,45 @@
 import scipy
 import numpy as np
 import seaborn as sns
+from numba import njit
 from scipy.sparse import issparse
 
 from numpy.linalg import norm
 
 
 C_LIST = sns.color_palette()
+
+
+@njit
+def ST(x, u):
+    """Soft-thresholding of scalar x at level u."""
+    if x > u:
+        return x - u
+    elif x < - u:
+        return x + u
+    else:
+        return 0.
+
+
+@njit
+def ST_vec(x, u):
+    return np.sign(x) * np.maximum(0., np.abs(x) - u)
+
+
+@njit
+def BST(x, u):
+    """Block soft-thresholding of vector x at level u."""
+    norm_x = norm(x)
+    if norm_x < u:
+        return np.zeros_like(x)
+    else:
+        return (1 - u / norm_x) * x
+
+
+def BST_vec(x, u, grp_size):
+    norm_grp = norm(x.reshape(-1, grp_size), axis=1)
+    scaling = np.maximum(1 - u / norm_grp, 0)
+    return (x.reshape(-1, grp_size) * scaling[:, None]).reshape(x.shape[0])
 
 
 def get_gd_mat_gram(A):
