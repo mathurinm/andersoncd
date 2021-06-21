@@ -267,6 +267,6 @@ def _cd_epoch(X, w, R, penalty, lc, feats):
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j + np.dot(Xj, R) / lc[j], n_samples / lc[j], j)
+            old_w_j + Xj @ R / lc[j], n_samples / lc[j], j)
         if w[j] != old_w_j:
             R += (old_w_j - w[j]) * Xj
