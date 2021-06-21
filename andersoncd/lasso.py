@@ -1,11 +1,11 @@
 import time
 import numpy as np
-
-from scipy import sparse
 from numba import njit
-
+from scipy import sparse
 from numpy.linalg import norm
 from scipy.sparse.linalg import svds
+
+from andersoncd.utils import ST, ST_vec
 
 
 def primal_enet(R, w, alpha, rho=0):
@@ -46,22 +46,6 @@ def dual_enet(XTR, Xw, y, alpha, rho):
     for j in range(XTR.shape[0]):
         d_obj -= 1. / (2 * rho) * ST(XTR[j], alpha) ** 2
     return d_obj
-
-
-@njit
-def ST(x, u):
-    """Soft-thresholding of scalar x at level u."""
-    if x > u:
-        return x - u
-    elif x < - u:
-        return x + u
-    else:
-        return 0.
-
-
-@njit
-def ST_vec(x, u):
-    return np.sign(x) * np.maximum(0., np.abs(x) - u)
 
 
 @njit

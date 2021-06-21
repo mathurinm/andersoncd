@@ -5,7 +5,7 @@ from numpy.linalg import norm
 
 from sklearn.utils import check_array
 from sklearn.linear_model import Lasso as Lasso_sklearn
-from andersoncd.lasso import ST
+from andersoncd.utils import ST
 
 
 class WeightedLasso(Lasso_sklearn):
@@ -224,7 +224,7 @@ def celer_primal_path(X, y, eps=1e-3, n_alphas=100, alphas=None,
     penalized = weights > 0
     if alphas is None:
         alpha_max = np.max(np.abs(
-            X[:, penalized] @ y / weights[penalized])) / n_samples
+            X[:, penalized].T @ y / weights[penalized])) / n_samples
 
         alphas = alpha_max * np.geomspace(1, eps, n_alphas, dtype=X.dtype)
     else:

@@ -7,27 +7,12 @@ from numpy.linalg import norm
 from scipy.sparse.linalg import svds
 
 from andersoncd.lasso import dual_lasso
+from andersoncd.utils import BST, BST_vec
 
 
 def primal_grp(R, w, alpha, grp_size):
     return (0.5 * norm(R) ** 2 + alpha *
             norm(w.reshape(-1, grp_size), axis=1).sum())
-
-
-@njit
-def BST(x, u):
-    """Block soft-thresholding of vector x at level u."""
-    norm_x = norm(x)
-    if norm_x < u:
-        return np.zeros_like(x)
-    else:
-        return (1 - u / norm_x) * x
-
-
-def BST_vec(x, u, grp_size):
-    norm_grp = norm(x.reshape(-1, grp_size), axis=1)
-    scaling = np.maximum(1 - u / norm_grp, 0)
-    return (x.reshape(-1, grp_size) * scaling[:, None]).reshape(x.shape[0])
 
 
 @njit
