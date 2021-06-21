@@ -26,7 +26,8 @@ def test_enet_solver(use_acc=True):
     R = y - X @ w
     norms_X_col = norm(X, axis=0)
     coef_ours = solver(
-        X, y, penalty, w, R, norms_X_col, max_iter=10_000, verbose=2)[0]
+        X, y, penalty, w, R, norms_X_col, verbose=2, max_iter=10,
+        max_epochs=100)[0]
 
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
