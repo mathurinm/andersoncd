@@ -6,7 +6,6 @@ from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 
 from andersoncd.data.synthetic import simu_linreg
-from andersoncd.penalties import L1, L1_plus_L2
 from andersoncd.estimators import WeightedLasso, ElasticNet
 
 X, y = simu_linreg(n_samples=30, n_features=40)
