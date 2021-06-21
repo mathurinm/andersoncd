@@ -5,18 +5,13 @@ from numpy.linalg import norm
 from sklearn.utils import check_array
 
 
-def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
+def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 coef_init=None, max_iter=20, max_epochs=50_000,
                 p0=10, tol=1e-4, prune=0,
                 return_n_iter=False, verbose=0,):
     r"""Compute optimization path with Celer primal as inner solver.
 
-    With `n = len(y)` and `p = len(w)` the number of samples and features,
-    the loss is:
-
-    .. math::
-
-        \frac{||y - X w||_2^2}{2 n} + \alpha \sum_1^p penalty(|w_j|)
+    The loss is customised by passing various choices of datafit and penalty.
 
 
     Parameters
@@ -26,6 +21,9 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
     y : ndarray, shape (n_samples,)
         Target values.
+
+    datafit : instance of Datafit class
+        Datafitting term.
 
     penalty : instance of Penalty class
         Penalty used in the model.
@@ -106,6 +104,7 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
     # X_dense, X_data, X_indices, X_indptr = _sparse_and_dense(X)
 
     if alphas is None:
+        # TODO pass datafit.gradient at 0
         alpha_max = penalty.alpha_max(X, y)
         alphas = alpha_max * np.geomspace(1, eps, n_alphas, dtype=X.dtype)
     else:
@@ -136,7 +135,7 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
             if coef_init is not None:
                 w = coef_init.copy()
                 p0 = max((w != 0.).sum(), p0)
-                R = y - X @ w
+                R = y - X @ w  # TODO Xw should be used instead
             else:
                 w = np.zeros(n_features, dtype=X.dtype)
                 R = y.copy()
@@ -160,10 +159,11 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
 
 def solver(
-        X, y, penalty, w, R, norms_X_col, max_iter=50,
+        X, y, datafit, penalty, w, R, norms_X_col, max_iter=50,
         max_epochs=50_000, p0=10, tol=1e-4, use_acc=True, K=5, verbose=0):
     """
-    penalty: Penalty object
+    datafit : instance of Datafit
+    penalty: instance of Penalty
     p0: first size of working set.
     """
     n_samples, n_features = X.shape
@@ -175,7 +175,7 @@ def solver(
 
     for t in range(max_iter):
 
-        kkt = _kkt_violation(w, X, R, penalty, np.arange(n_features))
+        kkt = _kkt_violation(w, X, R, datafit, penalty, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
