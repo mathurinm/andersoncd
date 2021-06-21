@@ -48,6 +48,7 @@ of block coordinate descent for the group Lasso.
       warnings.warn(NumbaPerformanceWarning(msg))
     Early exit
     Algo: pgd, use Anderson: True
+    Early exit
     Algo: bcd, use Anderson: False
     Algo: pgd, use Anderson: False
     Algo: rbcd, use Anderson: False
@@ -158,7 +159,7 @@ of block coordinate descent for the group Lasso.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  26.624 seconds)
+   **Total running time of the script:** ( 0 minutes  21.112 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_group.py:
