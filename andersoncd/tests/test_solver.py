@@ -28,10 +28,6 @@ dict_estimators_ours["Lasso"] = WeightedLasso(
 dict_estimators_ours["ElasticNet"] = ElasticNet(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
 
-dict_penalties = {}
-dict_penalties["Lasso"] = L1(alpha)
-dict_penalties["ElasticNet"] = L1_plus_L2(alpha, alpha)
-
 
 @pytest.mark.parametrize("estimator_name", ["Lasso", "ElasticNet"])
 def test_estimator(estimator_name):
