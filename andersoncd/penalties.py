@@ -65,25 +65,28 @@ class L1(Penalty):
         return np.ones(n_features).astype(bool_)
 
 
-# TODO parametrize with l1_ratio ?
 spec_L1_plus_L2 = [
     ('alpha', float64),
-    ('rho', float64),
+    ('l1_ratio', float64),
 ]
 
 
 # TODO find a better name
 @jitclass(spec_L1_plus_L2)
 class L1_plus_L2(Penalty):
-    def __init__(self, alpha, rho):
+    def __init__(self, alpha, l1_ratio):
         self.alpha = alpha
-        self.rho = rho
+        self.l1_ratio = l1_ratio
 
     def value(self, w):
-        return self.alpha * np.sum(np.abs(w)) + self.rho / 2 * np.sum(w ** 2)
+        res = self.l1_ratio * self.alpha * np.sum(np.abs(w))
+        res += (1 - self.l1_ratio) * self.alpha / 2 * np.sum(w ** 2)
+        return res
 
     def prox_1d(self, value, stepsize, j):
-        return ST(value, self.alpha * stepsize) / (1 + stepsize * self.rho)
+        res = ST(value, self.l1_ratio * self.alpha * stepsize)
+        res /= (1 + stepsize * (1 - self.l1_ratio) * self.alpha)
+        return res
 
     def subdiff_distance(self, w, neg_grad, ws):
         res = np.zeros_like(neg_grad)
@@ -91,12 +94,18 @@ class L1_plus_L2(Penalty):
             j = ws[idx]
             if w[j] == 0:
                 # distance of grad_j to alpha * [-1, 1]
-                res[idx] = max(
-                    0, np.abs(neg_grad[idx] - self.rho * w[j]) - self.alpha)
+                tmp = neg_grad[idx]
+                tmp -= (1 - self.l1_ratio) * self.alpha * w[j]
+                tmp = np.abs(tmp)
+                tmp -= self.l1_ratio * self.alpha
+                res[idx] = max(0, tmp)
             else:
                 # distance of grad_j to alpha  * sign(w[j])
-                res[idx] = np.abs(
-                    np.abs(neg_grad[idx] - self.rho * w[j]) - self.alpha)
+                tmp = neg_grad[idx]
+                tmp -= (1 - self.l1_ratio) * self.alpha * w[j]
+                tmp = np.abs(tmp)
+                tmp -= self.l1_ratio * self.alpha
+                res[idx] = np.abs(tmp)
         return res
 
     def is_penalized(self, n_features):
