@@ -2,6 +2,7 @@ import numpy as np
 from numba import float64
 from abc import abstractmethod
 from numba.experimental import jitclass
+from numba.types import bool_
 
 from andersoncd.utils import ST
 
@@ -46,14 +47,14 @@ class L1(Penalty):
             j = ws[idx]
             if w[j] == 0:
                 # distance of grad to alpha * [-1, 1]
-                res[idx] = max(0, np.abs(grad[j]) - self.alpha)
+                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
             else:
                 # distance of grad_j to alpha  * sign(w[j])
-                res[idx] = np.abs(np.abs(grad[j]) - self.alpha)
+                res[idx] = np.abs(np.abs(grad[idx]) - self.alpha)
         return res
 
     def is_penalized(self, n_features):
-        return np.ones(n_features, dtype=bool)
+        return np.ones(n_features).astype(bool_)
 
     def prox(self):
         pass
@@ -84,11 +85,11 @@ class WeightedL1(Penalty):
             j = ws[idx]
             if w[j] == 0:
                 # distance of grad to alpha * weights[j] * [-1, 1]
-                res[idx] = max(0, np.abs(grad[j]) -
+                res[idx] = max(0, np.abs(grad[idx]) -
                                self.alpha * self.weights[j])
             else:
                 # distance of grad_j to alpha * weights[j] * sign(w[j])
-                res[idx] = np.abs(np.abs(grad[j]) -
+                res[idx] = np.abs(np.abs(grad[idx]) -
                                   self.alpha * self.weights[j])
         return res
 
