@@ -77,7 +77,8 @@ class WeightedLasso(Lasso_sklearn):
 
     See also
     --------
-    TODO
+    Lasso
+    WeightedLassoCV
 
     References
     ----------
@@ -121,7 +122,7 @@ class ElasticNet(ElasticNet_sklearn):
     r"""
     Elastic net estimator based on Celer solver and primal extrapolation.
 
-    The optimization objective for WeightedLasso is::
+    The optimization objective for Elastic net is::
 
     (1 / (2 * n_samples)) * ||y - X w||^2_2 + l1_ratio * alpha * \sum_j |w_j|
     + (1 - l1_ratio) * alpha / 2 \sum_j w_j ** 2
@@ -132,7 +133,7 @@ class ElasticNet(ElasticNet_sklearn):
         Constant that multiplies the L1 term. Defaults to 1.0.
         ``alpha = 0`` is equivalent to an ordinary least square.
         For numerical reasons, using ``alpha = 0`` with the
-        ``WeightedLasso`` object is not advised.
+        ``ElasticNet`` object is not advised.
 
     l1_ratio : float, default=0.5
         The ElasticNet mixing parameter, with ``0 <= l1_ratio <= 1``. For
@@ -141,7 +142,7 @@ class ElasticNet(ElasticNet_sklearn):
         combination of L1 and L2.
 
     max_iter : int, optional
-        The maximum number of iterations (subproblem definitions)
+        Maximum number of iterations (subproblem definitions)
 
     max_epochs : int
         Maximum number of CD epochs on each subproblem.
@@ -187,7 +188,7 @@ class ElasticNet(ElasticNet_sklearn):
 
     See also
     --------
-    TODO
+    ElasticNetCV
 
     References
     ----------
@@ -228,4 +229,4 @@ class ElasticNet(ElasticNet_sklearn):
             X, y, self.penalty, alphas=alphas, coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
             max_epochs=self.max_epochs, p0=self.p0, tol=self.tol,
-            prune=self.prune, verbose=self.verbose,)
+            prune=self.prune, verbose=self.verbose)
