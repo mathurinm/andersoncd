@@ -193,7 +193,10 @@ def solver(
         # 1) select features : all unpenalized, + 2 * (nnz and penalized)
         ws_size = max(p0 + n_unpen,
                       min(2 * (w != 0).sum() - n_unpen, n_features))
+        # if t == 2:
+        #     1/0
         kkt[unpen] = np.inf  # always include unpenalized features
+        kkt[w != 0] = np.inf  # TODO check
         ws = np.argsort(kkt)[-ws_size:]
 
         if use_acc:
@@ -201,7 +204,7 @@ def solver(
             U = np.zeros([K, n_features])
 
         if verbose:
-            print(f'Iteration {t}, {ws_size} feats in subpb.')
+            print(f'Iteration {t + 1}, {ws_size} feats in subpb.')
 
         # 2) do iterations on smaller problem
         for epoch in range(max_epochs):

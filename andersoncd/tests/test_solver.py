@@ -13,7 +13,7 @@ def test_enet_solver(use_acc=True):
     n_samples, n_features = X.shape
 
     alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
-    alpha = 0.5 * alpha_max
+    alpha = 0.05 * alpha_max
     tol = 1e-14
     # enet from sklearn
     estimator = Lasso(
@@ -27,29 +27,10 @@ def test_enet_solver(use_acc=True):
     norms_X_col = norm(X, axis=0)
     coef_ours = solver(
         X, y, penalty, w, R, norms_X_col, verbose=2, max_iter=10,
-        max_epochs=100)[0]
+        max_epochs=1_000, tol=1e-10)[0]
 
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
 
 if __name__ == '__main__':
-    X, y = simu_linreg(n_samples=30, n_features=40)
-    n_samples, n_features = X.shape
-
-    alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
-    alpha = 0.5 * alpha_max
-    tol = 1e-14
-    # enet from sklearn
-    estimator = Lasso(
-        alpha=alpha, fit_intercept=False, tol=tol)
-    estimator.fit(X, y)
-    coef_sk = estimator.coef_
-
-    penalty = L1(alpha)
-    w = np.zeros(n_features)
-    R = y - X @ w
-    norms_X_col = norm(X, axis=0)
-    coef_ours = solver(
-        X, y, penalty, w, R, norms_X_col, verbose=2, p0=40, max_epochs=50, max_iter=2)[0]
-
-    np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
+    test_enet_solver(True)
