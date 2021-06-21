@@ -206,22 +206,21 @@ class ElasticNet(ElasticNet_sklearn):
       https://jmlr.org/papers/v21/19-587.html
     """
 
-    # def __init__(self, alpha=1., rho=1, max_iter=100,
     def __init__(self, alpha=1., l1_ratio=0.5, max_iter=100,
                  max_epochs=50_000, p0=10,
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
                  normalize=False, warm_start=False):
         super(ElasticNet, self).__init__(
-            alpha=alpha, tol=tol, max_iter=max_iter,
+            alpha=alpha, l1_ratio=0.5, tol=tol, max_iter=max_iter,
             fit_intercept=fit_intercept, normalize=normalize,
             warm_start=warm_start)
         self.verbose = verbose
         self.max_epochs = max_epochs
         self.p0 = p0
         self.prune = prune
-        self.penalty = L1_plus_L2(
-            # alpha, rho)
-            self.l1_ratio * alpha, (1 - self.l1_ratio) * alpha)
+
+        # TODO should we put self or not?
+        self.penalty = L1_plus_L2(alpha, l1_ratio)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute weighted Lasso path with Celer + primal extrapolation."""

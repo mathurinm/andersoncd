@@ -122,6 +122,7 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
     norms_X_col = norm(X, axis=0)
 
     for t in range(n_alphas):
+
         alpha = alphas[t]
         penalty.alpha = alpha  # TODO this feels unnatural
         if verbose:
