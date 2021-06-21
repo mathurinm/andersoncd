@@ -81,20 +81,24 @@ class L1_plus_L2(Penalty):
     def prox_1d(self, value, stepsize, j):
         return ST(value, self.alpha * stepsize) / (1 + stepsize * self.rho)
 
-    def subdiff_distance(self, w, grad, ws):
+    def subdiff_distance(self, w, neg_grad, ws):
         """TODO to double check
+        w: TODO
+        neg_grad: ndarray, shape (n_features,)
+            Minus the value of the gradient of the datafit at w.
+        ws: TODO
         """
-        res = np.zeros_like(grad)
+        res = np.zeros_like(neg_grad)
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
-                # distance of grad to alpha * [-1, 1]
+                # distance of grad_j to alpha * [-1, 1]
                 res[idx] = max(
-                    0, np.abs(grad[idx] + self.rho * w[idx]) - self.alpha)
+                    0, np.abs(neg_grad[idx] - self.rho * w[idx]) - self.alpha)
             else:
                 # distance of grad_j to alpha  * sign(w[j])
                 res[idx] = np.abs(
-                    np.abs(grad[idx] + self.rho * w[idx]) - self.alpha)
+                    np.abs(neg_grad[idx] - self.rho * w[idx]) - self.alpha)
         return res
 
     def is_penalized(self, n_features):
