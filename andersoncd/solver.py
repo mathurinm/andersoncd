@@ -15,7 +15,7 @@ def solver(
     penalty: Penalty object
     p0: first size of working set.
     """
-    n_samples, n_features = X.shape
+    n_samples, n_features = X.shape[1]
     pen = penalty.is_penalized(n_features)
     unpen = ~pen
     n_unpen = unpen.sum()
@@ -38,14 +38,14 @@ def solver(
 
         if use_acc:
             last_K_w = np.zeros([K + 1, n_features])
-        U = np.zeros([K, n_features])
+            U = np.zeros([K, n_features])
 
         if verbose:
             print(f'Iteration {t}, {ws_size} feats in subpb.')
 
         # 2) do iterations on smaller problem
         for epoch in range(max_epochs):
-            _cd_wlasso(X, w, R, penalty, lc, ws)
+            _cd_epoch(X, w, R, penalty, lc, ws)
 
             # TODO optimize computation using ws
             if use_acc:
@@ -62,9 +62,11 @@ def solver(
                         w_acc = w.copy()
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
-                        p_obj = primal_wlasso(R, w, penalty)
+                        datafit = (R ** 2).sum() / (2 * n_samples)
+                        p_obj = datafit + penalty.value(w)
                         R_acc = y - X @ w_acc
-                        p_obj_acc = primal_wlasso(R_acc, w_acc, penalty)
+                        datafit_acc = (R_acc ** 2).sum() / (2 * n_samples)
+                        p_obj_acc = datafit_acc + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
                             R[:] = R_acc
@@ -74,7 +76,7 @@ def solver(
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws
-                p_obj = primal_wlasso(R, w, penalty)
+                p_obj = (R ** 2).sum() / (2 * n_samples) + penalty.value(w)
 
                 kkt_ws = _kkt_violation(w, X, R, penalty, ws)
                 kkt_ws_max = np.max(kkt_ws)
@@ -92,21 +94,19 @@ def solver(
 @njit
 def _kkt_violation(w, X, R, penalty, ws):
     n_samples = X.shape[0]
-    return penalty.subdiff_distance(X.T @ R / n_samples, w)
+    grad = np.zeros(ws.shape[0])
+    for idx, j in enumerate(ws):
+        grad[j] = X[:, j] @ R / n_samples
+    return penalty.subdiff_distance(grad, w)
 
 
 @njit
-def _cd_wlasso(X, w, R, penalty, lc, feats):
-    # we apply ST even when weights[j] == 0
-    n_samples = len(R)
+def _cd_epoch(X, w, R, penalty, lc, feats):
+    n_samples = R.shape[0]
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
-        w[j] = penalty.prox1D(
-            old_w_j + np.dot(Xj, R) / lc[j], n_samples * penalty.alpha / lc[j])
+        w[j] = penalty.prox_1d(
+            old_w_j + np.dot(Xj, R) / lc[j], n_samples / lc[j], j)
         if w[j] != old_w_j:
             R += (old_w_j - w[j]) * Xj
-
-
-def primal_wlasso(R, w, penalty):
-    return 0.5 * norm(R) ** 2 / len(R) + penalty.value(w)
