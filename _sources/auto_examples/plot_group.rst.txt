@@ -42,7 +42,7 @@ of block coordinate descent for the group Lasso.
 
     usetex mode requires TeX.
     Algo: bcd, use Anderson: True
-    /home/circleci/project/andersoncd/group.py:40: NumbaPerformanceWarning: '@' is faster on contiguous arrays, called on (array(float64, 2d, A), array(float64, 1d, C))
+    /home/circleci/project/andersoncd/group.py:25: NumbaPerformanceWarning: '@' is faster on contiguous arrays, called on (array(float64, 2d, A), array(float64, 1d, C))
       w[grp] = BST(old_w_g + Xg.T @ R / lc[g], alpha / lc[g])
     /home/circleci/.local/lib/python3.8/site-packages/numba/core/typing/npydecl.py:937: NumbaPerformanceWarning: '@' is faster on contiguous arrays, called on (array(float64, 2d, A), array(float64, 1d, C))
       warnings.warn(NumbaPerformanceWarning(msg))
@@ -160,7 +160,7 @@ of block coordinate descent for the group Lasso.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  16.930 seconds)
+   **Total running time of the script:** ( 0 minutes  15.872 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_group.py:

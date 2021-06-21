@@ -163,7 +163,7 @@ usetex mode requires TeX.
 </div>
 <p>Load the data:
 n_features = 1000</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="n">fetch_libsvm</span><span class="p">(</span><span class="s1">&#39;rcv1.binary&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="n">fetch_libsvm</span><span class="p">(</span><span class="s1">&#39;rcv1.binary&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -173,7 +173,7 @@ n_features = 1000</p>
 <p>Run solver with various regularization strengths:
 alpha = 0</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">div_alpha</span> <span class="o">=</span> <span class="mi">30</span>
-<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha_max</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">abs</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+<a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha_max</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">abs</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
 <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha_max</span></a> <span class="o">/</span> <span class="n">div_alpha</span>
 
 <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-10</span>
@@ -187,14 +187,14 @@ alpha = 0</p>
 
 <span class="k">for</span> <span class="n">reg_amount</span> <span class="ow">in</span> <span class="n">reg_amount_list</span><span class="p">:</span>
     <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">solver_logreg</span><span class="p">(</span>
-        <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+        <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
         <span class="n">algo</span><span class="o">=</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">use_acc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reg_amount</span><span class="o">=</span><span class="n">reg_amount</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">compute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">dict_Es</span><span class="p">[</span><span class="n">reg_amount</span><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">dict_times</span><span class="p">[</span><span class="n">reg_amount</span><span class="p">]</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_noacc</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <span class="n">times_noacc</span> <span class="o">=</span> <span class="n">solver_logreg</span><span class="p">(</span>
-    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
+    <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">alpha</span></a><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span>
     <span class="n">algo</span><span class="o">=</span><span class="s2">&quot;cd&quot;</span><span class="p">,</span> <span class="n">use_acc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">(</span><span class="s2">&quot;colorblind&quot;</span><span class="p">)</span>
@@ -206,687 +206,687 @@ alpha = 0</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>elapsed time: 0.000411
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>elapsed time: 0.000559
 Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-elapsed time: 0.945119
+elapsed time: 0.923734
 Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-elapsed time: 1.309577
+elapsed time: 1.279695
 Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-elapsed time: 1.692696
+elapsed time: 1.670555
 Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-elapsed time: 2.065169
+elapsed time: 2.027549
 Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-elapsed time: 2.414896
+elapsed time: 2.387501
 Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-elapsed time: 2.809542
+elapsed time: 2.778564
 Iteration 60, p_obj::5481.96788, d_obj::5450.79213, gap::3.12e+01
-elapsed time: 3.178317
+elapsed time: 3.130306
 Iteration 70, p_obj::5481.88123, d_obj::5474.30274, gap::7.58e+00
-elapsed time: 3.617879
+elapsed time: 3.480531
 Iteration 80, p_obj::5481.88077, d_obj::5478.38249, gap::3.50e+00
-elapsed time: 4.018244
+elapsed time: 3.867111
 Iteration 90, p_obj::5481.88063, d_obj::5478.91258, gap::2.97e+00
-elapsed time: 4.386405
+elapsed time: 4.230269
 Iteration 100, p_obj::5481.88057, d_obj::5479.28330, gap::2.60e+00
-elapsed time: 4.810558
+elapsed time: 4.580569
 Iteration 110, p_obj::5481.88050, d_obj::5479.74906, gap::2.13e+00
-elapsed time: 5.203935
+elapsed time: 4.963050
 Iteration 120, p_obj::5481.88046, d_obj::5480.13527, gap::1.75e+00
-elapsed time: 5.572883
+elapsed time: 5.330407
 Iteration 130, p_obj::5481.88043, d_obj::5480.36135, gap::1.52e+00
-elapsed time: 6.020809
+elapsed time: 5.680485
 Iteration 140, p_obj::5481.88040, d_obj::5480.63347, gap::1.25e+00
-elapsed time: 6.460610
+elapsed time: 6.060615
 Iteration 150, p_obj::5481.88039, d_obj::5480.83904, gap::1.04e+00
-elapsed time: 6.854831
+elapsed time: 6.428003
 Iteration 160, p_obj::5481.88038, d_obj::5481.00903, gap::8.71e-01
-elapsed time: 7.317832
+elapsed time: 6.778369
 Iteration 170, p_obj::5481.88037, d_obj::5481.21019, gap::6.70e-01
-elapsed time: 7.724768
+elapsed time: 7.168360
 Iteration 180, p_obj::5481.88037, d_obj::5481.31949, gap::5.61e-01
-elapsed time: 8.102332
+elapsed time: 7.528835
 Iteration 190, p_obj::5481.88036, d_obj::5481.41053, gap::4.70e-01
-elapsed time: 8.509336
+elapsed time: 7.898897
 Iteration 200, p_obj::5481.88036, d_obj::5481.52023, gap::3.60e-01
-elapsed time: 8.913186
+elapsed time: 8.282704
 Iteration 210, p_obj::5481.88036, d_obj::5481.57861, gap::3.02e-01
-elapsed time: 9.322779
+elapsed time: 8.632905
 Iteration 220, p_obj::5481.88036, d_obj::5481.62742, gap::2.53e-01
-elapsed time: 9.715116
+elapsed time: 8.989506
 Iteration 230, p_obj::5481.88036, d_obj::5481.68667, gap::1.94e-01
-elapsed time: 10.124303
+elapsed time: 9.376462
 Iteration 240, p_obj::5481.88036, d_obj::5481.71796, gap::1.62e-01
-elapsed time: 10.495743
+elapsed time: 9.730458
 Iteration 250, p_obj::5481.88036, d_obj::5481.74418, gap::1.36e-01
-elapsed time: 10.910072
+elapsed time: 10.080289
 Iteration 260, p_obj::5481.88036, d_obj::5481.77613, gap::1.04e-01
-elapsed time: 11.317080
+elapsed time: 10.462168
 Iteration 270, p_obj::5481.88036, d_obj::5481.79294, gap::8.74e-02
-elapsed time: 11.677079
+elapsed time: 10.830492
 Iteration 280, p_obj::5481.88036, d_obj::5481.80704, gap::7.33e-02
-elapsed time: 12.106968
+elapsed time: 11.181821
 Iteration 290, p_obj::5481.88036, d_obj::5481.82426, gap::5.61e-02
-elapsed time: 12.492476
+elapsed time: 11.563510
 Iteration 300, p_obj::5481.88036, d_obj::5481.83330, gap::4.71e-02
-elapsed time: 12.860940
+elapsed time: 11.929526
 Iteration 310, p_obj::5481.88036, d_obj::5481.84089, gap::3.95e-02
-elapsed time: 13.221293
+elapsed time: 12.280778
 Iteration 320, p_obj::5481.88036, d_obj::5481.85016, gap::3.02e-02
-elapsed time: 13.619131
+elapsed time: 12.661655
 Iteration 330, p_obj::5481.88036, d_obj::5481.85503, gap::2.53e-02
-elapsed time: 13.972974
+elapsed time: 13.028927
 Iteration 340, p_obj::5481.88036, d_obj::5481.85911, gap::2.12e-02
-elapsed time: 14.406769
+elapsed time: 13.379747
 Iteration 350, p_obj::5481.88036, d_obj::5481.86411, gap::1.62e-02
-elapsed time: 14.786896
+elapsed time: 13.770240
 Iteration 360, p_obj::5481.88036, d_obj::5481.86662, gap::1.37e-02
-elapsed time: 15.164175
+elapsed time: 14.127485
 Iteration 370, p_obj::5481.88036, d_obj::5481.86768, gap::1.27e-02
-elapsed time: 15.518981
+elapsed time: 14.487579
 Iteration 380, p_obj::5481.88036, d_obj::5481.86972, gap::1.06e-02
-elapsed time: 15.926747
+elapsed time: 14.874931
 Iteration 390, p_obj::5481.88036, d_obj::5481.87226, gap::8.10e-03
-elapsed time: 16.268440
+elapsed time: 15.229326
 Iteration 400, p_obj::5481.88036, d_obj::5481.87356, gap::6.79e-03
-elapsed time: 16.704724
+elapsed time: 15.581619
 Iteration 410, p_obj::5481.88036, d_obj::5481.87466, gap::5.70e-03
-elapsed time: 17.099801
+elapsed time: 15.964807
 Iteration 420, p_obj::5481.88036, d_obj::5481.87602, gap::4.34e-03
-elapsed time: 17.467532
+elapsed time: 16.328082
 Iteration 430, p_obj::5481.88036, d_obj::5481.87672, gap::3.64e-03
-elapsed time: 17.836028
+elapsed time: 16.687884
 Iteration 440, p_obj::5481.88036, d_obj::5481.87758, gap::2.77e-03
-elapsed time: 18.221848
+elapsed time: 17.078995
 Iteration 450, p_obj::5481.88036, d_obj::5481.87824, gap::2.11e-03
-elapsed time: 18.563883
+elapsed time: 17.426742
 Iteration 460, p_obj::5481.88036, d_obj::5481.87858, gap::1.77e-03
-elapsed time: 19.010288
+elapsed time: 17.784868
 Iteration 470, p_obj::5481.88036, d_obj::5481.87900, gap::1.36e-03
-elapsed time: 19.429645
+elapsed time: 18.172902
 Iteration 480, p_obj::5481.88036, d_obj::5481.87922, gap::1.14e-03
-elapsed time: 19.772824
+elapsed time: 18.532564
 Iteration 490, p_obj::5481.88036, d_obj::5481.87931, gap::1.05e-03
-elapsed time: 20.219378
+elapsed time: 18.903750
 Iteration 500, p_obj::5481.88036, d_obj::5481.87956, gap::8.00e-04
-elapsed time: 20.637904
+elapsed time: 19.281864
 Iteration 510, p_obj::5481.88036, d_obj::5481.87975, gap::6.10e-04
-elapsed time: 20.994399
+elapsed time: 19.630779
 Iteration 520, p_obj::5481.88036, d_obj::5481.87979, gap::5.63e-04
-elapsed time: 21.411201
+elapsed time: 20.097573
 Iteration 530, p_obj::5481.88036, d_obj::5481.87993, gap::4.29e-04
-elapsed time: 21.816787
+elapsed time: 20.480001
 Iteration 540, p_obj::5481.88036, d_obj::5481.88003, gap::3.27e-04
-elapsed time: 22.173347
+elapsed time: 20.834460
 Iteration 550, p_obj::5481.88036, d_obj::5481.88005, gap::3.02e-04
-elapsed time: 22.613136
+elapsed time: 21.183264
 Iteration 560, p_obj::5481.88036, d_obj::5481.88010, gap::2.53e-04
-elapsed time: 23.033045
+elapsed time: 21.572369
 Iteration 570, p_obj::5481.88036, d_obj::5481.88012, gap::2.34e-04
-elapsed time: 23.410517
+elapsed time: 21.933287
 Iteration 580, p_obj::5481.88036, d_obj::5481.88014, gap::2.16e-04
-elapsed time: 23.815468
+elapsed time: 22.370459
 Iteration 590, p_obj::5481.88036, d_obj::5481.88016, gap::1.99e-04
-elapsed time: 0.000311
+elapsed time: 0.045229
 Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-elapsed time: 0.397388
+elapsed time: 0.414973
 Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-elapsed time: 0.820547
+elapsed time: 0.771283
 Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-elapsed time: 1.231951
+elapsed time: 1.158427
 Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-elapsed time: 1.579492
+elapsed time: 1.514414
 Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-elapsed time: 2.014393
+elapsed time: 1.865679
 Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-elapsed time: 2.414706
+elapsed time: 2.248055
 Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-elapsed time: 2.769383
+elapsed time: 2.612428
 Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-elapsed time: 3.208805
+elapsed time: 2.963372
 Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-elapsed time: 3.624046
+elapsed time: 3.352532
 Iteration 90, p_obj::5481.88071, d_obj::5478.53015, gap::3.35e+00
-elapsed time: 3.975424
+elapsed time: 3.711289
 Iteration 100, p_obj::5481.88060, d_obj::5479.05838, gap::2.82e+00
-elapsed time: 4.410766
+elapsed time: 4.064787
 Iteration 110, p_obj::5481.88050, d_obj::5479.74438, gap::2.14e+00
-elapsed time: 4.825095
+elapsed time: 4.446642
 Iteration 120, p_obj::5481.88044, d_obj::5480.25502, gap::1.63e+00
-elapsed time: 5.232017
+elapsed time: 4.812428
 Iteration 130, p_obj::5481.88041, d_obj::5480.53439, gap::1.35e+00
-elapsed time: 5.624098
+elapsed time: 5.161713
 Iteration 140, p_obj::5481.88040, d_obj::5480.74490, gap::1.14e+00
-elapsed time: 6.026700
+elapsed time: 5.547639
 Iteration 150, p_obj::5481.88037, d_obj::5481.31667, gap::5.64e-01
-elapsed time: 6.376829
+elapsed time: 5.913613
 Iteration 160, p_obj::5481.88036, d_obj::5481.48386, gap::3.97e-01
-elapsed time: 6.813421
+elapsed time: 6.264532
 Iteration 170, p_obj::5481.88036, d_obj::5481.59910, gap::2.81e-01
-elapsed time: 7.210190
+elapsed time: 6.645436
 Iteration 180, p_obj::5481.88036, d_obj::5481.67512, gap::2.05e-01
-elapsed time: 7.580189
+elapsed time: 7.011351
 Iteration 190, p_obj::5481.88036, d_obj::5481.70145, gap::1.79e-01
-elapsed time: 8.010754
+elapsed time: 7.365069
 Iteration 200, p_obj::5481.88036, d_obj::5481.74792, gap::1.32e-01
-elapsed time: 8.397442
+elapsed time: 7.746135
 Iteration 210, p_obj::5481.88036, d_obj::5481.81794, gap::6.24e-02
-elapsed time: 8.761489
+elapsed time: 8.111722
 Iteration 220, p_obj::5481.88036, d_obj::5481.82516, gap::5.52e-02
-elapsed time: 9.116236
+elapsed time: 8.462704
 Iteration 230, p_obj::5481.88036, d_obj::5481.85539, gap::2.50e-02
-elapsed time: 9.504283
+elapsed time: 8.847964
 Iteration 240, p_obj::5481.88036, d_obj::5481.85843, gap::2.19e-02
-elapsed time: 9.860956
+elapsed time: 9.211099
 Iteration 250, p_obj::5481.88036, d_obj::5481.87005, gap::1.03e-02
-elapsed time: 10.217640
+elapsed time: 9.565839
 Iteration 260, p_obj::5481.88036, d_obj::5481.87127, gap::9.09e-03
-elapsed time: 10.606220
+elapsed time: 9.948426
 Iteration 270, p_obj::5481.88036, d_obj::5481.87633, gap::4.03e-03
-elapsed time: 10.961296
+elapsed time: 10.311841
 Iteration 280, p_obj::5481.88036, d_obj::5481.87731, gap::3.05e-03
-elapsed time: 11.316143
+elapsed time: 10.672084
 Iteration 290, p_obj::5481.88036, d_obj::5481.87811, gap::2.25e-03
-elapsed time: 11.706812
+elapsed time: 11.054213
 Iteration 300, p_obj::5481.88036, d_obj::5481.87840, gap::1.96e-03
-elapsed time: 12.087441
+elapsed time: 11.417897
 Iteration 310, p_obj::5481.88036, d_obj::5481.87941, gap::9.50e-04
-elapsed time: 12.511278
+elapsed time: 11.855677
 Iteration 320, p_obj::5481.88036, d_obj::5481.87952, gap::8.37e-04
-elapsed time: 12.902160
+elapsed time: 12.244907
 Iteration 330, p_obj::5481.88036, d_obj::5481.87958, gap::7.72e-04
-elapsed time: 13.273672
+elapsed time: 12.608734
 Iteration 340, p_obj::5481.88036, d_obj::5481.88003, gap::3.21e-04
-elapsed time: 13.721298
+elapsed time: 12.967292
 Iteration 350, p_obj::5481.88036, d_obj::5481.88020, gap::1.52e-04
-elapsed time: 14.130039
+elapsed time: 13.354477
 Iteration 360, p_obj::5481.88036, d_obj::5481.88027, gap::8.32e-05
-elapsed time: 14.478637
+elapsed time: 13.712547
 Iteration 370, p_obj::5481.88036, d_obj::5481.88028, gap::7.60e-05
-elapsed time: 14.920433
+elapsed time: 14.066272
 Iteration 380, p_obj::5481.88036, d_obj::5481.88029, gap::7.01e-05
-elapsed time: 15.307425
+elapsed time: 14.447917
 Iteration 390, p_obj::5481.88036, d_obj::5481.88033, gap::2.99e-05
-elapsed time: 15.673002
+elapsed time: 14.810263
 Iteration 400, p_obj::5481.88036, d_obj::5481.88033, gap::2.76e-05
-elapsed time: 16.106939
+elapsed time: 15.163144
 Iteration 410, p_obj::5481.88036, d_obj::5481.88033, gap::2.54e-05
-elapsed time: 16.510576
+elapsed time: 15.552318
 Iteration 420, p_obj::5481.88036, d_obj::5481.88033, gap::2.35e-05
-elapsed time: 16.903681
+elapsed time: 15.909346
 Iteration 430, p_obj::5481.88036, d_obj::5481.88033, gap::2.17e-05
-elapsed time: 17.315058
+elapsed time: 16.266304
 Iteration 440, p_obj::5481.88036, d_obj::5481.88034, gap::2.00e-05
-elapsed time: 17.722090
+elapsed time: 16.654923
 Iteration 450, p_obj::5481.88036, d_obj::5481.88034, gap::1.85e-05
-elapsed time: 18.067169
+elapsed time: 17.012608
 Iteration 460, p_obj::5481.88036, d_obj::5481.88034, gap::1.71e-05
-elapsed time: 18.512342
+elapsed time: 17.450610
 Iteration 470, p_obj::5481.88036, d_obj::5481.88034, gap::1.57e-05
-elapsed time: 18.932073
+elapsed time: 17.839040
 Iteration 480, p_obj::5481.88036, d_obj::5481.88034, gap::1.45e-05
-elapsed time: 19.299176
+elapsed time: 18.208638
 Iteration 490, p_obj::5481.88036, d_obj::5481.88034, gap::1.34e-05
-elapsed time: 19.717077
+elapsed time: 18.562160
 Iteration 500, p_obj::5481.88036, d_obj::5481.88034, gap::1.24e-05
-elapsed time: 20.144129
+elapsed time: 18.955111
 Iteration 510, p_obj::5481.88036, d_obj::5481.88034, gap::1.14e-05
-elapsed time: 20.540214
+elapsed time: 19.313467
 Iteration 520, p_obj::5481.88036, d_obj::5481.88035, gap::1.06e-05
-elapsed time: 20.921918
+elapsed time: 19.662714
 Iteration 530, p_obj::5481.88036, d_obj::5481.88035, gap::9.75e-06
-elapsed time: 21.333589
+elapsed time: 20.047137
 Iteration 540, p_obj::5481.88036, d_obj::5481.88035, gap::9.00e-06
-elapsed time: 21.706162
+elapsed time: 20.410037
 Iteration 550, p_obj::5481.88036, d_obj::5481.88035, gap::8.31e-06
-elapsed time: 22.108540
+elapsed time: 20.763150
 Iteration 560, p_obj::5481.88036, d_obj::5481.88035, gap::7.67e-06
-elapsed time: 22.510057
+elapsed time: 21.154002
 Iteration 570, p_obj::5481.88036, d_obj::5481.88035, gap::3.19e-06
-elapsed time: 22.923631
+elapsed time: 21.513919
 Iteration 580, p_obj::5481.88036, d_obj::5481.88035, gap::2.94e-06
-elapsed time: 23.311198
+elapsed time: 21.887264
 Iteration 590, p_obj::5481.88036, d_obj::5481.88035, gap::1.22e-06
-elapsed time: 0.000332
+elapsed time: 0.000371
 Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-elapsed time: 0.374257
+elapsed time: 0.365760
 Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-elapsed time: 0.805046
+elapsed time: 0.804766
 Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-elapsed time: 1.203233
+elapsed time: 1.187534
 Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-elapsed time: 1.575141
+elapsed time: 1.557831
 Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-elapsed time: 2.012647
+elapsed time: 1.913375
 Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-elapsed time: 2.414250
+elapsed time: 2.296289
 Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-elapsed time: 2.768251
+elapsed time: 2.659848
 Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-elapsed time: 3.219896
+elapsed time: 3.029912
 Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-elapsed time: 3.621308
+elapsed time: 3.411152
 Iteration 90, p_obj::5481.88069, d_obj::5478.64476, gap::3.24e+00
-elapsed time: 3.985417
+elapsed time: 3.757270
 Iteration 100, p_obj::5481.88052, d_obj::5479.57681, gap::2.30e+00
-elapsed time: 4.407452
+elapsed time: 4.110449
 Iteration 110, p_obj::5481.88043, d_obj::5480.38485, gap::1.50e+00
-elapsed time: 4.816194
+elapsed time: 4.498553
 Iteration 120, p_obj::5481.88042, d_obj::5480.50822, gap::1.37e+00
-elapsed time: 5.161778
+elapsed time: 4.859638
 Iteration 130, p_obj::5481.88041, d_obj::5480.61591, gap::1.26e+00
-elapsed time: 5.605175
+elapsed time: 5.229534
 Iteration 140, p_obj::5481.88036, d_obj::5481.70501, gap::1.75e-01
-elapsed time: 5.988657
+elapsed time: 5.611309
 Iteration 150, p_obj::5481.88036, d_obj::5481.73923, gap::1.41e-01
-elapsed time: 6.363915
+elapsed time: 5.958424
 Iteration 160, p_obj::5481.88036, d_obj::5481.75021, gap::1.30e-01
-elapsed time: 6.730618
+elapsed time: 6.312219
 Iteration 170, p_obj::5481.88036, d_obj::5481.76034, gap::1.20e-01
-elapsed time: 7.130156
+elapsed time: 6.693745
 Iteration 180, p_obj::5481.88036, d_obj::5481.76962, gap::1.11e-01
-elapsed time: 7.467224
+elapsed time: 7.061203
 Iteration 190, p_obj::5481.88036, d_obj::5481.77815, gap::1.02e-01
-elapsed time: 7.911411
+elapsed time: 7.411482
 Iteration 200, p_obj::5481.88036, d_obj::5481.78601, gap::9.43e-02
-elapsed time: 8.318039
+elapsed time: 7.792798
 Iteration 210, p_obj::5481.88036, d_obj::5481.79326, gap::8.71e-02
-elapsed time: 8.671939
+elapsed time: 8.160108
 Iteration 220, p_obj::5481.88036, d_obj::5481.79996, gap::8.04e-02
-elapsed time: 9.110943
+elapsed time: 8.511145
 Iteration 230, p_obj::5481.88036, d_obj::5481.80613, gap::7.42e-02
-elapsed time: 9.520589
+elapsed time: 8.901120
 Iteration 240, p_obj::5481.88036, d_obj::5481.87522, gap::5.13e-03
-elapsed time: 9.867089
+elapsed time: 9.260317
 Iteration 250, p_obj::5481.88036, d_obj::5481.87981, gap::5.49e-04
-elapsed time: 10.303217
+elapsed time: 9.611479
 Iteration 260, p_obj::5481.88036, d_obj::5481.87994, gap::4.21e-04
-elapsed time: 10.755563
+elapsed time: 10.001369
 Iteration 270, p_obj::5481.88036, d_obj::5481.88009, gap::2.66e-04
-elapsed time: 11.144155
+elapsed time: 10.361498
 Iteration 280, p_obj::5481.88036, d_obj::5481.88011, gap::2.46e-04
-elapsed time: 11.512667
+elapsed time: 10.804853
 Iteration 290, p_obj::5481.88036, d_obj::5481.88021, gap::1.44e-04
-elapsed time: 11.916304
+elapsed time: 11.183227
 Iteration 300, p_obj::5481.88036, d_obj::5481.88022, gap::1.33e-04
-elapsed time: 12.306948
+elapsed time: 11.553547
 Iteration 310, p_obj::5481.88036, d_obj::5481.88031, gap::4.11e-05
-elapsed time: 12.722204
+elapsed time: 11.912950
 Iteration 320, p_obj::5481.88036, d_obj::5481.88032, gap::3.77e-05
-elapsed time: 13.125744
+elapsed time: 12.303915
 Iteration 330, p_obj::5481.88036, d_obj::5481.88032, gap::3.47e-05
-elapsed time: 13.472685
+elapsed time: 12.658901
 Iteration 340, p_obj::5481.88036, d_obj::5481.88032, gap::3.21e-05
-elapsed time: 13.907043
+elapsed time: 13.017500
 Iteration 350, p_obj::5481.88036, d_obj::5481.88035, gap::6.12e-06
-elapsed time: 14.297879
+elapsed time: 13.407226
 Iteration 360, p_obj::5481.88036, d_obj::5481.88035, gap::5.66e-06
-elapsed time: 14.667409
+elapsed time: 13.759667
 Iteration 370, p_obj::5481.88036, d_obj::5481.88035, gap::5.22e-06
-elapsed time: 15.105059
+elapsed time: 14.122834
 Iteration 380, p_obj::5481.88036, d_obj::5481.88035, gap::4.82e-06
-elapsed time: 15.501012
+elapsed time: 14.502208
 Iteration 390, p_obj::5481.88036, d_obj::5481.88036, gap::6.61e-07
-elapsed time: 15.859026
+elapsed time: 14.862668
 Iteration 400, p_obj::5481.88036, d_obj::5481.88036, gap::6.17e-07
-elapsed time: 16.236081
+elapsed time: 15.218277
 Iteration 410, p_obj::5481.88036, d_obj::5481.88036, gap::5.73e-07
-elapsed time: 16.622687
+elapsed time: 15.608931
 Iteration 420, p_obj::5481.88036, d_obj::5481.88036, gap::5.30e-07
-elapsed time: 16.976933
+elapsed time: 15.960708
 Iteration 430, p_obj::5481.88036, d_obj::5481.88036, gap::4.89e-07
-elapsed time: 17.415450
+elapsed time: 16.403698
 Iteration 440, p_obj::5481.88036, d_obj::5481.88036, gap::4.52e-07
-elapsed time: 17.822351
+elapsed time: 16.794973
 Iteration 450, p_obj::5481.88036, d_obj::5481.88036, gap::5.36e-08
-elapsed time: 18.210860
+elapsed time: 17.159280
 Iteration 460, p_obj::5481.88036, d_obj::5481.88036, gap::4.91e-08
-elapsed time: 18.622529
+elapsed time: 17.511083
 Iteration 470, p_obj::5481.88036, d_obj::5481.88036, gap::4.53e-08
-elapsed time: 19.032391
+elapsed time: 17.903153
 Iteration 480, p_obj::5481.88036, d_obj::5481.88036, gap::3.27e-08
-elapsed time: 19.373654
+elapsed time: 18.260347
 Iteration 490, p_obj::5481.88036, d_obj::5481.88036, gap::3.02e-08
-elapsed time: 19.816574
+elapsed time: 18.612773
 Iteration 500, p_obj::5481.88036, d_obj::5481.88036, gap::2.79e-08
-elapsed time: 20.212565
+elapsed time: 19.001982
 Iteration 510, p_obj::5481.88036, d_obj::5481.88036, gap::2.57e-08
-elapsed time: 20.563106
+elapsed time: 19.358999
 Iteration 520, p_obj::5481.88036, d_obj::5481.88036, gap::2.38e-08
-elapsed time: 21.010581
+elapsed time: 19.711157
 Iteration 530, p_obj::5481.88036, d_obj::5481.88036, gap::2.20e-08
-elapsed time: 21.395417
+elapsed time: 20.092228
 Iteration 540, p_obj::5481.88036, d_obj::5481.88036, gap::2.02e-08
-elapsed time: 21.760092
+elapsed time: 20.458896
 Iteration 550, p_obj::5481.88036, d_obj::5481.88036, gap::1.87e-08
-elapsed time: 22.112489
+elapsed time: 20.811515
 Iteration 560, p_obj::5481.88036, d_obj::5481.88036, gap::1.73e-08
-elapsed time: 22.511688
+elapsed time: 21.191182
 Iteration 570, p_obj::5481.88036, d_obj::5481.88036, gap::1.59e-08
-elapsed time: 22.859967
+elapsed time: 21.560325
 Iteration 580, p_obj::5481.88036, d_obj::5481.88036, gap::1.48e-08
-elapsed time: 23.212512
+elapsed time: 21.910447
 Iteration 590, p_obj::5481.88036, d_obj::5481.88036, gap::1.36e-08
-elapsed time: 0.000328
+elapsed time: 0.000425
 Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-elapsed time: 0.371279
+elapsed time: 0.354681
 Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-elapsed time: 0.809109
+elapsed time: 0.717965
 Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-elapsed time: 1.197625
+elapsed time: 1.102686
 Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-elapsed time: 1.566888
+elapsed time: 1.450099
 Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-elapsed time: 1.944351
+elapsed time: 1.810262
 Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-elapsed time: 2.325202
+elapsed time: 2.196761
 Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-elapsed time: 2.675365
+elapsed time: 2.555985
 Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-elapsed time: 3.120623
+elapsed time: 2.993289
 Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-elapsed time: 3.535696
+elapsed time: 3.371162
 Iteration 90, p_obj::5481.88058, d_obj::5479.26401, gap::2.62e+00
-elapsed time: 3.904613
+elapsed time: 3.749215
 Iteration 100, p_obj::5481.88046, d_obj::5480.08555, gap::1.79e+00
-elapsed time: 4.307823
+elapsed time: 4.099198
 Iteration 110, p_obj::5481.88039, d_obj::5480.89304, gap::9.87e-01
-elapsed time: 4.689826
+elapsed time: 4.484643
 Iteration 120, p_obj::5481.88037, d_obj::5481.17553, gap::7.05e-01
-elapsed time: 5.062012
+elapsed time: 4.852082
 Iteration 130, p_obj::5481.88037, d_obj::5481.22775, gap::6.53e-01
-elapsed time: 5.409236
+elapsed time: 5.202416
 Iteration 140, p_obj::5481.88036, d_obj::5481.77750, gap::1.03e-01
-elapsed time: 5.788347
+elapsed time: 5.592608
 Iteration 150, p_obj::5481.88036, d_obj::5481.81956, gap::6.08e-02
-elapsed time: 6.159458
+elapsed time: 5.951111
 Iteration 160, p_obj::5481.88036, d_obj::5481.82410, gap::5.63e-02
-elapsed time: 6.515271
+elapsed time: 6.305220
 Iteration 170, p_obj::5481.88036, d_obj::5481.87352, gap::6.84e-03
-elapsed time: 6.900770
+elapsed time: 6.686829
 Iteration 180, p_obj::5481.88036, d_obj::5481.87651, gap::3.84e-03
-elapsed time: 7.261662
+elapsed time: 7.050529
 Iteration 190, p_obj::5481.88036, d_obj::5481.87740, gap::2.95e-03
-elapsed time: 7.633185
+elapsed time: 7.404984
 Iteration 200, p_obj::5481.88036, d_obj::5481.87865, gap::1.70e-03
-elapsed time: 8.032445
+elapsed time: 7.790658
 Iteration 210, p_obj::5481.88036, d_obj::5481.87935, gap::1.00e-03
-elapsed time: 8.394821
+elapsed time: 8.154354
 Iteration 220, p_obj::5481.88036, d_obj::5481.87966, gap::6.93e-04
-elapsed time: 8.814680
+elapsed time: 8.507802
 Iteration 230, p_obj::5481.88036, d_obj::5481.87995, gap::4.03e-04
-elapsed time: 9.221398
+elapsed time: 8.893681
 Iteration 240, p_obj::5481.88036, d_obj::5481.88013, gap::2.27e-04
-elapsed time: 9.618466
+elapsed time: 9.252642
 Iteration 250, p_obj::5481.88036, d_obj::5481.88019, gap::1.70e-04
-elapsed time: 10.028987
+elapsed time: 9.623453
 Iteration 260, p_obj::5481.88036, d_obj::5481.88025, gap::1.01e-04
-elapsed time: 10.434447
+elapsed time: 10.006259
 Iteration 270, p_obj::5481.88036, d_obj::5481.88032, gap::3.94e-05
-elapsed time: 10.837819
+elapsed time: 10.353601
 Iteration 280, p_obj::5481.88036, d_obj::5481.88032, gap::3.64e-05
-elapsed time: 11.233520
+elapsed time: 10.708504
 Iteration 290, p_obj::5481.88036, d_obj::5481.88032, gap::3.36e-05
-elapsed time: 11.641496
+elapsed time: 11.091555
 Iteration 300, p_obj::5481.88036, d_obj::5481.88035, gap::2.22e-06
-elapsed time: 12.044178
+elapsed time: 11.451258
 Iteration 310, p_obj::5481.88036, d_obj::5481.88035, gap::1.97e-06
-elapsed time: 12.428923
+elapsed time: 11.805694
 Iteration 320, p_obj::5481.88036, d_obj::5481.88035, gap::1.61e-06
-elapsed time: 12.827821
+elapsed time: 12.195579
 Iteration 330, p_obj::5481.88036, d_obj::5481.88036, gap::2.36e-07
-elapsed time: 13.182374
+elapsed time: 12.551466
 Iteration 340, p_obj::5481.88036, d_obj::5481.88036, gap::2.18e-07
-elapsed time: 13.614596
+elapsed time: 12.906274
 Iteration 350, p_obj::5481.88036, d_obj::5481.88036, gap::2.01e-07
-elapsed time: 14.021714
+elapsed time: 13.293119
 Iteration 360, p_obj::5481.88036, d_obj::5481.88036, gap::2.00e-09
-elapsed time: 14.362402
+elapsed time: 13.653779
 Iteration 370, p_obj::5481.88036, d_obj::5481.88036, gap::4.69e-10
-elapsed time: 14.803113
+elapsed time: 14.010096
 Iteration 380, p_obj::5481.88036, d_obj::5481.88036, gap::2.07e-10
-elapsed time: 15.182945
+elapsed time: 14.394749
 Iteration 390, p_obj::5481.88036, d_obj::5481.88036, gap::1.77e-10
-elapsed time: 15.558871
+elapsed time: 14.750342
 Iteration 400, p_obj::5481.88036, d_obj::5481.88036, gap::1.60e-10
-elapsed time: 15.915231
+elapsed time: 15.104723
 Iteration 410, p_obj::5481.88036, d_obj::5481.88036, gap::1.49e-10
-elapsed time: 16.298785
+elapsed time: 15.487486
 Iteration 420, p_obj::5481.88036, d_obj::5481.88036, gap::1.36e-10
-elapsed time: 16.667293
+elapsed time: 15.851370
 Iteration 430, p_obj::5481.88036, d_obj::5481.88036, gap::1.22e-10
-elapsed time: 17.109396
+elapsed time: 16.201236
 Iteration 440, p_obj::5481.88036, d_obj::5481.88036, gap::1.06e-10
-elapsed time: 17.522137
+elapsed time: 16.582715
 Iteration 450, p_obj::5481.88036, d_obj::5481.88036, gap::9.46e-11
 Early exit
-elapsed time: 0.000460
+elapsed time: 0.000366
 Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-elapsed time: 0.412822
+elapsed time: 0.353009
 Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-elapsed time: 0.811411
+elapsed time: 0.798707
 Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-elapsed time: 1.223132
+elapsed time: 1.178049
 Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-elapsed time: 1.579347
+elapsed time: 1.549077
 Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-elapsed time: 2.009012
+elapsed time: 1.903203
 Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-elapsed time: 2.416701
+elapsed time: 2.293654
 Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-elapsed time: 2.777884
+elapsed time: 2.652988
 Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-elapsed time: 3.209640
+elapsed time: 3.024930
 Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-elapsed time: 3.607688
+elapsed time: 3.400932
 Iteration 90, p_obj::5481.88043, d_obj::5480.32633, gap::1.55e+00
-elapsed time: 3.967975
+elapsed time: 3.751173
 Iteration 100, p_obj::5481.88040, d_obj::5480.74348, gap::1.14e+00
-elapsed time: 4.414089
+elapsed time: 4.103572
 Iteration 110, p_obj::5481.88039, d_obj::5480.82974, gap::1.05e+00
-elapsed time: 4.812565
+elapsed time: 4.487472
 Iteration 120, p_obj::5481.88039, d_obj::5480.91039, gap::9.70e-01
-elapsed time: 5.192958
+elapsed time: 4.852914
 Iteration 130, p_obj::5481.88038, d_obj::5480.98538, gap::8.95e-01
-elapsed time: 5.610461
+elapsed time: 5.206450
 Iteration 140, p_obj::5481.88038, d_obj::5481.05473, gap::8.26e-01
-elapsed time: 6.017263
+elapsed time: 5.592129
 Iteration 150, p_obj::5481.88037, d_obj::5481.11872, gap::7.62e-01
-elapsed time: 6.363926
+elapsed time: 5.954504
 Iteration 160, p_obj::5481.88037, d_obj::5481.17772, gap::7.03e-01
-elapsed time: 6.800699
+elapsed time: 6.303649
 Iteration 170, p_obj::5481.88036, d_obj::5481.87790, gap::2.46e-03
-elapsed time: 7.195482
+elapsed time: 6.690028
 Iteration 180, p_obj::5481.88036, d_obj::5481.87983, gap::5.25e-04
-elapsed time: 7.561044
+elapsed time: 7.053253
 Iteration 190, p_obj::5481.88036, d_obj::5481.87961, gap::7.41e-04
-elapsed time: 8.008665
+elapsed time: 7.405879
 Iteration 200, p_obj::5481.88036, d_obj::5481.88005, gap::3.03e-04
-elapsed time: 8.407908
+elapsed time: 7.788947
 Iteration 210, p_obj::5481.88036, d_obj::5481.88022, gap::1.38e-04
-elapsed time: 8.789561
+elapsed time: 8.149092
 Iteration 220, p_obj::5481.88036, d_obj::5481.88023, gap::1.27e-04
-elapsed time: 9.200073
+elapsed time: 8.505295
 Iteration 230, p_obj::5481.88036, d_obj::5481.88035, gap::1.74e-06
-elapsed time: 9.599202
+elapsed time: 8.886452
 Iteration 240, p_obj::5481.88036, d_obj::5481.88035, gap::1.63e-06
-elapsed time: 9.994070
+elapsed time: 9.247727
 Iteration 250, p_obj::5481.88036, d_obj::5481.88035, gap::1.51e-06
-elapsed time: 10.399330
+elapsed time: 9.611211
 Iteration 260, p_obj::5481.88036, d_obj::5481.88036, gap::2.24e-07
-elapsed time: 10.801656
+elapsed time: 9.989218
 Iteration 270, p_obj::5481.88036, d_obj::5481.88036, gap::2.07e-07
-elapsed time: 11.167661
+elapsed time: 10.352069
 Iteration 280, p_obj::5481.88036, d_obj::5481.88036, gap::1.91e-07
-elapsed time: 11.605070
+elapsed time: 10.705821
 Iteration 290, p_obj::5481.88036, d_obj::5481.88036, gap::7.68e-08
-elapsed time: 12.019821
+elapsed time: 11.092397
 Iteration 300, p_obj::5481.88036, d_obj::5481.88036, gap::7.11e-08
-elapsed time: 12.370958
+elapsed time: 11.452339
 Iteration 310, p_obj::5481.88036, d_obj::5481.88036, gap::6.57e-08
-elapsed time: 12.812187
+elapsed time: 11.808615
 Iteration 320, p_obj::5481.88036, d_obj::5481.88036, gap::5.16e-09
-elapsed time: 13.220039
+elapsed time: 12.194755
 Iteration 330, p_obj::5481.88036, d_obj::5481.88036, gap::2.59e-09
-elapsed time: 13.603893
+elapsed time: 12.553051
 Iteration 340, p_obj::5481.88036, d_obj::5481.88036, gap::1.55e-09
-elapsed time: 14.010179
+elapsed time: 12.923755
 Iteration 350, p_obj::5481.88036, d_obj::5481.88036, gap::1.43e-09
-elapsed time: 14.418979
+elapsed time: 13.305506
 Iteration 360, p_obj::5481.88036, d_obj::5481.88036, gap::1.33e-09
-elapsed time: 14.825868
+elapsed time: 13.655715
 Iteration 370, p_obj::5481.88036, d_obj::5481.88036, gap::1.22e-09
-elapsed time: 15.213895
+elapsed time: 14.005766
 Iteration 380, p_obj::5481.88036, d_obj::5481.88036, gap::7.37e-10
-elapsed time: 15.635697
+elapsed time: 14.389697
 Iteration 390, p_obj::5481.88036, d_obj::5481.88036, gap::5.71e-10
-elapsed time: 16.022269
+elapsed time: 14.754284
 Iteration 400, p_obj::5481.88036, d_obj::5481.88036, gap::3.87e-10
-elapsed time: 16.416809
+elapsed time: 15.103611
 Iteration 410, p_obj::5481.88036, d_obj::5481.88036, gap::2.81e-10
-elapsed time: 16.811718
+elapsed time: 15.492715
 Iteration 420, p_obj::5481.88036, d_obj::5481.88036, gap::2.57e-10
-elapsed time: 17.159829
+elapsed time: 15.850184
 Iteration 430, p_obj::5481.88036, d_obj::5481.88036, gap::2.40e-10
-elapsed time: 17.600638
+elapsed time: 16.206243
 Iteration 440, p_obj::5481.88036, d_obj::5481.88036, gap::2.24e-10
-elapsed time: 17.996273
+elapsed time: 16.584480
 Iteration 450, p_obj::5481.88036, d_obj::5481.88036, gap::2.03e-10
-elapsed time: 18.359480
+elapsed time: 16.953365
 Iteration 460, p_obj::5481.88036, d_obj::5481.88036, gap::1.78e-10
-elapsed time: 18.736033
+elapsed time: 17.305573
 Iteration 470, p_obj::5481.88036, d_obj::5481.88036, gap::1.64e-10
-elapsed time: 19.114029
+elapsed time: 17.684428
 Iteration 480, p_obj::5481.88036, d_obj::5481.88036, gap::1.52e-10
-elapsed time: 19.465893
+elapsed time: 18.051840
 Iteration 490, p_obj::5481.88036, d_obj::5481.88036, gap::1.38e-10
-elapsed time: 19.814096
+elapsed time: 18.401748
 Iteration 500, p_obj::5481.88036, d_obj::5481.88036, gap::1.25e-10
-elapsed time: 20.198362
+elapsed time: 18.783673
 Iteration 510, p_obj::5481.88036, d_obj::5481.88036, gap::1.11e-10
-elapsed time: 20.560383
+elapsed time: 19.151101
 Iteration 520, p_obj::5481.88036, d_obj::5481.88036, gap::1.01e-10
-elapsed time: 20.998711
+elapsed time: 19.502106
 Iteration 530, p_obj::5481.88036, d_obj::5481.88036, gap::9.09e-11
 Early exit
-elapsed time: 0.000413
+elapsed time: 0.000429
 Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-elapsed time: 0.343285
+elapsed time: 0.312038
 Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-elapsed time: 0.681593
+elapsed time: 0.612020
 Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-elapsed time: 1.038041
+elapsed time: 0.907188
 Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-elapsed time: 1.361501
+elapsed time: 1.197407
 Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-elapsed time: 1.707692
+elapsed time: 1.500621
 Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-elapsed time: 2.034149
+elapsed time: 1.803652
 Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-elapsed time: 2.370759
+elapsed time: 2.104301
 Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-elapsed time: 2.725707
+elapsed time: 2.399925
 Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-elapsed time: 3.051780
+elapsed time: 2.703027
 Iteration 90, p_obj::5481.88417, d_obj::5455.60141, gap::2.63e+01
-elapsed time: 3.417099
+elapsed time: 3.001508
 Iteration 100, p_obj::5481.88194, d_obj::5466.64271, gap::1.52e+01
-elapsed time: 3.749781
+elapsed time: 3.300773
 Iteration 110, p_obj::5481.88114, d_obj::5473.03586, gap::8.85e+00
-elapsed time: 4.102888
+elapsed time: 3.598946
 Iteration 120, p_obj::5481.88083, d_obj::5476.74770, gap::5.13e+00
-elapsed time: 4.424319
+elapsed time: 3.901752
 Iteration 130, p_obj::5481.88070, d_obj::5478.88339, gap::3.00e+00
-elapsed time: 4.738538
+elapsed time: 4.201024
 Iteration 140, p_obj::5481.88062, d_obj::5479.08771, gap::2.79e+00
-elapsed time: 5.052777
+elapsed time: 4.498571
 Iteration 150, p_obj::5481.88058, d_obj::5479.28944, gap::2.59e+00
-elapsed time: 5.396951
+elapsed time: 4.800136
 Iteration 160, p_obj::5481.88054, d_obj::5479.48296, gap::2.40e+00
-elapsed time: 5.729146
+elapsed time: 5.102891
 Iteration 170, p_obj::5481.88051, d_obj::5479.66557, gap::2.21e+00
-elapsed time: 6.049687
+elapsed time: 5.401005
 Iteration 180, p_obj::5481.88049, d_obj::5479.83621, gap::2.04e+00
-elapsed time: 6.388575
+elapsed time: 5.699327
 Iteration 190, p_obj::5481.88047, d_obj::5479.99473, gap::1.89e+00
-elapsed time: 6.727237
+elapsed time: 6.001863
 Iteration 200, p_obj::5481.88045, d_obj::5480.14147, gap::1.74e+00
-elapsed time: 7.044526
+elapsed time: 6.301345
 Iteration 210, p_obj::5481.88044, d_obj::5480.27702, gap::1.60e+00
-elapsed time: 7.381233
+elapsed time: 6.599780
 Iteration 220, p_obj::5481.88042, d_obj::5480.40207, gap::1.48e+00
-elapsed time: 7.709568
+elapsed time: 6.902735
 Iteration 230, p_obj::5481.88041, d_obj::5480.51735, gap::1.36e+00
-elapsed time: 8.026822
+elapsed time: 7.201772
 Iteration 240, p_obj::5481.88041, d_obj::5480.62358, gap::1.26e+00
-elapsed time: 8.326536
+elapsed time: 7.500378
 Iteration 250, p_obj::5481.88040, d_obj::5480.72147, gap::1.16e+00
-elapsed time: 8.630829
+elapsed time: 7.803469
 Iteration 260, p_obj::5481.88039, d_obj::5480.81165, gap::1.07e+00
-elapsed time: 8.929114
+elapsed time: 8.107066
 Iteration 270, p_obj::5481.88039, d_obj::5480.89475, gap::9.86e-01
-elapsed time: 9.227077
+elapsed time: 8.437324
 Iteration 280, p_obj::5481.88038, d_obj::5480.97131, gap::9.09e-01
-elapsed time: 9.540982
+elapsed time: 8.799126
 Iteration 290, p_obj::5481.88038, d_obj::5481.04187, gap::8.39e-01
-elapsed time: 9.912801
+elapsed time: 9.130143
 Iteration 300, p_obj::5481.88037, d_obj::5481.10690, gap::7.73e-01
-elapsed time: 10.224471
+elapsed time: 9.496961
 Iteration 310, p_obj::5481.88037, d_obj::5481.16684, gap::7.14e-01
-elapsed time: 10.533184
+elapsed time: 9.827296
 Iteration 320, p_obj::5481.88037, d_obj::5481.22210, gap::6.58e-01
-elapsed time: 10.855777
+elapsed time: 10.198547
 Iteration 330, p_obj::5481.88037, d_obj::5481.27304, gap::6.07e-01
-elapsed time: 11.213208
+elapsed time: 10.531833
 Iteration 340, p_obj::5481.88037, d_obj::5481.32002, gap::5.60e-01
-elapsed time: 11.547688
+elapsed time: 10.899684
 Iteration 350, p_obj::5481.88036, d_obj::5481.36333, gap::5.17e-01
-elapsed time: 11.904663
+elapsed time: 11.231177
 Iteration 360, p_obj::5481.88036, d_obj::5481.40328, gap::4.77e-01
-elapsed time: 12.227517
+elapsed time: 11.599339
 Iteration 370, p_obj::5481.88036, d_obj::5481.44012, gap::4.40e-01
-elapsed time: 12.549106
+elapsed time: 11.930672
 Iteration 380, p_obj::5481.88036, d_obj::5481.47410, gap::4.06e-01
-elapsed time: 12.889504
+elapsed time: 12.297850
 Iteration 390, p_obj::5481.88036, d_obj::5481.50544, gap::3.75e-01
-elapsed time: 13.216710
+elapsed time: 12.628491
 Iteration 400, p_obj::5481.88036, d_obj::5481.53436, gap::3.46e-01
-elapsed time: 13.560907
+elapsed time: 12.999620
 Iteration 410, p_obj::5481.88036, d_obj::5481.56103, gap::3.19e-01
-elapsed time: 13.911777
+elapsed time: 13.330809
 Iteration 420, p_obj::5481.88036, d_obj::5481.58564, gap::2.95e-01
-elapsed time: 14.223717
+elapsed time: 13.698188
 Iteration 430, p_obj::5481.88036, d_obj::5481.60835, gap::2.72e-01
-elapsed time: 14.526568
+elapsed time: 14.029885
 Iteration 440, p_obj::5481.88036, d_obj::5481.62930, gap::2.51e-01
-elapsed time: 14.832104
+elapsed time: 14.395766
 Iteration 450, p_obj::5481.88036, d_obj::5481.64864, gap::2.32e-01
-elapsed time: 15.132836
+elapsed time: 14.726284
 Iteration 460, p_obj::5481.88036, d_obj::5481.66648, gap::2.14e-01
-elapsed time: 15.434737
+elapsed time: 15.096022
 Iteration 470, p_obj::5481.88036, d_obj::5481.68294, gap::1.97e-01
-elapsed time: 15.752232
+elapsed time: 15.428189
 Iteration 480, p_obj::5481.88036, d_obj::5481.69813, gap::1.82e-01
-elapsed time: 16.079556
+elapsed time: 15.799153
 Iteration 490, p_obj::5481.88036, d_obj::5481.71215, gap::1.68e-01
-elapsed time: 16.414540
+elapsed time: 16.129803
 Iteration 500, p_obj::5481.88036, d_obj::5481.72509, gap::1.55e-01
-elapsed time: 16.737338
+elapsed time: 16.498495
 Iteration 510, p_obj::5481.88036, d_obj::5481.73703, gap::1.43e-01
-elapsed time: 17.053776
+elapsed time: 16.800996
 Iteration 520, p_obj::5481.88036, d_obj::5481.74806, gap::1.32e-01
-elapsed time: 17.398806
+elapsed time: 17.104135
 Iteration 530, p_obj::5481.88036, d_obj::5481.75823, gap::1.22e-01
-elapsed time: 17.737494
+elapsed time: 17.403752
 Iteration 540, p_obj::5481.88036, d_obj::5481.76762, gap::1.13e-01
-elapsed time: 18.064424
+elapsed time: 17.701826
 Iteration 550, p_obj::5481.88036, d_obj::5481.77629, gap::1.04e-01
-elapsed time: 18.413560
+elapsed time: 18.000078
 Iteration 560, p_obj::5481.88036, d_obj::5481.78429, gap::9.61e-02
-elapsed time: 18.746481
+elapsed time: 18.303118
 Iteration 570, p_obj::5481.88036, d_obj::5481.79167, gap::8.87e-02
-elapsed time: 19.088655
+elapsed time: 18.601919
 Iteration 580, p_obj::5481.88036, d_obj::5481.79849, gap::8.19e-02
-elapsed time: 19.452668
+elapsed time: 18.900398
 Iteration 590, p_obj::5481.88036, d_obj::5481.80478, gap::7.56e-02
 </pre></div>
 </div>
@@ -944,7 +944,7 @@ Iteration 590, p_obj::5481.88036, d_obj::5481.80478, gap::7.56e-02
 </pre></div>
 </div>
 <img alt="plot influ reg" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_influ_reg_001.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  10.751 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  3.538 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-influ-reg-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/99f8d0e91c4855b14455c773182433a5/plot_influ_reg.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_influ_reg.py</span></code></a></p>

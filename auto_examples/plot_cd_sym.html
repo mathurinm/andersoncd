@@ -127,8 +127,8 @@ coordinate descent.</p>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html#numpy.linalg.norm" title="numpy.linalg.norm" class="sphx-glr-backref-module-numpy-linalg sphx-glr-backref-type-py-function"><span class="n">norm</span></a>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="scipy.sparse.linalg.cg" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">cg</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.svds.html#scipy.sparse.linalg.svds" title="scipy.sparse.linalg.svds" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">svds</span></a>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.fmin_l_bfgs_b.html#scipy.optimize.fmin_l_bfgs_b" title="scipy.optimize.fmin_l_bfgs_b" class="sphx-glr-backref-module-scipy-optimize sphx-glr-backref-type-py-function"><span class="n">fmin_l_bfgs_b</span></a>
+<span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="scipy.sparse.linalg.cg" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">cg</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.linalg.svds.html#scipy.sparse.linalg.svds" title="scipy.sparse.linalg.svds" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">svds</span></a>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.optimize.fmin_l_bfgs_b.html#scipy.optimize.fmin_l_bfgs_b" title="scipy.optimize.fmin_l_bfgs_b" class="sphx-glr-backref-module-scipy-optimize sphx-glr-backref-type-py-function"><span class="n">fmin_l_bfgs_b</span></a>
 <span class="kn">from</span> <span class="nn">libsvmdata</span> <span class="kn">import</span> <span class="n">fetch_libsvm</span>
 
 <span class="kn">from</span> <span class="nn">andersoncd.plot_utils</span> <span class="kn">import</span> <span class="n">configure_plt</span><span class="p">,</span> <span class="n">_plot_legend_apart</span>
@@ -173,10 +173,10 @@ usetex mode requires TeX.
 <p>Load the data:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="s2">&quot;real-sim&quot;</span>
 <span class="n">n_features</span> <span class="o">=</span> <span class="mi">1000</span>
-<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="n">fetch_libsvm</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="n">fetch_libsvm</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 
-<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">[:,</span> <span class="p">:</span><span class="n">n_features</span><span class="p">]</span>
-<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.multiply.html#scipy.sparse.csc_matrix.multiply" title="scipy.sparse.csc_matrix.multiply" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-method"><span class="n">X</span><span class="o">.</span><span class="n">multiply</span></a><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.norm.html#scipy.sparse.linalg.norm" title="scipy.sparse.linalg.norm" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">[:,</span> <span class="p">:</span><span class="n">n_features</span><span class="p">]</span>
+<a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.multiply.html#scipy.sparse.csc_matrix.multiply" title="scipy.sparse.csc_matrix.multiply" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-method"><span class="n">X</span><span class="o">.</span><span class="n">multiply</span></a><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.linalg.norm.html#scipy.sparse.linalg.norm" title="scipy.sparse.linalg.norm" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -201,7 +201,7 @@ usetex mode requires TeX.
     <span class="c1"># run &quot;best algorithm&quot;: conj. grad. for LS, LBFGS for logreg:</span>
     <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_optimal</span></a> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">pb</span> <span class="o">==</span> <span class="s2">&quot;logreg&quot;</span><span class="p">:</span>
-        <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.svds.html#scipy.sparse.linalg.svds" title="scipy.sparse.linalg.svds" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">svds</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">100_000</span>  <span class="c1"># a bit of enet regularization</span>
+        <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.linalg.svds.html#scipy.sparse.linalg.svds" title="scipy.sparse.linalg.svds" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">svds</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">100_000</span>  <span class="c1"># a bit of enet regularization</span>
         <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_optimal</span><span class="o">.</span><span class="n">append</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">log</span></a><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">))</span>
         <span class="n">t_optimal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">label_opt</span> <span class="o">=</span> <span class="s2">&quot;L-BFGS&quot;</span>
@@ -209,18 +209,18 @@ usetex mode requires TeX.
         <span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
         <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="n">pobj</span> <span class="o">=</span> <span class="n">primal_logreg</span><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a><span class="p">)</span>
+            <span class="n">pobj</span> <span class="o">=</span> <span class="n">primal_logreg</span><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a><span class="p">)</span>
             <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_optimal</span><span class="o">.</span><span class="n">append</span></a><span class="p">(</span><span class="n">pobj</span><span class="p">)</span>
             <span class="n">t_optimal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">obj</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">log</span></a><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">*</span> <span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">)))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a> <span class="o">*</span> <span class="n">x</span> <span class="o">@</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">log</span></a><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">*</span> <span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">)))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a> <span class="o">*</span> <span class="n">x</span> <span class="o">@</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">2</span>
 
         <span class="k">def</span> <span class="nf">fprime</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="k">return</span> <span class="o">-</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">*</span> <span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">))))</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a> <span class="o">*</span> <span class="n">x</span>
+            <span class="k">return</span> <span class="o">-</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">*</span> <span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">))))</span> <span class="o">+</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a> <span class="o">*</span> <span class="n">x</span>
 
-        <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.fmin_l_bfgs_b.html#scipy.optimize.fmin_l_bfgs_b" title="scipy.optimize.fmin_l_bfgs_b" class="sphx-glr-backref-module-scipy-optimize sphx-glr-backref-type-py-function"><span class="n">fmin_l_bfgs_b</span></a><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span>
-            <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.shape.html#scipy.sparse.csc_matrix.shape" title="scipy.sparse.csc_matrix.shape" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-method"><span class="n">X</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">fprime</span><span class="o">=</span><span class="n">fprime</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">factr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">pgtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.optimize.fmin_l_bfgs_b.html#scipy.optimize.fmin_l_bfgs_b" title="scipy.optimize.fmin_l_bfgs_b" class="sphx-glr-backref-module-scipy-optimize sphx-glr-backref-type-py-function"><span class="n">fmin_l_bfgs_b</span></a><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span>
+            <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.shape.html#scipy.sparse.csc_matrix.shape" title="scipy.sparse.csc_matrix.shape" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-property"><span class="n">X</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">fprime</span><span class="o">=</span><span class="n">fprime</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">factr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">pgtol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="mi">0</span>
@@ -232,11 +232,11 @@ usetex mode requires TeX.
         <span class="n">tmax</span> <span class="o">=</span> <span class="mi">3</span>
 
         <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="n">pobj</span> <span class="o">=</span> <span class="n">primal_enet</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">-</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="n">pobj</span> <span class="o">=</span> <span class="n">primal_enet</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">-</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">@</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
             <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_optimal</span><span class="o">.</span><span class="n">append</span></a><span class="p">(</span><span class="n">pobj</span><span class="p">)</span>
             <span class="n">t_optimal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span><span class="p">)</span>
 
-        <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="scipy.sparse.linalg.cg" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">cg</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-32</span><span class="p">)</span>
+        <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="scipy.sparse.linalg.cg" class="sphx-glr-backref-module-scipy-sparse-linalg sphx-glr-backref-type-py-function"><span class="n">cg</span></a><span class="p">(</span><a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a> <span class="o">@</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-32</span><span class="p">)</span>
     <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_optimal</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E_optimal</span></a><span class="p">)</span>
 
     <span class="n">all_algos</span> <span class="o">=</span> <span class="p">[</span>
@@ -263,12 +263,12 @@ usetex mode requires TeX.
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">algo_names</span><span class="p">[</span><span class="n">algo</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">pb</span> <span class="o">==</span> <span class="s2">&quot;ols&quot;</span><span class="p">:</span>
             <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">solver_enet</span><span class="p">(</span>
-                <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span>
+                <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span>
                 <span class="n">max_iter</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">max_iter</span><span class="o">/</span><span class="n">dict_coef</span><span class="p">[</span><span class="n">algo</span><span class="p">[</span><span class="mi">0</span><span class="p">]]),</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
                 <span class="n">algo</span><span class="o">=</span><span class="n">algo</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">use_acc</span><span class="o">=</span><span class="n">algo</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">compute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="n">tmax</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">pb</span> <span class="o">==</span> <span class="s2">&quot;logreg&quot;</span><span class="p">:</span>
             <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">solver_logreg</span><span class="p">(</span>
-                <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span>
+                <a href="https://docs.scipy.org/doc/scipy/reference/reference/generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">rho</span></a><span class="p">,</span> <span class="n">f_gap</span><span class="o">=</span><span class="n">f_gap</span><span class="p">,</span>
                 <span class="n">max_iter</span><span class="o">=</span><span class="n">max_iter</span><span class="o">//</span><span class="n">dict_coef</span><span class="p">[</span><span class="n">algo</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
                 <span class="n">algo</span><span class="o">=</span><span class="n">algo</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">use_acc</span><span class="o">=</span><span class="n">algo</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">compute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="n">tmax</span><span class="p">)</span>
         <span class="n">dict_Es</span><span class="p">[</span><span class="n">algo</span><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">E</span></a>
@@ -342,309 +342,297 @@ Running CD sym
 Running CD sym - Anderson
 Running RCD
 Running CD
-elapsed time: 0.000779
-elapsed time: 0.550995
-elapsed time: 0.819561
-elapsed time: 1.095169
-elapsed time: 1.355220
-elapsed time: 1.668468
-elapsed time: 1.961348
-elapsed time: 2.249429
-elapsed time: 2.535556
-elapsed time: 2.814753
-elapsed time: 3.092827
-elapsed time: 3.385822
-elapsed time: 3.672118
-elapsed time: 3.946863
-elapsed time: 4.229132
-elapsed time: 4.496864
-elapsed time: 4.782895
-elapsed time: 5.042531
-elapsed time: 5.308555
-elapsed time: 5.567304
-elapsed time: 5.835521
-elapsed time: 6.096952
-elapsed time: 6.359186
-elapsed time: 6.629775
-elapsed time: 6.899314
-elapsed time: 7.215700
-elapsed time: 7.475302
-elapsed time: 7.741638
-elapsed time: 8.021573
-elapsed time: 8.297777
-elapsed time: 8.579504
-elapsed time: 8.869132
-elapsed time: 9.139780
-elapsed time: 9.420872
-elapsed time: 9.691733
-elapsed time: 9.984797
-elapsed time: 10.264720
-elapsed time: 10.547529
-elapsed time: 10.841018
-elapsed time: 11.126979
-elapsed time: 11.414448
-elapsed time: 11.689591
-elapsed time: 11.989635
-elapsed time: 12.264374
-elapsed time: 12.566369
-elapsed time: 12.849226
-elapsed time: 13.142692
-elapsed time: 13.414090
-elapsed time: 13.687326
-elapsed time: 13.979233
-elapsed time: 14.258083
-elapsed time: 14.532713
-elapsed time: 14.814275
-elapsed time: 15.099482
-elapsed time: 15.390449
-elapsed time: 15.670720
-elapsed time: 15.949357
-elapsed time: 16.226972
-elapsed time: 16.501040
-elapsed time: 16.782085
-elapsed time: 17.071427
-elapsed time: 17.351815
-elapsed time: 17.634109
-elapsed time: 17.916907
-elapsed time: 18.200638
-elapsed time: 18.469122
-elapsed time: 18.741596
-elapsed time: 19.021910
-elapsed time: 19.303472
-elapsed time: 19.580122
-elapsed time: 19.865020
-elapsed time: 20.150056
+elapsed time: 0.000657
+elapsed time: 0.522264
+elapsed time: 0.793244
+elapsed time: 1.062737
+elapsed time: 1.331024
+elapsed time: 1.601906
+elapsed time: 1.871327
+elapsed time: 2.139729
+elapsed time: 2.408823
+elapsed time: 2.677462
+elapsed time: 2.945557
+elapsed time: 3.213725
+elapsed time: 3.484024
+elapsed time: 3.751929
+elapsed time: 4.020490
+elapsed time: 4.289929
+elapsed time: 4.558324
+elapsed time: 4.826141
+elapsed time: 5.095243
+elapsed time: 5.363853
+elapsed time: 5.632489
+elapsed time: 5.901777
+elapsed time: 6.169885
+elapsed time: 6.437529
+elapsed time: 6.707353
+elapsed time: 6.976518
+elapsed time: 7.244191
+elapsed time: 7.512683
+elapsed time: 7.781161
+elapsed time: 8.048905
+elapsed time: 8.318854
+elapsed time: 8.588666
+elapsed time: 8.857308
+elapsed time: 9.125749
+elapsed time: 9.395580
+elapsed time: 9.664589
+elapsed time: 9.932480
+elapsed time: 10.201407
+elapsed time: 10.469898
+elapsed time: 10.737031
+elapsed time: 11.006178
+elapsed time: 11.274848
+elapsed time: 11.543051
+elapsed time: 11.811278
+elapsed time: 12.079968
+elapsed time: 12.347607
+elapsed time: 12.616282
+elapsed time: 12.885186
+elapsed time: 13.153152
+elapsed time: 13.421159
+elapsed time: 13.690527
+elapsed time: 13.959217
+elapsed time: 14.226528
+elapsed time: 14.495508
+elapsed time: 14.763180
+elapsed time: 15.031520
+elapsed time: 15.300541
+elapsed time: 15.569043
+elapsed time: 15.836692
+elapsed time: 16.105454
+elapsed time: 16.373930
+elapsed time: 16.641133
+elapsed time: 16.910754
+elapsed time: 17.179578
+elapsed time: 17.447016
+elapsed time: 17.714870
+elapsed time: 17.983754
+elapsed time: 18.250511
+elapsed time: 18.518917
+elapsed time: 18.788110
+elapsed time: 19.055973
+elapsed time: 19.323572
+elapsed time: 19.593084
+elapsed time: 19.861887
+elapsed time: 20.129733
 Running CD - Anderson
-elapsed time: 0.000690
-elapsed time: 0.302885
-elapsed time: 0.603389
-elapsed time: 0.879946
-elapsed time: 1.168461
-elapsed time: 1.450099
-elapsed time: 1.716932
-elapsed time: 1.980487
-elapsed time: 2.245711
-elapsed time: 2.510748
-elapsed time: 2.770502
-elapsed time: 3.035229
-elapsed time: 3.305603
-elapsed time: 3.583838
-elapsed time: 3.849529
-elapsed time: 4.113571
-elapsed time: 4.373102
-elapsed time: 4.636690
-elapsed time: 4.900290
-elapsed time: 5.161140
-elapsed time: 5.427045
-elapsed time: 5.695707
-elapsed time: 5.958685
-elapsed time: 6.226548
-elapsed time: 6.505046
-elapsed time: 6.792882
-elapsed time: 7.081787
-elapsed time: 7.364087
-elapsed time: 7.628470
-elapsed time: 7.907914
-elapsed time: 8.178889
-elapsed time: 8.452653
-elapsed time: 8.731361
-elapsed time: 9.033068
-elapsed time: 9.340829
-elapsed time: 9.633911
-elapsed time: 9.926142
-elapsed time: 10.221133
-elapsed time: 10.490403
-elapsed time: 10.763765
-elapsed time: 11.023845
-elapsed time: 11.288166
-elapsed time: 11.551904
-elapsed time: 11.812181
-elapsed time: 12.078260
-elapsed time: 12.346811
-elapsed time: 12.625982
-elapsed time: 12.893902
-elapsed time: 13.184003
-elapsed time: 13.450572
-elapsed time: 13.721174
-elapsed time: 13.989275
-elapsed time: 14.261608
-elapsed time: 14.546811
-elapsed time: 14.810939
-elapsed time: 15.073024
-elapsed time: 15.339637
-elapsed time: 15.617444
-elapsed time: 15.899518
-elapsed time: 16.205649
-elapsed time: 16.487612
-elapsed time: 16.791226
-elapsed time: 17.085959
-elapsed time: 17.384296
-elapsed time: 17.646053
-elapsed time: 17.926785
-elapsed time: 18.200553
-elapsed time: 18.466976
-elapsed time: 18.751468
-elapsed time: 19.042619
-elapsed time: 19.331602
-elapsed time: 19.611389
-elapsed time: 19.889064
-elapsed time: 20.186435
+elapsed time: 0.000660
+elapsed time: 0.277898
+elapsed time: 0.555072
+elapsed time: 0.832928
+elapsed time: 1.106172
+elapsed time: 1.384848
+elapsed time: 1.662263
+elapsed time: 1.934011
+elapsed time: 2.212456
+elapsed time: 2.489923
+elapsed time: 2.763686
+elapsed time: 3.040602
+elapsed time: 3.318474
+elapsed time: 3.592554
+elapsed time: 3.870386
+elapsed time: 4.148195
+elapsed time: 4.421640
+elapsed time: 4.700443
+elapsed time: 4.978407
+elapsed time: 5.251343
+elapsed time: 5.532094
+elapsed time: 5.830704
+elapsed time: 6.105691
+elapsed time: 6.384448
+elapsed time: 6.662292
+elapsed time: 6.936358
+elapsed time: 7.216168
+elapsed time: 7.496788
+elapsed time: 7.773833
+elapsed time: 8.071478
+elapsed time: 8.356772
+elapsed time: 8.630513
+elapsed time: 8.909603
+elapsed time: 9.211165
+elapsed time: 9.519909
+elapsed time: 9.798965
+elapsed time: 10.077822
+elapsed time: 10.352137
+elapsed time: 10.632177
+elapsed time: 10.917302
+elapsed time: 11.209016
+elapsed time: 11.493336
+elapsed time: 11.773370
+elapsed time: 12.051900
+elapsed time: 12.331487
+elapsed time: 12.610692
+elapsed time: 12.907238
+elapsed time: 13.188872
+elapsed time: 13.467916
+elapsed time: 13.763226
+elapsed time: 14.043189
+elapsed time: 14.342388
+elapsed time: 14.632453
+elapsed time: 14.924517
+elapsed time: 15.204854
+elapsed time: 15.483739
+elapsed time: 15.765829
+elapsed time: 16.056446
+elapsed time: 16.352817
+elapsed time: 16.631907
+elapsed time: 16.912115
+elapsed time: 17.211453
+elapsed time: 17.491324
+elapsed time: 17.771653
+elapsed time: 18.046897
+elapsed time: 18.327207
+elapsed time: 18.607709
+elapsed time: 18.883657
+elapsed time: 19.162017
+elapsed time: 19.468947
+elapsed time: 19.779950
+elapsed time: 20.106336
 Running CD sym
-elapsed time: 0.000700
-elapsed time: 0.552585
-elapsed time: 1.091261
-elapsed time: 1.640513
-elapsed time: 2.194370
-elapsed time: 2.739028
-elapsed time: 3.292257
-elapsed time: 3.857825
-elapsed time: 4.426892
-elapsed time: 4.988025
-elapsed time: 5.555837
-elapsed time: 6.110620
-elapsed time: 6.643931
-elapsed time: 7.187206
-elapsed time: 7.732676
-elapsed time: 8.302894
-elapsed time: 8.858282
-elapsed time: 9.398271
-elapsed time: 9.970799
-elapsed time: 10.512574
-elapsed time: 11.034788
-elapsed time: 11.556557
-elapsed time: 12.075316
-elapsed time: 12.589831
-elapsed time: 13.104735
-elapsed time: 13.619953
-elapsed time: 14.140445
-elapsed time: 14.659689
-elapsed time: 15.181827
-elapsed time: 15.716948
-elapsed time: 16.282432
-elapsed time: 16.854572
-elapsed time: 17.401804
-elapsed time: 17.946159
-elapsed time: 18.472447
-elapsed time: 19.003985
-elapsed time: 19.519278
-elapsed time: 20.057133
+elapsed time: 0.000701
+elapsed time: 0.555881
+elapsed time: 1.098321
+elapsed time: 1.642574
+elapsed time: 2.196465
+elapsed time: 2.790058
+elapsed time: 3.372391
+elapsed time: 3.921809
+elapsed time: 4.463544
+elapsed time: 5.005433
+elapsed time: 5.548172
+elapsed time: 6.089717
+elapsed time: 6.726863
+elapsed time: 7.385659
+elapsed time: 8.056299
+elapsed time: 8.707150
+elapsed time: 9.250526
+elapsed time: 9.794563
+elapsed time: 10.394228
+elapsed time: 10.961558
+elapsed time: 11.501520
+elapsed time: 12.043555
+elapsed time: 12.583774
+elapsed time: 13.126296
+elapsed time: 13.687891
+elapsed time: 14.238397
+elapsed time: 14.789587
+elapsed time: 15.331743
+elapsed time: 15.948353
+elapsed time: 16.497433
+elapsed time: 17.037664
+elapsed time: 17.579433
+elapsed time: 18.119535
+elapsed time: 18.662007
+elapsed time: 19.200916
+elapsed time: 19.795868
+elapsed time: 20.337084
 Running CD sym - Anderson
-elapsed time: 0.000722
-elapsed time: 0.537361
-elapsed time: 1.076901
-elapsed time: 1.613198
-elapsed time: 2.193205
-elapsed time: 2.777957
-elapsed time: 3.356406
-elapsed time: 3.923480
-elapsed time: 4.475284
-elapsed time: 5.045292
-elapsed time: 5.568542
-elapsed time: 6.104914
-elapsed time: 6.646080
-elapsed time: 7.206208
-elapsed time: 7.748705
-elapsed time: 8.284035
-elapsed time: 8.808907
-elapsed time: 9.363060
-elapsed time: 9.901853
-elapsed time: 10.438581
-elapsed time: 10.977668
-elapsed time: 11.499208
-elapsed time: 12.014623
-elapsed time: 12.533234
-elapsed time: 13.053493
-elapsed time: 13.594004
-elapsed time: 14.115118
-elapsed time: 14.635926
-elapsed time: 15.161907
-elapsed time: 15.687383
-elapsed time: 16.213877
-elapsed time: 16.748608
-elapsed time: 17.300693
-elapsed time: 17.832647
-elapsed time: 18.354756
-elapsed time: 18.886368
-elapsed time: 19.438426
-elapsed time: 19.982262
-elapsed time: 20.564772
+elapsed time: 0.000680
+elapsed time: 0.550220
+elapsed time: 1.100993
+elapsed time: 1.651548
+elapsed time: 2.197220
+elapsed time: 2.746952
+elapsed time: 3.298962
+elapsed time: 3.847012
+elapsed time: 4.399457
+elapsed time: 4.981664
+elapsed time: 5.571942
+elapsed time: 6.168459
+elapsed time: 6.765258
+elapsed time: 7.354235
+elapsed time: 7.981307
+elapsed time: 8.574214
+elapsed time: 9.163177
+elapsed time: 9.755362
+elapsed time: 10.347060
+elapsed time: 10.928217
+elapsed time: 11.519703
+elapsed time: 12.109773
+elapsed time: 12.695334
+elapsed time: 13.287589
+elapsed time: 13.879206
+elapsed time: 14.466535
+elapsed time: 15.057728
+elapsed time: 15.651052
+elapsed time: 16.234012
+elapsed time: 16.821689
+elapsed time: 17.412127
+elapsed time: 17.998796
+elapsed time: 18.591415
+elapsed time: 19.208712
+elapsed time: 19.847802
+elapsed time: 20.486111
 Running RCD
-elapsed time: 0.001087
-elapsed time: 0.288971
-elapsed time: 0.578633
-elapsed time: 0.856179
-elapsed time: 1.154247
-elapsed time: 1.439668
-elapsed time: 1.718235
-elapsed time: 1.985667
-elapsed time: 2.250705
-elapsed time: 2.521070
-elapsed time: 2.803138
-elapsed time: 3.081459
-elapsed time: 3.361094
-elapsed time: 3.634698
-elapsed time: 3.916219
-elapsed time: 4.193820
-elapsed time: 4.460937
-elapsed time: 4.730020
-elapsed time: 5.002535
-elapsed time: 5.267536
-elapsed time: 5.532758
-elapsed time: 5.809787
-elapsed time: 6.092853
-elapsed time: 6.366412
-elapsed time: 6.628489
-elapsed time: 6.914578
-elapsed time: 7.204233
-elapsed time: 7.505641
-elapsed time: 7.799241
-elapsed time: 8.094213
-elapsed time: 8.399662
-elapsed time: 8.700473
-elapsed time: 9.002837
-elapsed time: 9.277489
-elapsed time: 9.557305
-elapsed time: 9.821826
-elapsed time: 10.110581
-elapsed time: 10.380454
-elapsed time: 10.649603
-elapsed time: 10.924392
-elapsed time: 11.219027
-elapsed time: 11.492320
-elapsed time: 11.762938
-elapsed time: 12.024348
-elapsed time: 12.290586
-elapsed time: 12.550810
-elapsed time: 12.822302
-elapsed time: 13.084853
-elapsed time: 13.342156
-elapsed time: 13.606112
-elapsed time: 13.869196
-elapsed time: 14.129534
-elapsed time: 14.390849
-elapsed time: 14.655902
-elapsed time: 14.925291
-elapsed time: 15.214593
-elapsed time: 15.498377
-elapsed time: 15.778788
-elapsed time: 16.054526
-elapsed time: 16.340898
-elapsed time: 16.608993
-elapsed time: 16.875847
-elapsed time: 17.148448
-elapsed time: 17.426793
-elapsed time: 17.706151
-elapsed time: 17.985383
-elapsed time: 18.261251
-elapsed time: 18.539025
-elapsed time: 18.843874
-elapsed time: 19.129945
-elapsed time: 19.436387
-elapsed time: 19.738682
-elapsed time: 20.025628
+elapsed time: 0.000690
+elapsed time: 0.337222
+elapsed time: 0.660002
+elapsed time: 0.979228
+elapsed time: 1.299276
+elapsed time: 1.623500
+elapsed time: 1.944531
+elapsed time: 2.260160
+elapsed time: 2.575244
+elapsed time: 2.888931
+elapsed time: 3.219577
+elapsed time: 3.539577
+elapsed time: 3.851947
+elapsed time: 4.170604
+elapsed time: 4.487994
+elapsed time: 4.810918
+elapsed time: 5.141701
+elapsed time: 5.460189
+elapsed time: 5.782409
+elapsed time: 6.096374
+elapsed time: 6.414035
+elapsed time: 6.743014
+elapsed time: 7.059417
+elapsed time: 7.371572
+elapsed time: 7.682726
+elapsed time: 7.999957
+elapsed time: 8.326856
+elapsed time: 8.647739
+elapsed time: 8.963289
+elapsed time: 9.286008
+elapsed time: 9.604372
+elapsed time: 9.930782
+elapsed time: 10.252481
+elapsed time: 10.572555
+elapsed time: 10.889677
+elapsed time: 11.199806
+elapsed time: 11.524015
+elapsed time: 11.841048
+elapsed time: 12.156648
+elapsed time: 12.473873
+elapsed time: 12.796000
+elapsed time: 13.119965
+elapsed time: 13.443371
+elapsed time: 13.769033
+elapsed time: 14.087041
+elapsed time: 14.401521
+elapsed time: 14.737949
+elapsed time: 15.063209
+elapsed time: 15.374243
+elapsed time: 15.691884
+elapsed time: 16.007255
+elapsed time: 16.335543
+elapsed time: 16.647392
+elapsed time: 16.966098
+elapsed time: 17.283444
+elapsed time: 17.603626
+elapsed time: 17.937830
+elapsed time: 18.257304
+elapsed time: 18.569850
+elapsed time: 18.886942
+elapsed time: 19.198127
+elapsed time: 19.507728
+elapsed time: 19.837376
+elapsed time: 20.156302
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  8.112 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  8.903 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-cd-sym-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/df7460d3f72aca3f0e871d3bf13ad0fe/plot_cd_sym.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_cd_sym.py</span></code></a></p>

@@ -123,7 +123,7 @@ of block coordinate descent for the group Lasso.</p>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>usetex mode requires TeX.
 Algo: bcd, use Anderson: True
-/home/circleci/project/andersoncd/group.py:40: NumbaPerformanceWarning: &#39;@&#39; is faster on contiguous arrays, called on (array(float64, 2d, A), array(float64, 1d, C))
+/home/circleci/project/andersoncd/group.py:25: NumbaPerformanceWarning: &#39;@&#39; is faster on contiguous arrays, called on (array(float64, 2d, A), array(float64, 1d, C))
   w[grp] = BST(old_w_g + Xg.T @ R / lc[g], alpha / lc[g])
 /home/circleci/.local/lib/python3.8/site-packages/numba/core/typing/npydecl.py:937: NumbaPerformanceWarning: &#39;@&#39; is faster on contiguous arrays, called on (array(float64, 2d, A), array(float64, 1d, C))
   warnings.warn(NumbaPerformanceWarning(msg))
@@ -233,7 +233,7 @@ Algo: fista, use Anderson: False
 <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  16.930 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  15.872 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-group-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/4b84888c1fb2b5df26a3c04cd51f8577/plot_group.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_group.py</span></code></a></p>
