@@ -29,7 +29,7 @@ dict_estimators_ours["Lasso"] = WeightedLasso(
     alpha=alpha, fit_intercept=False, tol=tol, weights=np.ones(n_features))
 dict_estimators_ours["ElasticNet"] = ElasticNet(
     alpha=2 * alpha, l1_ratio=0.5, fit_intercept=False, tol=tol)
-    # alpha=alpha, rho=alpha, fit_intercept=False, tol=tol)
+# alpha=alpha, rho=alpha, fit_intercept=False, tol=tol)
 
 dict_penalties = {}
 dict_penalties["Lasso"] = L1(alpha)
