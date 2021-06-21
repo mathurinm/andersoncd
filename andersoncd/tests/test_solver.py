@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 from numpy.linalg import norm
 
@@ -8,7 +9,9 @@ from andersoncd.data.synthetic import simu_linreg
 from andersoncd.penalties import L1
 
 
-def test_enet_solver(use_acc=True):
+@pytest.mark.parametrize(
+    "use_acc", [True, False])
+def test_solver(use_acc):
     X, y = simu_linreg(n_samples=30, n_features=40)
     n_samples, n_features = X.shape
 
@@ -33,4 +36,4 @@ def test_enet_solver(use_acc=True):
 
 
 if __name__ == '__main__':
-    test_enet_solver(True)
+    test_solver(True)
