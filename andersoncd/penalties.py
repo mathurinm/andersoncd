@@ -62,14 +62,15 @@ class L1(Penalty):
 
 
 # TODO parametrize with l1_ratio ?
-spec_ElasticNet = [
+spec_L1_plus_L2 = [
     ('alpha', float64),
     ('rho', float64),
 ]
 
 
-@jitclass(spec_ElasticNet)
-class ElasticNet(Penalty):
+# TODO find a better name
+@jitclass(spec_L1_plus_L2)
+class L1_plus_L2(Penalty):
     def __init__(self, alpha, rho):
         self.alpha = alpha
         self.rho = rho
@@ -81,15 +82,19 @@ class ElasticNet(Penalty):
         return ST(value, self.alpha * stepsize) / (1 + stepsize * self.rho)
 
     def subdiff_distance(self, w, grad, ws):
+        """TODO to double check
+        """
         res = np.zeros_like(grad)
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
                 # distance of grad to alpha * [-1, 1]
-                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
+                res[idx] = max(
+                    0, np.abs(grad[idx] + self.rho * w[idx]) - self.alpha)
             else:
                 # distance of grad_j to alpha  * sign(w[j])
-                res[idx] = np.abs(np.abs(grad[idx]) - self.alpha)
+                res[idx] = np.abs(
+                    np.abs(grad[idx] + self.rho * w[idx]) - self.alpha)
         return res
 
     def is_penalized(self, n_features):
