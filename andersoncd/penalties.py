@@ -7,11 +7,6 @@ from numba.types import bool_
 from andersoncd.utils import ST
 
 
-spec_L1 = [
-    ('alpha', float64),
-]
-
-
 class Penalty():
     @abstractmethod
     def value(self, w):
@@ -36,6 +31,11 @@ class Penalty():
     @abstractmethod
     def is_penalized(self, n_features):
         """Mask corresponding to penalized features."""
+
+
+spec_L1 = [
+    ('alpha', float64),
+]
 
 
 @jitclass(spec_L1)
@@ -63,10 +63,6 @@ class L1(Penalty):
 
     def is_penalized(self, n_features):
         return np.ones(n_features).astype(bool_)
-
-    def prox(self):
-        pass
-        # TODO needed ?
 
 
 # TODO parametrize with l1_ratio ?
@@ -105,10 +101,6 @@ class L1_plus_L2(Penalty):
 
     def is_penalized(self, n_features):
         return np.ones(n_features).astype(bool_)
-
-    def prox(self):
-        pass
-        # TODO needed ?
 
 
 spec_WeightedL1 = [
