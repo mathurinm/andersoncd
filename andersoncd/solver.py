@@ -105,16 +105,8 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
     # X_dense, X_data, X_indices, X_indptr = _sparse_and_dense(X)
 
-    if weights is None:
-        weights = np.ones(n_features, dtype=X.dtype)
-    elif (weights < 0).any():
-        raise ValueError("Strictly negative weights are not supported.")
-
-    penalized = weights > 0
     if alphas is None:
-        alpha_max = np.max(np.abs(
-            X[:, penalized].T @ y / weights[penalized])) / n_samples
-
+        alpha_max = penalty.alpha_max(X, y)
         alphas = alpha_max * np.geomspace(1, eps, n_alphas, dtype=X.dtype)
     else:
         alphas = np.sort(alphas)[::-1]
@@ -150,9 +142,9 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 R = y.copy()
 
         sol = solver(
-            X, y, alpha, w, R, norms_X_col, weights,
+            X, y, penalty, w, R, norms_X_col,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            use_acc=True, K=5, verbose=verbose)
+            verbose=verbose)
 
         coefs[:, t] = w.copy()
         kkt_maxs[t] = sol[-1]

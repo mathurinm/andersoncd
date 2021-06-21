@@ -49,8 +49,8 @@ def get_name(func):
 
 # functions to ignore args / docstring of
 _docstring_ignores = [
-    "andersoncd.weighted_lasso.WeightedLasso.path",
-    "andersoncd.weighted_lasso.path",
+    "andersoncd.estimators.WeightedLasso.path",
+    "andersoncd.estimators.path",
 ]
 _tab_ignores = []
 
