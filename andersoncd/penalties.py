@@ -22,8 +22,16 @@ class Penalty():
         """Proximal operator of penalty for feature j."""
 
     @abstractmethod
-    def subdiff_distance(self, w, grad, ws):
-        """Distance of gradient to subdifferential of penalty for feature j."""
+    def subdiff_distance(self, w, neg_grad, ws):
+        """Distance of gradient to subdifferential of penalty for feature j.
+
+        w : array, shape (n_features,)
+            Coefficient vector.
+        neg_grad: array, shape (n_features,)
+            Minus the value of the gradient of the datafit at w.
+        ws: array
+            Features in the working set.
+        """
 
     @abstractmethod
     def is_penalized(self, n_features):
@@ -41,16 +49,16 @@ class L1(Penalty):
     def prox_1d(self, value, stepsize, j):
         return ST(value, self.alpha * stepsize)
 
-    def subdiff_distance(self, w, grad, ws):
-        res = np.zeros_like(grad)
+    def subdiff_distance(self, w, neg_grad, ws):
+        res = np.zeros_like(neg_grad)
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
                 # distance of grad to alpha * [-1, 1]
-                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
+                res[idx] = max(0, np.abs(neg_grad[idx]) - self.alpha)
             else:
                 # distance of grad_j to alpha  * sign(w[j])
-                res[idx] = np.abs(np.abs(grad[idx]) - self.alpha)
+                res[idx] = np.abs(np.abs(neg_grad[idx]) - self.alpha)
         return res
 
     def is_penalized(self, n_features):
@@ -82,12 +90,6 @@ class L1_plus_L2(Penalty):
         return ST(value, self.alpha * stepsize) / (1 + stepsize * self.rho)
 
     def subdiff_distance(self, w, neg_grad, ws):
-        """TODO to double check
-        w: TODO
-        neg_grad: ndarray, shape (n_features,)
-            Minus the value of the gradient of the datafit at w.
-        ws: TODO
-        """
         res = np.zeros_like(neg_grad)
         for idx in range(ws.shape[0]):
             j = ws[idx]

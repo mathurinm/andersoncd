@@ -45,24 +45,5 @@ def test_solver(estimator_name, use_acc):
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
 
-# @pytest.mark.parametrize("use_acc", [True, False])
-# def test_solver2(use_acc=True):
-#     # elastic net from sklearn
-#     estimator = ElasticNet(
-#         alpha=2 * alpha, l1_ratio=0.5, fit_intercept=False, tol=tol)
-#     estimator.fit(X, y)
-#     coef_sk = estimator.coef_
-
-#     penalty = L1_plus_L2(alpha, alpha)
-#     w = np.zeros(n_features)
-#     R = y - X @ w
-#     norms_X_col = norm(X, axis=0)
-#     coef_ours = solver(
-#         X, y, penalty, w, R, norms_X_col, verbose=2, max_iter=20,
-#         max_epochs=1_000, tol=1e-10)[0]
-
-#     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
-
-
 if __name__ == '__main__':
-    test_solver2(True)
+    test_solver("Lasso", True)
