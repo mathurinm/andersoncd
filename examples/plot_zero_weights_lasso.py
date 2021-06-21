@@ -24,7 +24,7 @@ dataset = "simu"
 
 if dataset == "simu":
     n_features = 100
-    X, y = simu_linreg(n_samples=100, n_features=n_features, corr=0.9)
+    X, y = simu_linreg(n_samples=100, n_features=n_features, corr=0.7)
 else:
     X, y = fetch_openml("leukemia", return_X_y=True)
     X, y = X.to_numpy(), y.to_numpy()
@@ -43,11 +43,13 @@ weights[50:] = 1
 
 alpha_max = np.max(np.abs(
     X[:, weights != 0].T @ y / weights[weights != 0])) / len(y)
-clf = WeightedLasso(alpha=alpha_max/30, weights=weights,
-                    fit_intercept=False, verbose=1).fit(X, y)
+clf = WeightedLasso(alpha=alpha_max/10, weights=weights,
+                    fit_intercept=False, verbose=1, tol=1e-10).fit(X, y)
 
 
 plt.figure(figsize=(5, 4))
+plt.axvline(50, color='k', linestyle='--')
+plt.axvline(10, color='k', linestyle='--')
 plt.stem(clf.coef_)
 plt.title("Estimated coefficients")
 plt.show(block=False)
