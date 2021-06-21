@@ -175,7 +175,7 @@ def solver(
     penalty: Penalty object
     p0: first size of working set.
     """
-    n_samples, n_features = X.shape[1]
+    n_samples, n_features = X.shape
     pen = penalty.is_penalized(n_features)
     unpen = ~pen
     n_unpen = unpen.sum()
