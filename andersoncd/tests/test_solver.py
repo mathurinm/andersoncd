@@ -1,9 +1,7 @@
-from andersoncd import penalties
-import pytest
 import numpy as np
 from numpy.linalg import norm
 
-from sklearn.linear_model import ElasticNet, Lasso, lasso_path
+from sklearn.linear_model import ElasticNet
 
 from andersoncd.solver import solver
 from andersoncd.data.synthetic import simu_linreg
@@ -31,7 +29,6 @@ def test_enet_solver(use_acc=True):
         X, y, penalty, w, R, norms_X_col, max_iter=10_000)[0]
 
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
-
 
 
 if __name__ == '__main__':
