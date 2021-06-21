@@ -1,4 +1,3 @@
-from andersoncd import estimators
 from itertools import product
 import pytest
 import numpy as np
