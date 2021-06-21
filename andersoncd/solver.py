@@ -7,7 +7,7 @@ from sklearn.utils import check_array
 
 def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 coef_init=None, max_iter=20, max_epochs=50_000,
-                p0=10, tol=1e-4, prune=0, weights=None,
+                p0=10, tol=1e-4, prune=0,
                 return_n_iter=False, verbose=0,):
     r"""Compute optimization path with Celer primal as inner solver.
 
@@ -16,7 +16,7 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
     .. math::
 
-        \frac{||y - X w||_2^2}{2 n} + \alpha \sum_1^p weights_j |w_j|
+        \frac{||y - X w||_2^2}{2 n} + \alpha \sum_1^p penalty(|w_j|)
 
 
     Parameters
@@ -25,7 +25,10 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
         Training data.
 
     y : ndarray, shape (n_samples,)
-        Target values
+        Target values.
+
+    penalty : instance of Penalty class
+        Penalty used in the model.
 
     eps : float, optional
         Length of the path. ``eps=1e-3`` means that
@@ -60,10 +63,6 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
     prune : bool, optional
         Whether or not to use pruning when growing working sets.
 
-    weights : ndarray, shape (n_features,) or (n_groups,), optional
-        Feature/group weights used in the penalty. Default to array of ones.
-        Features with weights equal to np.inf are ignored.
-
     X_offset : np.array, shape (n_features,), optional
         Used to center sparse X without breaking sparsity. Mean of each column.
         See sklearn.linear_model.base._preprocess_data().
@@ -84,8 +83,8 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
     coefs : array, shape (n_features, n_alphas)
         Coefficients along the path.
 
-    dual_gaps : array, shape (n_alphas,)
-        Duality gaps returned by the solver along the path.  TODO stop crit
+    kkt_max : array, shape (n_alphas,)
+        Maximum violation of KKT along the path.
     """
 
     if sparse.issparse(X):
@@ -193,8 +192,7 @@ def solver(
         # 1) select features : all unpenalized, + 2 * (nnz and penalized)
         ws_size = max(p0 + n_unpen,
                       min(2 * (w != 0).sum() - n_unpen, n_features))
-        # if t == 2:
-        #     1/0
+
         kkt[unpen] = np.inf  # always include unpenalized features
         kkt[w != 0] = np.inf  # TODO check
         ws = np.argsort(kkt)[-ws_size:]

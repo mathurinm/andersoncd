@@ -110,7 +110,7 @@ class WeightedLasso(Lasso_sklearn):
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute weighted Lasso path with Celer + primal extrapolation."""
         return solver_path(
-            X, y, alpha=alphas, coef_init=coef_init,
+            X, y, self.penalty, alphas=alphas, coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
             max_epochs=self.max_epochs, p0=self.p0, tol=self.tol,
             prune=self.prune, verbose=self.verbose,)
