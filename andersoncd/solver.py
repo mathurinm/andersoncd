@@ -1,11 +1,5 @@
 import numpy as np
 from numba import njit
-from scipy import sparse
-from numpy.linalg import norm
-
-from sklearn.utils import check_array
-from sklearn.linear_model import Lasso as Lasso_sklearn
-from andersoncd.lasso import ST
 
 
 def solver(
