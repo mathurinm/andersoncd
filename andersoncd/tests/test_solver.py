@@ -9,8 +9,7 @@ from andersoncd.data.synthetic import simu_linreg
 from andersoncd.penalties import L1
 
 
-@pytest.mark.parametrize(
-    "use_acc", [True, False])
+@pytest.mark.parametrize("use_acc", [True, False])
 def test_solver(use_acc):
     X, y = simu_linreg(n_samples=30, n_features=40)
     n_samples, n_features = X.shape
