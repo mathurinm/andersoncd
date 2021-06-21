@@ -71,4 +71,16 @@ def test_estimator(estimator_name):
 
 if __name__ == '__main__':
     # test_estimator("Lasso")
-    test_estimator("ElasticNet")
+    # test_estimator("ElasticNet")
+    name = "ElasticNet"
+    estimator_sk = dict_estimators_sk[name]
+    estimator_sk.fit(X, y)
+    coef_sk = estimator_sk.coef_
+
+    estimator_ours = dict_estimators_ours[name]
+    estimator_ours.verbose = 2
+    estimator_ours.alpha = estimator_ours.alpha / 2
+    estimator_ours.fit(X, y)
+    coef_ours = estimator_ours.coef_
+
+    np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)

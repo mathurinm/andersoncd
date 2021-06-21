@@ -212,7 +212,7 @@ class ElasticNet(ElasticNet_sklearn):
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
                  normalize=False, warm_start=False):
         super(ElasticNet, self).__init__(
-            alpha=alpha, tol=tol, max_iter=max_iter,
+            alpha=alpha, l1_ratio=l1_ratio, tol=tol, max_iter=max_iter,
             fit_intercept=fit_intercept, normalize=normalize,
             warm_start=warm_start)
         self.verbose = verbose
