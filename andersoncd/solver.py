@@ -1,10 +1,176 @@
 import numpy as np
 from numba import njit
+from scipy import sparse
+from numpy.linalg import norm
+from sklearn.utils import check_array
+
+
+def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
+                coef_init=None, max_iter=20, max_epochs=50_000,
+                p0=10, tol=1e-4, prune=0, weights=None,
+                return_n_iter=False, verbose=0,):
+    r"""Compute optimization path with Celer primal as inner solver.
+
+    With `n = len(y)` and `p = len(w)` the number of samples and features,
+    the loss is:
+
+    .. math::
+
+        \frac{||y - X w||_2^2}{2 n} + \alpha \sum_1^p weights_j |w_j|
+
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_samples, n_features)
+        Training data.
+
+    y : ndarray, shape (n_samples,)
+        Target values
+
+    eps : float, optional
+        Length of the path. ``eps=1e-3`` means that
+        ``alpha_min = 1e-3 * alpha_max``
+
+    n_alphas : int, optional
+        Number of alphas along the regularization path
+
+    alphas : ndarray, optional
+        List of alphas where to compute the models.
+        If ``None`` alphas are set automatically
+
+    coef_init : ndarray, shape (n_features,) | None, optional, (default=None)
+        Initial value of coefficients. If None, np.zeros(n_features) is used.
+
+    max_iter : int, optional
+        The maximum number of iterations (definition of working set and
+        resolution of problem restricted to features in working set)
+
+    max_epochs : int, optional
+        Maximum number of (block) CD epochs on each subproblem.
+
+    p0 : int, optional
+        First working set size.
+
+    verbose : bool or integer, optional
+        Amount of verbosity. 0/False is silent
+
+    tol : float, optional
+        The tolerance for the optimization.
+
+    prune : bool, optional
+        Whether or not to use pruning when growing working sets.
+
+    weights : ndarray, shape (n_features,) or (n_groups,), optional
+        Feature/group weights used in the penalty. Default to array of ones.
+        Features with weights equal to np.inf are ignored.
+
+    X_offset : np.array, shape (n_features,), optional
+        Used to center sparse X without breaking sparsity. Mean of each column.
+        See sklearn.linear_model.base._preprocess_data().
+
+    X_scale : np.array, shape (n_features,), optional
+        Used to scale centered sparse X without breaking sparsity. Norm of each
+        centered column. See sklearn.linear_model.base._preprocess_data().
+
+    return_n_iter : bool, optional
+        If True, number of iterations along the path are returned.
+
+
+    Returns
+    -------
+    alphas : array, shape (n_alphas,)
+        The alphas along the path where models are computed.
+
+    coefs : array, shape (n_features, n_alphas)
+        Coefficients along the path.
+
+    dual_gaps : array, shape (n_alphas,)
+        Duality gaps returned by the solver along the path.  TODO stop crit
+    """
+
+    if sparse.issparse(X):
+        raise ValueError("Spare design matrices are not supported yet.")
+
+    X = check_array(X, 'csc', dtype=[np.float64, np.float32],
+                    order='F', copy=False, accept_large_sparse=False)
+    y = check_array(y, 'csc', dtype=X.dtype.type, order='F', copy=False,
+                    ensure_2d=False)
+
+    n_samples, n_features = X.shape
+
+    # if X_offset is not None:
+    #     X_sparse_scaling = X_offset / X_scale
+    #     X_sparse_scaling = np.asarray(X_sparse_scaling, dtype=X.dtype)
+    # else:
+    #     X_sparse_scaling = np.zeros(n_features, dtype=X.dtype)
+
+    # X_dense, X_data, X_indices, X_indptr = _sparse_and_dense(X)
+
+    if weights is None:
+        weights = np.ones(n_features, dtype=X.dtype)
+    elif (weights < 0).any():
+        raise ValueError("Strictly negative weights are not supported.")
+
+    penalized = weights > 0
+    if alphas is None:
+        alpha_max = np.max(np.abs(
+            X[:, penalized].T @ y / weights[penalized])) / n_samples
+
+        alphas = alpha_max * np.geomspace(1, eps, n_alphas, dtype=X.dtype)
+    else:
+        alphas = np.sort(alphas)[::-1]
+
+    n_alphas = len(alphas)
+
+    coefs = np.zeros((n_features, n_alphas), order='F', dtype=X.dtype)
+    kkt_maxs = np.zeros(n_alphas)
+
+    if return_n_iter:
+        n_iters = np.zeros(n_alphas, dtype=int)
+
+    norms_X_col = norm(X, axis=0)
+
+    for t in range(n_alphas):
+        alpha = alphas[t]
+        penalty.alpha = alpha  # TODO this feels unnatural
+        if verbose:
+            to_print = "##### Computing alpha %d/%d" % (t + 1, n_alphas)
+            print("#" * len(to_print))
+            print(to_print)
+            print("#" * len(to_print))
+        if t > 0:
+            w = coefs[:, t - 1].copy()
+            p0 = max(len(np.where(w != 0)[0]), 1)
+        else:
+            if coef_init is not None:
+                w = coef_init.copy()
+                p0 = max((w != 0.).sum(), p0)
+                R = y - X @ w
+            else:
+                w = np.zeros(n_features, dtype=X.dtype)
+                R = y.copy()
+
+        sol = solver(
+            X, y, alpha, w, R, norms_X_col, weights,
+            max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
+            use_acc=True, K=5, verbose=verbose)
+
+        coefs[:, t] = w.copy()
+        kkt_maxs[t] = sol[-1]
+
+        if return_n_iter:
+            n_iters[t] = len(sol[1])
+
+    results = alphas, coefs, kkt_maxs
+    if return_n_iter:
+        results += (n_iters,)
+
+    return results
 
 
 def solver(
         X, y, penalty, w, R, norms_X_col, max_iter=50,
-        max_epochs=50_000, p0=10, tol=1e-4, use_acc=False, K=5, verbose=0):
+        max_epochs=50_000, p0=10, tol=1e-4, use_acc=True, K=5, verbose=0):
     """
     penalty: Penalty object
     p0: first size of working set.
