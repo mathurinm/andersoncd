@@ -165,9 +165,10 @@ class MCP(Penalty):
         self.gamma = gamma
 
     def value(self, w):
-        if np.abs(w) < self.gamma * self.alpha:
-            return self.alpha * np.abs(w) - w**2 / (2 * self.gamma)
-        return np.array([self.gamma * self.alpha ** 2 / 2.])
+        s0 = np.abs(w) < self.gamma * self.alpha
+        res = np.full_like(w, self.gamma * self.alpha ** 2 / 2.)
+        res[s0] = self.alpha * np.abs(w[s0]) - w[s0]**2 / (2 * self.gamma)
+        return np.sum(res)
 
     def prox_1d(self, value, stepsize, j):
         tau = self.alpha * stepsize
