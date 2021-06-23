@@ -2,7 +2,6 @@
 #         Mathurin Massias <mathurin.massias@gmail.com>
 # License: BSD 3 clause
 
-import numpy as np
 from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 
