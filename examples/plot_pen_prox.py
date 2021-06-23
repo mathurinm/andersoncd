@@ -20,7 +20,7 @@ penalties = [WeightedL1(alpha=1, weights=np.array([2.])),
              ]
 
 
-x_range = np.linspace(-3, 3, num=300)
+x_range = np.linspace(-5, 5, num=300)
 
 fig, axarr = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
 
