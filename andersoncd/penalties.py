@@ -49,6 +49,8 @@ class L1(Penalty):
         self.alpha = alpha
 
     def value(self, w):
+        """ alpha * ||w||_1
+        """
         return self.alpha * np.sum(np.abs(w))
 
     def prox_1d(self, value, stepsize, j):
@@ -83,6 +85,8 @@ class L1_plus_L2(Penalty):
         self.l1_ratio = l1_ratio
 
     def value(self, w):
+        """ alpha * (l1_ratio * ||w||_1 + (1 - l1_ratio) * ||w||_2^2)
+        """
         res = self.l1_ratio * self.alpha * np.sum(np.abs(w))
         res += (1 - self.l1_ratio) * self.alpha / 2 * np.sum(w ** 2)
         return res
@@ -129,6 +133,8 @@ class WeightedL1(Penalty):
         self.weights = weights
 
     def value(self, w):
+        """ sum_{j=1}^{n_features} alpha * weights[j] |w_j|
+        """
         return self.alpha * np.sum(np.abs(w) * self.weights)
 
     def prox_1d(self, value, stepsize, j):
@@ -165,6 +171,15 @@ class MCP(Penalty):
         self.gamma = gamma
 
     def value(self, w):
+        """
+        pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * lambda
+                   gamma * lambda ** 2               if w_j > gamma * lambda
+        value = sum_{j=1}^{n_features} pen(|w_j|)
+
+        For more details see
+        Coordinate descent algorithms for nonconvex penalized regression,
+        with applications to biological feature selection, Breheny and Huang.
+        """
         s0 = np.abs(w) < self.gamma * self.alpha
         res = np.full_like(w, self.gamma * self.alpha ** 2 / 2.)
         res[s0] = self.alpha * np.abs(w[s0]) - w[s0]**2 / (2 * self.gamma)
