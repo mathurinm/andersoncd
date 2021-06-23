@@ -1,3 +1,12 @@
+"""
+=========================================
+Value and proximal operators of penalties
+=========================================
+
+Illustrate the value and proximal operators of some sparse penalties.
+"""
+# Author: Mathurin Massias <mathurin.massias@gmail.com>
+
 import numpy as np
 import matplotlib.pyplot as plt
 
