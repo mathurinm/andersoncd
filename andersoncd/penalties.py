@@ -9,7 +9,7 @@ from abc import abstractmethod
 from numba.experimental import jitclass
 from numba.types import bool_
 
-from andersoncd.utils import ST, MC_penalty, FT
+from andersoncd.utils import ST
 
 
 class Penalty():
@@ -165,10 +165,18 @@ class MCP(Penalty):
         self.gamma = gamma
 
     def value(self, w):
-        return MC_penalty(w, self.alpha, self.gamma)
+        if np.abs(w) < self.gamma * self.alpha:
+            return self.alpha * np.abs(w) - w**2 / (2 * self.gamma)
+        return self.gamma * self.alpha ** 2 / 2.
 
     def prox_1d(self, value, stepsize, j):
-        return FT(value, self.alpha * stepsize, self.gamma / stepsize)
+        tau = self.alpha * stepsize
+        g = self.gamma / stepsize
+        if np.abs(value) <= tau:
+            return 0.
+        if np.abs(value) > g * tau:
+            return value
+        return np.sign(value) * (np.abs(value) - tau) / (1. - 1./g)
 
     def subdiff_distance(self, w, grad, ws):
         res = np.zeros_like(grad)
