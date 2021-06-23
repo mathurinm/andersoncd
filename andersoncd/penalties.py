@@ -85,7 +85,7 @@ class L1_plus_L2(Penalty):
         self.l1_ratio = l1_ratio
 
     def value(self, w):
-        """ alpha * (l1_ratio * ||w||_1 + (1 - l1_ratio) * ||w||_2^2)
+        """ alpha * (l1_ratio * ||w||_1 + 0.5 * (1 - l1_ratio) * ||w||_2^2)
         """
         res = self.l1_ratio * self.alpha * np.sum(np.abs(w))
         res += (1 - self.l1_ratio) * self.alpha / 2 * np.sum(w ** 2)
@@ -133,7 +133,7 @@ class WeightedL1(Penalty):
         self.weights = weights
 
     def value(self, w):
-        """ sum_{j=1}^{n_features} alpha * weights[j] |w_j|
+        """ alpha * ||weights * w||_1
         """
         return self.alpha * np.sum(np.abs(w) * self.weights)
 
@@ -174,7 +174,7 @@ class MCP_pen(Penalty):
         """
         With x >= 0
         pen(x) = alpha * x - x^2 / (2 * gamma) if x =< gamma * alpha
-                 gamma * alpha ** 2 / 2        if x > gamma * alpha
+                 gamma * alpha 2 / 2           if x > gamma * alpha
         value = sum_{j=1}^{n_features} pen(|w_j|)
 
         For more details see
