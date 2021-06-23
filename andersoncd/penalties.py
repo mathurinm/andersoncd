@@ -1,3 +1,8 @@
+# Author: Quentin Bertrand <quentin.bertrand@inria.fr>
+#         Mathurin Massias <mathurin.massias@gmail.com>
+#         Salim Benchelabi
+# License: BSD 3 clause
+
 import numpy as np
 from numba import float64
 from abc import abstractmethod
@@ -44,6 +49,8 @@ class L1(Penalty):
         self.alpha = alpha
 
     def value(self, w):
+        """ alpha * ||w||_1
+        """
         return self.alpha * np.sum(np.abs(w))
 
     def prox_1d(self, value, stepsize, j):
@@ -71,7 +78,6 @@ spec_L1_plus_L2 = [
 ]
 
 
-# TODO find a better name
 @jitclass(spec_L1_plus_L2)
 class L1_plus_L2(Penalty):
     def __init__(self, alpha, l1_ratio):
@@ -79,6 +85,8 @@ class L1_plus_L2(Penalty):
         self.l1_ratio = l1_ratio
 
     def value(self, w):
+        """ alpha * (l1_ratio * ||w||_1 + 0.5 * (1 - l1_ratio) * ||w||_2^2)
+        """
         res = self.l1_ratio * self.alpha * np.sum(np.abs(w))
         res += (1 - self.l1_ratio) * self.alpha / 2 * np.sum(w ** 2)
         return res
@@ -125,6 +133,8 @@ class WeightedL1(Penalty):
         self.weights = weights
 
     def value(self, w):
+        """ alpha * ||weights * w||_1
+        """
         return self.alpha * np.sum(np.abs(w) * self.weights)
 
     def prox_1d(self, value, stepsize, j):
@@ -146,3 +156,60 @@ class WeightedL1(Penalty):
 
     def is_penalized(self, n_features):
         return self.weights != 0
+
+
+spec_MCP = [
+    ('alpha', float64),
+    ('gamma', float64),
+]
+
+
+@jitclass(spec_MCP)
+class MCP_pen(Penalty):
+    def __init__(self, alpha, gamma):
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def value(self, w):
+        """
+        With x >= 0
+        pen(x) = alpha * x - x^2 / (2 * gamma) if x =< gamma * alpha
+                 gamma * alpha 2 / 2           if x > gamma * alpha
+        value = sum_{j=1}^{n_features} pen(|w_j|)
+
+        For more details see
+        Coordinate descent algorithms for nonconvex penalized regression,
+        with applications to biological feature selection, Breheny and Huang.
+        """
+        s0 = np.abs(w) < self.gamma * self.alpha
+        res = np.full_like(w, self.gamma * self.alpha ** 2 / 2.)
+        res[s0] = self.alpha * np.abs(w[s0]) - w[s0]**2 / (2 * self.gamma)
+        return np.sum(res)
+
+    def prox_1d(self, value, stepsize, j):
+        tau = self.alpha * stepsize
+        g = self.gamma / stepsize
+        if np.abs(value) <= tau:
+            return 0.
+        if np.abs(value) > g * tau:
+            return value
+        return np.sign(value) * (np.abs(value) - tau) / (1. - 1./g)
+
+    def subdiff_distance(self, w, grad, ws):
+        res = np.zeros_like(grad)
+        for idx in range(ws.shape[0]):
+            j = ws[idx]
+            if w[j] == 0:
+                # distance of grad to alpha * [-1, 1]
+                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
+            elif np.abs(w[j]) < self.alpha * self.gamma:
+                # distance of grad_j to (alpha - abs(w[j])/gamma) * sign(w[j])
+                res[idx] = np.abs(np.abs(grad[idx]) - (
+                    self.alpha - np.abs(w[j])/self.gamma))
+            else:
+                # distance of grad to 0
+                res[idx] = np.abs(grad[idx])
+        return res
+
+    def is_penalized(self, n_features):
+        return np.ones(n_features).astype(bool_)
