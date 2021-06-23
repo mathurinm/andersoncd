@@ -6,7 +6,7 @@ from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 
 from andersoncd.data.synthetic import simu_linreg
-from andersoncd.estimators import WeightedLasso, ElasticNet
+from andersoncd.estimators import WeightedLasso, ElasticNet, MCP
 
 X, y = simu_linreg(n_samples=30, n_features=40)
 n_samples, n_features = X.shape
@@ -20,15 +20,19 @@ dict_estimators_sk["Lasso"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_sk["ElasticNet"] = ElasticNet_sklearn(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
+dict_estimators_sk["MCP"] = Lasso_sklearn(
+    alpha=alpha, fit_intercept=False, tol=tol)
 
 dict_estimators_ours = {}
 dict_estimators_ours["Lasso"] = WeightedLasso(
     alpha=alpha, fit_intercept=False, tol=tol, weights=np.ones(n_features))
 dict_estimators_ours["ElasticNet"] = ElasticNet(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
+dict_estimators_ours["MCP"] = MCP(
+    alpha=alpha, gamma=np.infty, fit_intercept=False, tol=tol)
 
 
-@pytest.mark.parametrize("estimator_name", ["Lasso", "ElasticNet"])
+@pytest.mark.parametrize("estimator_name", ["Lasso", "ElasticNet", "MCP"])
 def test_estimator(estimator_name):
     # lasso from sklearn
     estimator_sk = dict_estimators_sk[estimator_name]
@@ -43,4 +47,4 @@ def test_estimator(estimator_name):
 
 
 if __name__ == '__main__':
-    test_estimator("ElasticNet")
+    test_estimator("MCP")

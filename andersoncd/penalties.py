@@ -165,7 +165,7 @@ spec_MCP = [
 
 
 @jitclass(spec_MCP)
-class MCP(Penalty):
+class MCP_pen(Penalty):
     def __init__(self, alpha, gamma):
         self.alpha = alpha
         self.gamma = gamma
