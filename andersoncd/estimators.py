@@ -238,7 +238,7 @@ class MCP(Lasso_sklearn):
     The optimization objective for MCP is, with:
     With x >= 0
     pen(x) = alpha * x - x^2 / (2 * gamma) if x =< gamma * alpha
-               gamma * alpha ** 2               if x > gamma * alpha
+               gamma * alpha ** 2 / 2      if x > gamma * alpha
 
     obj = (1 / (2 * n_samples)) * ||y - X w||^2_2 + pen(|w_j|)
 

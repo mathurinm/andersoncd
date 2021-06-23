@@ -174,7 +174,7 @@ class MCP_pen(Penalty):
         """
         With x >= 0
         pen(x) = alpha * x - x^2 / (2 * gamma) if x =< gamma * alpha
-                   gamma * alpha ** 2               if x > gamma * alpha
+                 gamma * alpha ** 2 / 2        if x > gamma * alpha
         value = sum_{j=1}^{n_features} pen(|w_j|)
 
         For more details see
