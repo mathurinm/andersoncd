@@ -4,7 +4,7 @@ from abc import abstractmethod
 from numba.experimental import jitclass
 from numba.types import bool_
 
-from andersoncd.utils import ST
+from andersoncd.utils import ST, MC_penalty, FT
 
 
 class Penalty():
@@ -146,3 +146,41 @@ class WeightedL1(Penalty):
 
     def is_penalized(self, n_features):
         return self.weights != 0
+
+
+spec_MCP = [
+    ('alpha', float64),
+    ('gamma', float64),
+]
+
+
+@jitclass(spec_L1)
+class MCP(Penalty):
+    def __init__(self, alpha, gamma):
+        self.alpha = alpha
+        self.gamma = gamma
+
+    def value(self, w):
+        return MC_penalty(w, self.alpha, self.gamma)
+
+    def prox_1d(self, value, stepsize, j):
+        return FT(value, self.alpha * stepsize, self.gamma / stepsize)
+
+    def subdiff_distance(self, w, grad, ws):
+        res = np.zeros_like(grad)
+        for idx in range(ws.shape[0]):
+            j = ws[idx]
+            if w[j] == 0:
+                # distance of grad to alpha * [-1, 1]
+                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
+            elif np.abs(w[j]) < self.alpha * self.gamma:
+                # distance of grad_j to (alpha - abs(w[j])/gamma) * sign(w[j])
+                res[idx] = np.abs(np.abs(grad[idx]) - (
+                    self.alpha - np.abs(w[j])/self.gamma))
+            else:
+                # distance of grad to 0
+                res[idx] = np.abs(grad[idx])
+        return res
+
+    def is_penalized(self, n_features):
+        return np.ones(n_features).astype(bool_)

@@ -107,3 +107,20 @@ def get_kaczmarz_mat(X):
     for i in range(n_samples):
         mat -= np.outer(X[i, :], X[i, :] @ mat) / norm(X[i, :]) ** 2
     return mat
+
+
+def MC_penalty(x, alpha=1., gamma=3):
+    """MCP penalty at level alpha, with parameter gamma"""
+    s0 = np.abs(x) < gamma * alpha
+    res = np.full_like(x, gamma * alpha ** 2 / 2.)
+    res[s0] = alpha * np.abs(x[s0]) - x[s0]**2 / (2 * gamma)
+    return res
+
+
+def FT(x, tau=1., gamma=3):
+    """Firm-thresholding of scalar x at level tau."""
+    if np.abs(x) <= tau:
+        return 0.
+    if np.abs(x) > gamma * tau:
+        return x
+    return np.sign(x) * (np.abs(x) - tau) / (1. - 1./gamma)
