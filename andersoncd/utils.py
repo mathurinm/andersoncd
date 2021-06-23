@@ -109,6 +109,7 @@ def get_kaczmarz_mat(X):
     return mat
 
 
+@njit
 def MC_penalty(x, alpha=1., gamma=3):
     """MCP penalty at level alpha, with parameter gamma"""
     s0 = np.abs(x) < gamma * alpha
@@ -117,6 +118,7 @@ def MC_penalty(x, alpha=1., gamma=3):
     return res
 
 
+@njit
 def FT(x, tau=1., gamma=3):
     """Firm-thresholding of scalar x at level tau."""
     if np.abs(x) <= tau:

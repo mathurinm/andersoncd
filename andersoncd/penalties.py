@@ -1,3 +1,8 @@
+# Author: Quentin Bertrand <quentin.bertrand@inria.fr>
+#         Mathurin Massias <mathurin.massias@gmail.com>
+#         Salim Benchelabi
+# License: BSD 3 clause
+
 import numpy as np
 from numba import float64
 from abc import abstractmethod
@@ -71,7 +76,6 @@ spec_L1_plus_L2 = [
 ]
 
 
-# TODO find a better name
 @jitclass(spec_L1_plus_L2)
 class L1_plus_L2(Penalty):
     def __init__(self, alpha, l1_ratio):
@@ -154,7 +158,7 @@ spec_MCP = [
 ]
 
 
-@jitclass(spec_L1)
+@jitclass(spec_MCP)
 class MCP(Penalty):
     def __init__(self, alpha, gamma):
         self.alpha = alpha
