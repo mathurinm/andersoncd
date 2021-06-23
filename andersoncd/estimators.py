@@ -237,8 +237,9 @@ class MCP(Lasso_sklearn):
     MPC estimator based on Celer solver and primal extrapolation.
 
     The optimization objective for MCP is, with:
-    pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * alpha
-               gamma * alpha ** 2               if w_j > gamma * alpha
+    With x >= 0
+    pen(x) = alpha * x - x^2 / (2 * gamma) if x =< gamma * alpha
+               gamma * alpha ** 2               if x > gamma * alpha
 
     obj = (1 / (2 * n_samples)) * ||y - X w||^2_2 + pen(|w_j|)
 
@@ -250,8 +251,7 @@ class MCP(Lasso_sklearn):
     Parameters
     ----------
     alpha : float, optional
-        Constant that multiplies the L1 term. Defaults to 1.0.
-        ``alpha = 0`` is equivalent to an ordinary least square.
+        Penalty strength.
         For numerical reasons, using ``alpha = 0`` with the
         ``MCP`` object is not advised.
 
