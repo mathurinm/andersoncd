@@ -234,9 +234,18 @@ class ElasticNet(ElasticNet_sklearn):
 
 class MCP(Lasso_sklearn):
     r"""
-    Elastic net estimator based on Celer solver and primal extrapolation.
+    MPC estimator based on Celer solver and primal extrapolation.
 
-    The optimization objective for MCP TODO:
+    The optimization objective for MCP is, with:
+    pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * lambda
+               gamma * lambda ** 2               if w_j > gamma * lambda
+
+    obj = (1 / (2 * n_samples)) * ||y - X w||^2_2 + pen(|w_j|)
+
+    For more details see
+    Coordinate descent algorithms for nonconvex penalized regression,
+    with applications to biological feature selection, Breheny and Huang.
+
 
     Parameters
     ----------
@@ -244,10 +253,10 @@ class MCP(Lasso_sklearn):
         Constant that multiplies the L1 term. Defaults to 1.0.
         ``alpha = 0`` is equivalent to an ordinary least square.
         For numerical reasons, using ``alpha = 0`` with the
-        ``ElasticNet`` object is not advised.
+        ``MCP`` object is not advised.
 
-    gamma : float, default=0.5
-        TODO
+    gamma : float, default=np.infty
+        Should be larger than (or equal to) 1
 
     max_iter : int, optional
         Maximum number of iterations (subproblem definitions)
