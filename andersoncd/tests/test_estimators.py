@@ -29,7 +29,7 @@ dict_estimators_ours["Lasso"] = WeightedLasso(
 dict_estimators_ours["ElasticNet"] = ElasticNet(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
 dict_estimators_ours["MCP"] = MCP(
-    alpha=alpha, gamma=np.infty, fit_intercept=False, tol=tol)
+    alpha=alpha, gamma=np.inf, fit_intercept=False, tol=tol)
 
 
 @pytest.mark.parametrize("estimator_name", ["Lasso", "ElasticNet", "MCP"])
