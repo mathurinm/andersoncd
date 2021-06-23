@@ -237,8 +237,8 @@ class MCP(Lasso_sklearn):
     MPC estimator based on Celer solver and primal extrapolation.
 
     The optimization objective for MCP is, with:
-    pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * lambda
-               gamma * lambda ** 2               if w_j > gamma * lambda
+    pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * alpha
+               gamma * alpha ** 2               if w_j > gamma * alpha
 
     obj = (1 / (2 * n_samples)) * ||y - X w||^2_2 + pen(|w_j|)
 
@@ -255,7 +255,9 @@ class MCP(Lasso_sklearn):
         For numerical reasons, using ``alpha = 0`` with the
         ``MCP`` object is not advised.
 
-    gamma : float, default=np.infty
+    gamma : float, default=3
+        If gamma = 1, the prox of MCP is a hard thresholding.
+        If gamma=np.inf it is a soft thresholding.
         Should be larger than (or equal to) 1
 
     max_iter : int, optional
@@ -323,7 +325,7 @@ class MCP(Lasso_sklearn):
       https://jmlr.org/papers/v21/19-587.html
     """
 
-    def __init__(self, alpha=1., gamma=np.infty, max_iter=100,
+    def __init__(self, alpha=1., gamma=3, max_iter=100,
                  max_epochs=50_000, p0=10,
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
                  normalize=False, warm_start=False):

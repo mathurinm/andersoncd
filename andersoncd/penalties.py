@@ -172,8 +172,8 @@ class MCP_pen(Penalty):
 
     def value(self, w):
         """
-        pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * lambda
-                   gamma * lambda ** 2               if w_j > gamma * lambda
+        pen(w_j) = alpha * w_j - w_j^2 / (2 * gamma) if w_j =< gamma * alpha
+                   gamma * alpha ** 2               if w_j > gamma * alpha
         value = sum_{j=1}^{n_features} pen(|w_j|)
 
         For more details see
