@@ -10,19 +10,19 @@ Illustrate the value and proximal operators of some sparse penalties.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from andersoncd.penalties import WeightedL1, L1, L1_plus_L2, MCP
+from andersoncd.penalties import WeightedL1, L1, L1_plus_L2, MCP_pen
 
 
 penalties = [WeightedL1(alpha=1, weights=np.array([2.])),
              L1(alpha=1),
              L1_plus_L2(alpha=1, l1_ratio=0.7),
-             MCP(alpha=1, gamma=3.),
+             MCP_pen(alpha=1, gamma=3.),
              ]
 
 
 x_range = np.linspace(-5, 5, num=300)
 
-fig, axarr = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
+fig, axarr = plt.subplots(1, 2, figsize=(8, 3), constrained_layout=True)
 
 for pen in penalties:
     axarr[0].plot(x_range,
