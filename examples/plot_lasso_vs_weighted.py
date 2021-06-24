@@ -15,11 +15,12 @@ nnz = 5
 w_true[:nnz] = 1
 
 # important features have a smaller norm than the other
-X[:, :nnz] *= 0.1
-y = X @ w_true + np.random.randn(X.shape[0])
+X[:, :nnz] *= 0.01
+noise = np.random.randn(X.shape[0])
+y = X @ w_true + norm(X @ w_true) / norm(noise) * noise
 
 alpha_max = np.max(np.abs(X.T @ y)) / len(y)
-alpha = alpha_max / 25
+alpha = alpha_max / 10
 las = Lasso(alpha=alpha, fit_intercept=False).fit(X, y)
 wei = WeightedLasso(alpha=alpha, weights=norm(X, axis=0)).fit(X, y)
 
