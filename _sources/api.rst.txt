@@ -12,6 +12,7 @@ Scikit-learn like estimators
 .. autosummary::
    :toctree: generated/
 
+   Lasso
    ElasticNet
    MCP
    WeightedLasso
@@ -48,4 +49,3 @@ Datasets fetchers
    :toctree: generated/
 
    make_correlated_data
-

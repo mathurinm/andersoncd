@@ -38,6 +38,27 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Illustrate the importance of feature normalization when penalizing.">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_lasso_vs_weighted_thumb.png
+     :alt: Lasso vs Weighted Lasso
+
+     :ref:`sphx_glr_auto_examples_plot_lasso_vs_weighted.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_lasso_vs_weighted
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to use a weighted lasso with some vanishing weights. The fast Cel...">
 
 .. only:: html
