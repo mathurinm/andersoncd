@@ -49,17 +49,3 @@ Datasets fetchers
 
    make_correlated_data
 
-
-
-Solvers
-=======
-
-.. autosummary::
-   :toctree: generated/
-
-   solver_enet
-   solver_logreg
-   apcg_enet
-   apcg_logreg
-   primal_enet
-   primal_logreg
