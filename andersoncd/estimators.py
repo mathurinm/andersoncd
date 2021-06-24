@@ -20,7 +20,7 @@ class Lasso(Lasso_sklearn):
     Parameters
     ----------
     alpha : float, optional
-        Constant that multiplies the L1 term. Defaults to 1.0.
+        Penalty strength.
         ``alpha = 0`` is equivalent to an ordinary least square.
         For numerical reasons, using ``alpha = 0`` with the
         ``Lasso`` object is not advised.
