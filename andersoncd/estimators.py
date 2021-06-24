@@ -21,10 +21,7 @@ class WeightedLasso(Lasso_sklearn):
     Parameters
     ----------
     alpha : float, optional
-        Constant that multiplies the L1 term. Defaults to 1.0.
-        ``alpha = 0`` is equivalent to an ordinary least square.
-        For numerical reasons, using ``alpha = 0`` with the
-        ``WeightedLasso`` object is not advised.
+        Penalty strength.
 
     max_iter : int, optional
         The maximum number of iterations (subproblem definitions)
@@ -130,10 +127,7 @@ class ElasticNet(ElasticNet_sklearn):
     Parameters
     ----------
     alpha : float, optional
-        Constant that multiplies the L1 term. Defaults to 1.0.
-        ``alpha = 0`` is equivalent to an ordinary least square.
-        For numerical reasons, using ``alpha = 0`` with the
-        ``ElasticNet`` object is not advised.
+        Penalty strength.
 
     l1_ratio : float, default=0.5
         The ElasticNet mixing parameter, with ``0 <= l1_ratio <= 1``. For
@@ -218,8 +212,6 @@ class ElasticNet(ElasticNet_sklearn):
         self.max_epochs = max_epochs
         self.p0 = p0
         self.prune = prune
-
-        # TODO should we put self or not?
         self.penalty = L1_plus_L2(alpha, l1_ratio)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
@@ -233,7 +225,7 @@ class ElasticNet(ElasticNet_sklearn):
 
 class MCP(Lasso_sklearn):
     r"""
-    MPC estimator based on Celer solver and primal extrapolation.
+    MCP estimator based on Celer solver and primal extrapolation.
 
     The optimization objective for MCP is, with:
     With x >= 0
@@ -251,8 +243,6 @@ class MCP(Lasso_sklearn):
     ----------
     alpha : float, optional
         Penalty strength.
-        For numerical reasons, using ``alpha = 0`` with the
-        ``MCP`` object is not advised.
 
     gamma : float, default=3
         If gamma = 1, the prox of MCP is a hard thresholding.
@@ -336,9 +326,8 @@ class MCP(Lasso_sklearn):
         self.max_epochs = max_epochs
         self.p0 = p0
         self.prune = prune
-        self.gamma = gamma  # I am not sure of what is done here
-        # This may be dangerous
-        self.penalty = MCP_pen(alpha, gamma)  # TODO should we put self or not?
+        self.gamma = gamma
+        self.penalty = MCP_pen(alpha, gamma)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute weighted Lasso path with Celer + primal extrapolation."""

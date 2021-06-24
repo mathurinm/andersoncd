@@ -16,7 +16,7 @@ from sklearn.datasets import fetch_openml
 
 from andersoncd.group import solver_group
 from andersoncd.plot_utils import (configure_plt, dict_algo_name, dict_color)
-from andersoncd.data.synthetic import simu_linreg
+from andersoncd.data import make_correlated_data
 
 save_fig = False
 configure_plt(fontsize=14, poster=False)
@@ -24,7 +24,7 @@ configure_plt(fontsize=14, poster=False)
 dataset = "simu"
 
 if dataset == "simu":
-    X, y = simu_linreg(n_samples=100, n_features=1000, corr=0.9)
+    X, y, _ = make_correlated_data(n_samples=100, n_features=1000, corr=0.6)
 else:
     X, y = fetch_openml("leukemia", return_X_y=True)
     X, y = X.to_numpy(), y.to_numpy()
