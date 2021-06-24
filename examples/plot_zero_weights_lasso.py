@@ -16,7 +16,7 @@ from sklearn.datasets import fetch_openml
 
 from andersoncd import WeightedLasso
 from andersoncd.plot_utils import configure_plt
-from andersoncd.data.synthetic import simu_linreg
+from andersoncd.data import make_correlated_data
 
 configure_plt(fontsize=14, poster=False)
 
@@ -24,7 +24,8 @@ dataset = "simu"
 
 if dataset == "simu":
     n_features = 100
-    X, y = simu_linreg(n_samples=100, n_features=n_features, corr=0.7)
+    X, y, _ = make_correlated_data(
+        n_samples=100, n_features=n_features, corr=0.7)
 else:
     X, y = fetch_openml("leukemia", return_X_y=True)
     X, y = X.to_numpy(), y.to_numpy()

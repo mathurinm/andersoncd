@@ -6,7 +6,7 @@ from sklearn.linear_model import ElasticNet, Lasso, lasso_path
 
 from andersoncd import WeightedLasso
 from andersoncd.lasso import solver_enet
-from andersoncd.data.synthetic import simu_linreg
+from andersoncd.data import make_correlated_data
 
 
 l1_ratios = [0.9, 0.7, 0.6]
@@ -17,7 +17,7 @@ l1_ratios = [0.9, 0.7, 0.6]
         ("cd", True), ("pgd", True), ("fista", False)])
 @pytest.mark.parametrize("l1_ratio", l1_ratios)
 def test_enet_solver(algo, use_acc, l1_ratio):
-    X, y = simu_linreg(n_samples=30, n_features=40)
+    X, y, _ = make_correlated_data(n_samples=30, n_features=40)
     n_samples = X.shape[0]
 
     alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
@@ -38,7 +38,7 @@ def test_enet_solver(algo, use_acc, l1_ratio):
 
 
 def test_wlasso():
-    X, y = simu_linreg(n_samples=50, n_features=200)
+    X, y, _ = make_correlated_data(n_samples=50, n_features=200)
     y /= norm(y) / np.sqrt(len(y))
     alpha_max = np.max(np.abs(X.T @ y)) / len(y)
     alpha = alpha_max / 10
@@ -71,7 +71,7 @@ def test_wlasso():
 
 
 def test_path():
-    X, y = simu_linreg(n_samples=50, n_features=200)
+    X, y, _ = make_correlated_data(n_samples=50, n_features=200)
     y /= norm(y) / np.sqrt(len(y))
     alpha_max = np.max(np.abs(X.T @ y)) / len(y)
     alphas = np.geomspace(alpha_max, alpha_max / 10, num=10)
