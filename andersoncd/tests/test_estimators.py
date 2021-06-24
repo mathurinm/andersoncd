@@ -5,10 +5,10 @@ from numpy.linalg import norm
 from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 
-from andersoncd.data.synthetic import simu_linreg
+from andersoncd.data import make_correlated_data
 from andersoncd.estimators import WeightedLasso, ElasticNet, MCP
 
-X, y = simu_linreg(n_samples=30, n_features=40)
+X, y, _ = make_correlated_data(n_samples=30, n_features=40)
 n_samples, n_features = X.shape
 alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
 alpha = 0.05 * alpha_max
