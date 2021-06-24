@@ -30,8 +30,7 @@ def _get_args(function, varargs=False):
 public_modules = [
     # the list of modules users need to access for all functionality
     'andersoncd',
-    'andersoncd.lasso',
-    'andersoncd.logreg',
+    'andersoncd.data',
 ]
 
 
