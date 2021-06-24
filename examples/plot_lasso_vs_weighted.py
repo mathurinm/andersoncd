@@ -1,4 +1,11 @@
-"""Importance of feature normalization when penalizing."""
+"""
+=========================================
+Value and proximal operators of penalties
+=========================================
+
+Illustrate the importance of feature normalization when penalizing.
+"""
+
 # Author: Mathurin Massias
 import numpy as np
 from numpy.linalg import norm
