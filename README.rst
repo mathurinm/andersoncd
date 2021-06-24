@@ -4,11 +4,8 @@ Anderson extrapolation for Coordinate Descent
 |image0| |image1|
 
 
-This package implements Anderson extrapolation for coordinate descent.
+This package implements various GLM models missing from scikit-learn (Lasso, Weighted Lasso, MCP) with a lightning fast solver based on Anderson acceleration of coordinate descent and working set techniques.
 
-It also implements inertial proximal gradient descent (ie APPROX without parallelism).
-
-In order to be able to reproduce the experiments you can install the package.
 
 
 Install
@@ -20,14 +17,11 @@ To be able to run the code you first need to run, in this folder (code folder, w
     pip install -e .
 
 
-You should now be able to run a friendly example:
-::
-
-    ipython -i expes/expe_ols/plot_intro_ols.py
-
 
 Reproduce all experiments
 =========================
+
+The experiments are on a legacy branch, at https://github.com/mathurinm/andersoncd/tree/backup_expes_paper
 
 
 - Figure 1: ``expes_ols/plot_intro_ols.py`` (less than 2 min)
