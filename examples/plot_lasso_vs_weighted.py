@@ -1,7 +1,7 @@
 """
-=========================================
-Value and proximal operators of penalties
-=========================================
+=======================
+Lasso vs Weighted Lasso
+=======================
 
 Illustrate the importance of feature normalization when penalizing.
 """
