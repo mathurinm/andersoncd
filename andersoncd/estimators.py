@@ -73,7 +73,7 @@ class Lasso(Lasso_sklearn):
     See also
     --------
     Lasso
-    WeightedLassoCV
+    LassoCV
 
     References
     ----------
@@ -105,7 +105,7 @@ class Lasso(Lasso_sklearn):
         self.penalty = L1(alpha)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
-        """Compute weighted Lasso path with Celer + primal extrapolation."""
+        """Compute Lasso path with Celer + primal extrapolation."""
         return solver_path(
             X, y, self.penalty, alphas=alphas, coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
@@ -319,7 +319,7 @@ class ElasticNet(ElasticNet_sklearn):
         self.penalty = L1_plus_L2(alpha, l1_ratio)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
-        """Compute weighted Lasso path with Celer + primal extrapolation."""
+        """Compute Elastic Net path with Celer + primal extrapolation."""
         return solver_path(
             X, y, self.penalty, alphas=alphas, coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
@@ -434,7 +434,7 @@ class MCP(Lasso_sklearn):
         self.penalty = MCP_pen(alpha, gamma)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
-        """Compute weighted Lasso path with Celer + primal extrapolation."""
+        """Compute MCP path with Celer + primal extrapolation."""
         return solver_path(
             X, y, self.penalty, alphas=alphas, coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
