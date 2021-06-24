@@ -1,0 +1,6 @@
+﻿andersoncd.data.make\_correlated\_data
+======================================
+
+.. currentmodule:: andersoncd.data
+
+.. autofunction:: make_correlated_data

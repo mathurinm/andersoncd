@@ -158,687 +158,687 @@ alpha = 0
 
  .. code-block:: none
 
-    elapsed time: 0.000398 
+    elapsed time: 0.000346 
     Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-    elapsed time: 1.081000 
+    elapsed time: 0.928157 
     Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-    elapsed time: 1.457994 
+    elapsed time: 1.276736 
     Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-    elapsed time: 1.851537 
+    elapsed time: 1.668726 
     Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-    elapsed time: 2.273368 
+    elapsed time: 2.025042 
     Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-    elapsed time: 2.719343 
+    elapsed time: 2.467472 
     Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-    elapsed time: 3.130583 
+    elapsed time: 2.859025 
     Iteration 60, p_obj::5481.96788, d_obj::5450.79213, gap::3.12e+01
-    elapsed time: 3.590800 
+    elapsed time: 3.224885 
     Iteration 70, p_obj::5481.88123, d_obj::5474.30274, gap::7.58e+00
-    elapsed time: 4.038005 
+    elapsed time: 3.583460 
     Iteration 80, p_obj::5481.88077, d_obj::5478.38249, gap::3.50e+00
-    elapsed time: 4.444052 
+    elapsed time: 3.975857 
     Iteration 90, p_obj::5481.88063, d_obj::5478.91258, gap::2.97e+00
-    elapsed time: 4.854357 
+    elapsed time: 4.331265 
     Iteration 100, p_obj::5481.88057, d_obj::5479.28330, gap::2.60e+00
-    elapsed time: 5.247611 
+    elapsed time: 4.766923 
     Iteration 110, p_obj::5481.88050, d_obj::5479.74906, gap::2.13e+00
-    elapsed time: 5.646273 
+    elapsed time: 5.154654 
     Iteration 120, p_obj::5481.88046, d_obj::5480.13527, gap::1.75e+00
-    elapsed time: 6.010407 
+    elapsed time: 5.525983 
     Iteration 130, p_obj::5481.88043, d_obj::5480.36135, gap::1.52e+00
-    elapsed time: 6.422607 
+    elapsed time: 5.881164 
     Iteration 140, p_obj::5481.88040, d_obj::5480.63347, gap::1.25e+00
-    elapsed time: 6.827014 
+    elapsed time: 6.275824 
     Iteration 150, p_obj::5481.88039, d_obj::5480.83904, gap::1.04e+00
-    elapsed time: 7.218091 
+    elapsed time: 6.623087 
     Iteration 160, p_obj::5481.88038, d_obj::5481.00903, gap::8.71e-01
-    elapsed time: 7.619893 
+    elapsed time: 6.998662 
     Iteration 170, p_obj::5481.88037, d_obj::5481.21019, gap::6.70e-01
-    elapsed time: 8.019382 
+    elapsed time: 7.384894 
     Iteration 180, p_obj::5481.88037, d_obj::5481.31949, gap::5.61e-01
-    elapsed time: 8.490106 
+    elapsed time: 7.728390 
     Iteration 190, p_obj::5481.88036, d_obj::5481.41053, gap::4.70e-01
-    elapsed time: 8.952723 
+    elapsed time: 8.168021 
     Iteration 200, p_obj::5481.88036, d_obj::5481.52023, gap::3.60e-01
-    elapsed time: 9.347371 
+    elapsed time: 8.559377 
     Iteration 210, p_obj::5481.88036, d_obj::5481.57861, gap::3.02e-01
-    elapsed time: 9.738376 
+    elapsed time: 8.926671 
     Iteration 220, p_obj::5481.88036, d_obj::5481.62742, gap::2.53e-01
-    elapsed time: 10.140904 
+    elapsed time: 9.370001 
     Iteration 230, p_obj::5481.88036, d_obj::5481.68667, gap::1.94e-01
-    elapsed time: 10.563821 
+    elapsed time: 9.759810 
     Iteration 240, p_obj::5481.88036, d_obj::5481.71796, gap::1.62e-01
-    elapsed time: 11.046873 
+    elapsed time: 10.126584 
     Iteration 250, p_obj::5481.88036, d_obj::5481.74418, gap::1.36e-01
-    elapsed time: 11.430058 
+    elapsed time: 10.570200 
     Iteration 260, p_obj::5481.88036, d_obj::5481.77613, gap::1.04e-01
-    elapsed time: 11.856861 
+    elapsed time: 10.962540 
     Iteration 270, p_obj::5481.88036, d_obj::5481.79294, gap::8.74e-02
-    elapsed time: 12.283841 
+    elapsed time: 11.330011 
     Iteration 280, p_obj::5481.88036, d_obj::5481.80704, gap::7.33e-02
-    elapsed time: 12.745264 
+    elapsed time: 11.680342 
     Iteration 290, p_obj::5481.88036, d_obj::5481.82426, gap::5.61e-02
-    elapsed time: 13.183502 
+    elapsed time: 12.070122 
     Iteration 300, p_obj::5481.88036, d_obj::5481.83330, gap::4.71e-02
-    elapsed time: 13.586776 
+    elapsed time: 12.426144 
     Iteration 310, p_obj::5481.88036, d_obj::5481.84089, gap::3.95e-02
-    elapsed time: 14.027535 
+    elapsed time: 12.869066 
     Iteration 320, p_obj::5481.88036, d_obj::5481.85016, gap::3.02e-02
-    elapsed time: 14.495980 
+    elapsed time: 13.260201 
     Iteration 330, p_obj::5481.88036, d_obj::5481.85503, gap::2.53e-02
-    elapsed time: 14.894209 
+    elapsed time: 13.630889 
     Iteration 340, p_obj::5481.88036, d_obj::5481.85911, gap::2.12e-02
-    elapsed time: 15.351705 
+    elapsed time: 14.069605 
     Iteration 350, p_obj::5481.88036, d_obj::5481.86411, gap::1.62e-02
-    elapsed time: 15.798363 
+    elapsed time: 14.460313 
     Iteration 360, p_obj::5481.88036, d_obj::5481.86662, gap::1.37e-02
-    elapsed time: 16.265937 
+    elapsed time: 14.832082 
     Iteration 370, p_obj::5481.88036, d_obj::5481.86768, gap::1.27e-02
-    elapsed time: 16.648046 
+    elapsed time: 15.269897 
     Iteration 380, p_obj::5481.88036, d_obj::5481.86972, gap::1.06e-02
-    elapsed time: 17.053848 
+    elapsed time: 15.661019 
     Iteration 390, p_obj::5481.88036, d_obj::5481.87226, gap::8.10e-03
-    elapsed time: 17.488038 
+    elapsed time: 16.029234 
     Iteration 400, p_obj::5481.88036, d_obj::5481.87356, gap::6.79e-03
-    elapsed time: 18.029058 
+    elapsed time: 16.467476 
     Iteration 410, p_obj::5481.88036, d_obj::5481.87466, gap::5.70e-03
-    elapsed time: 18.441941 
+    elapsed time: 16.850848 
     Iteration 420, p_obj::5481.88036, d_obj::5481.87602, gap::4.34e-03
-    elapsed time: 18.835485 
+    elapsed time: 17.225935 
     Iteration 430, p_obj::5481.88036, d_obj::5481.87672, gap::3.64e-03
-    elapsed time: 19.328456 
+    elapsed time: 17.577066 
     Iteration 440, p_obj::5481.88036, d_obj::5481.87758, gap::2.77e-03
-    elapsed time: 19.736386 
+    elapsed time: 17.968114 
     Iteration 450, p_obj::5481.88036, d_obj::5481.87824, gap::2.11e-03
-    elapsed time: 20.141183 
+    elapsed time: 18.321961 
     Iteration 460, p_obj::5481.88036, d_obj::5481.87858, gap::1.77e-03
-    elapsed time: 20.545067 
+    elapsed time: 18.768897 
     Iteration 470, p_obj::5481.88036, d_obj::5481.87900, gap::1.36e-03
-    elapsed time: 20.960342 
+    elapsed time: 19.155551 
     Iteration 480, p_obj::5481.88036, d_obj::5481.87922, gap::1.14e-03
-    elapsed time: 21.390259 
+    elapsed time: 19.527866 
     Iteration 490, p_obj::5481.88036, d_obj::5481.87931, gap::1.05e-03
-    elapsed time: 21.834427 
+    elapsed time: 19.876488 
     Iteration 500, p_obj::5481.88036, d_obj::5481.87956, gap::8.00e-04
-    elapsed time: 22.242737 
+    elapsed time: 20.268414 
     Iteration 510, p_obj::5481.88036, d_obj::5481.87975, gap::6.10e-04
-    elapsed time: 22.625470 
+    elapsed time: 20.624414 
     Iteration 520, p_obj::5481.88036, d_obj::5481.87979, gap::5.63e-04
-    elapsed time: 23.032873 
+    elapsed time: 20.995276 
     Iteration 530, p_obj::5481.88036, d_obj::5481.87993, gap::4.29e-04
-    elapsed time: 23.445441 
+    elapsed time: 21.383522 
     Iteration 540, p_obj::5481.88036, d_obj::5481.88003, gap::3.27e-04
-    elapsed time: 23.880932 
+    elapsed time: 21.727578 
     Iteration 550, p_obj::5481.88036, d_obj::5481.88005, gap::3.02e-04
-    elapsed time: 24.241856 
+    elapsed time: 22.096139 
     Iteration 560, p_obj::5481.88036, d_obj::5481.88010, gap::2.53e-04
-    elapsed time: 24.651861 
+    elapsed time: 22.485827 
     Iteration 570, p_obj::5481.88036, d_obj::5481.88012, gap::2.34e-04
-    elapsed time: 25.014071 
+    elapsed time: 22.827562 
     Iteration 580, p_obj::5481.88036, d_obj::5481.88014, gap::2.16e-04
-    elapsed time: 25.433537 
+    elapsed time: 23.272683 
     Iteration 590, p_obj::5481.88036, d_obj::5481.88016, gap::1.99e-04
-    elapsed time: 0.000330 
+    elapsed time: 0.045646 
     Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-    elapsed time: 0.431064 
+    elapsed time: 0.414448 
     Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-    elapsed time: 0.880020 
+    elapsed time: 0.854275 
     Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-    elapsed time: 1.307632 
+    elapsed time: 1.250115 
     Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-    elapsed time: 1.711077 
+    elapsed time: 1.614132 
     Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-    elapsed time: 2.100741 
+    elapsed time: 2.059648 
     Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-    elapsed time: 2.517749 
+    elapsed time: 2.450747 
     Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-    elapsed time: 2.916810 
+    elapsed time: 2.814820 
     Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-    elapsed time: 3.312630 
+    elapsed time: 3.181807 
     Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-    elapsed time: 3.718632 
+    elapsed time: 3.571633 
     Iteration 90, p_obj::5481.88071, d_obj::5478.53015, gap::3.35e+00
-    elapsed time: 4.109932 
+    elapsed time: 3.913857 
     Iteration 100, p_obj::5481.88060, d_obj::5479.05838, gap::2.82e+00
-    elapsed time: 4.517735 
+    elapsed time: 4.353247 
     Iteration 110, p_obj::5481.88050, d_obj::5479.74438, gap::2.14e+00
-    elapsed time: 4.920168 
+    elapsed time: 4.732823 
     Iteration 120, p_obj::5481.88044, d_obj::5480.25502, gap::1.63e+00
-    elapsed time: 5.284681 
+    elapsed time: 5.112319 
     Iteration 130, p_obj::5481.88041, d_obj::5480.53439, gap::1.35e+00
-    elapsed time: 5.699887 
+    elapsed time: 5.467264 
     Iteration 140, p_obj::5481.88040, d_obj::5480.74490, gap::1.14e+00
-    elapsed time: 6.107776 
+    elapsed time: 5.856449 
     Iteration 150, p_obj::5481.88037, d_obj::5481.31667, gap::5.64e-01
-    elapsed time: 6.477160 
+    elapsed time: 6.214082 
     Iteration 160, p_obj::5481.88036, d_obj::5481.48386, gap::3.97e-01
-    elapsed time: 6.899400 
+    elapsed time: 6.576415 
     Iteration 170, p_obj::5481.88036, d_obj::5481.59910, gap::2.81e-01
-    elapsed time: 7.311248 
+    elapsed time: 6.962151 
     Iteration 180, p_obj::5481.88036, d_obj::5481.67512, gap::2.05e-01
-    elapsed time: 7.728261 
+    elapsed time: 7.317687 
     Iteration 190, p_obj::5481.88036, d_obj::5481.70145, gap::1.79e-01
-    elapsed time: 8.284961 
+    elapsed time: 7.759741 
     Iteration 200, p_obj::5481.88036, d_obj::5481.74792, gap::1.32e-01
-    elapsed time: 8.721766 
+    elapsed time: 8.150797 
     Iteration 210, p_obj::5481.88036, d_obj::5481.81794, gap::6.24e-02
-    elapsed time: 9.055245 
+    elapsed time: 8.519747 
     Iteration 220, p_obj::5481.88036, d_obj::5481.82516, gap::5.52e-02
-    elapsed time: 9.496028 
+    elapsed time: 8.883298 
     Iteration 230, p_obj::5481.88036, d_obj::5481.85539, gap::2.50e-02
-    elapsed time: 9.917160 
+    elapsed time: 9.268850 
     Iteration 240, p_obj::5481.88036, d_obj::5481.85843, gap::2.19e-02
-    elapsed time: 10.286965 
+    elapsed time: 9.614986 
     Iteration 250, p_obj::5481.88036, d_obj::5481.87005, gap::1.03e-02
-    elapsed time: 10.687996 
+    elapsed time: 10.058750 
     Iteration 260, p_obj::5481.88036, d_obj::5481.87127, gap::9.09e-03
-    elapsed time: 11.095482 
+    elapsed time: 10.441806 
     Iteration 270, p_obj::5481.88036, d_obj::5481.87633, gap::4.03e-03
-    elapsed time: 11.457440 
+    elapsed time: 10.815167 
     Iteration 280, p_obj::5481.88036, d_obj::5481.87731, gap::3.05e-03
-    elapsed time: 11.905113 
+    elapsed time: 11.166765 
     Iteration 290, p_obj::5481.88036, d_obj::5481.87811, gap::2.25e-03
-    elapsed time: 12.340547 
+    elapsed time: 11.553918 
     Iteration 300, p_obj::5481.88036, d_obj::5481.87840, gap::1.96e-03
-    elapsed time: 12.773256 
+    elapsed time: 11.920911 
     Iteration 310, p_obj::5481.88036, d_obj::5481.87941, gap::9.50e-04
-    elapsed time: 13.197117 
+    elapsed time: 12.357661 
     Iteration 320, p_obj::5481.88036, d_obj::5481.87952, gap::8.37e-04
-    elapsed time: 13.622172 
+    elapsed time: 12.740931 
     Iteration 330, p_obj::5481.88036, d_obj::5481.87958, gap::7.72e-04
-    elapsed time: 14.012686 
+    elapsed time: 13.112963 
     Iteration 340, p_obj::5481.88036, d_obj::5481.88003, gap::3.21e-04
-    elapsed time: 14.404807 
+    elapsed time: 13.464650 
     Iteration 350, p_obj::5481.88036, d_obj::5481.88020, gap::1.52e-04
-    elapsed time: 14.834426 
+    elapsed time: 13.856258 
     Iteration 360, p_obj::5481.88036, d_obj::5481.88027, gap::8.32e-05
-    elapsed time: 15.248341 
+    elapsed time: 14.216946 
     Iteration 370, p_obj::5481.88036, d_obj::5481.88028, gap::7.60e-05
-    elapsed time: 15.707090 
+    elapsed time: 14.586524 
     Iteration 380, p_obj::5481.88036, d_obj::5481.88029, gap::7.01e-05
-    elapsed time: 16.123467 
+    elapsed time: 14.972831 
     Iteration 390, p_obj::5481.88036, d_obj::5481.88033, gap::2.99e-05
-    elapsed time: 16.496436 
+    elapsed time: 15.317039 
     Iteration 400, p_obj::5481.88036, d_obj::5481.88033, gap::2.76e-05
-    elapsed time: 16.925403 
+    elapsed time: 15.769824 
     Iteration 410, p_obj::5481.88036, d_obj::5481.88033, gap::2.54e-05
-    elapsed time: 17.450942 
+    elapsed time: 16.176105 
     Iteration 420, p_obj::5481.88036, d_obj::5481.88033, gap::2.35e-05
-    elapsed time: 17.900906 
+    elapsed time: 16.577237 
     Iteration 430, p_obj::5481.88036, d_obj::5481.88033, gap::2.17e-05
-    elapsed time: 18.306825 
+    elapsed time: 16.958895 
     Iteration 440, p_obj::5481.88036, d_obj::5481.88034, gap::2.00e-05
-    elapsed time: 18.735945 
+    elapsed time: 17.347857 
     Iteration 450, p_obj::5481.88036, d_obj::5481.88034, gap::1.85e-05
-    elapsed time: 19.153650 
+    elapsed time: 17.717670 
     Iteration 460, p_obj::5481.88036, d_obj::5481.88034, gap::1.71e-05
-    elapsed time: 19.607346 
+    elapsed time: 18.071216 
     Iteration 470, p_obj::5481.88036, d_obj::5481.88034, gap::1.57e-05
-    elapsed time: 20.017182 
+    elapsed time: 18.465127 
     Iteration 480, p_obj::5481.88036, d_obj::5481.88034, gap::1.45e-05
-    elapsed time: 20.453195 
+    elapsed time: 18.815052 
     Iteration 490, p_obj::5481.88036, d_obj::5481.88034, gap::1.34e-05
-    elapsed time: 20.909619 
+    elapsed time: 19.265006 
     Iteration 500, p_obj::5481.88036, d_obj::5481.88034, gap::1.24e-05
-    elapsed time: 21.437968 
+    elapsed time: 19.693570 
     Iteration 510, p_obj::5481.88036, d_obj::5481.88034, gap::1.14e-05
-    elapsed time: 21.928863 
+    elapsed time: 20.068014 
     Iteration 520, p_obj::5481.88036, d_obj::5481.88035, gap::1.06e-05
-    elapsed time: 22.316175 
+    elapsed time: 20.463731 
     Iteration 530, p_obj::5481.88036, d_obj::5481.88035, gap::9.75e-06
-    elapsed time: 22.733968 
+    elapsed time: 20.858548 
     Iteration 540, p_obj::5481.88036, d_obj::5481.88035, gap::9.00e-06
-    elapsed time: 23.156511 
+    elapsed time: 21.213935 
     Iteration 550, p_obj::5481.88036, d_obj::5481.88035, gap::8.31e-06
-    elapsed time: 23.611962 
+    elapsed time: 21.574833 
     Iteration 560, p_obj::5481.88036, d_obj::5481.88035, gap::7.67e-06
-    elapsed time: 24.026557 
+    elapsed time: 21.964828 
     Iteration 570, p_obj::5481.88036, d_obj::5481.88035, gap::3.19e-06
-    elapsed time: 24.433245 
+    elapsed time: 22.311967 
     Iteration 580, p_obj::5481.88036, d_obj::5481.88035, gap::2.94e-06
-    elapsed time: 24.896412 
+    elapsed time: 22.666095 
     Iteration 590, p_obj::5481.88036, d_obj::5481.88035, gap::1.22e-06
-    elapsed time: 0.000403 
+    elapsed time: 0.000401 
     Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-    elapsed time: 0.442271 
+    elapsed time: 0.367877 
     Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-    elapsed time: 0.878818 
+    elapsed time: 0.816035 
     Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-    elapsed time: 1.331595 
+    elapsed time: 1.214566 
     Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-    elapsed time: 1.729891 
+    elapsed time: 1.570051 
     Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-    elapsed time: 2.186396 
+    elapsed time: 2.049700 
     Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-    elapsed time: 2.595056 
+    elapsed time: 2.432505 
     Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-    elapsed time: 3.084418 
+    elapsed time: 2.770627 
     Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-    elapsed time: 3.588174 
+    elapsed time: 3.210232 
     Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-    elapsed time: 4.066725 
+    elapsed time: 3.588478 
     Iteration 90, p_obj::5481.88069, d_obj::5478.64476, gap::3.24e+00
-    elapsed time: 4.519852 
+    elapsed time: 3.970025 
     Iteration 100, p_obj::5481.88052, d_obj::5479.57681, gap::2.30e+00
-    elapsed time: 4.975283 
+    elapsed time: 4.320614 
     Iteration 110, p_obj::5481.88043, d_obj::5480.38485, gap::1.50e+00
-    elapsed time: 5.398890 
+    elapsed time: 4.727538 
     Iteration 120, p_obj::5481.88042, d_obj::5480.50822, gap::1.37e+00
-    elapsed time: 5.802510 
+    elapsed time: 5.071159 
     Iteration 130, p_obj::5481.88041, d_obj::5480.61591, gap::1.26e+00
-    elapsed time: 6.270447 
+    elapsed time: 5.507315 
     Iteration 140, p_obj::5481.88036, d_obj::5481.70501, gap::1.75e-01
-    elapsed time: 6.688197 
+    elapsed time: 5.899006 
     Iteration 150, p_obj::5481.88036, d_obj::5481.73923, gap::1.41e-01
-    elapsed time: 7.117290 
+    elapsed time: 6.266269 
     Iteration 160, p_obj::5481.88036, d_obj::5481.75021, gap::1.30e-01
-    elapsed time: 7.548571 
+    elapsed time: 6.618099 
     Iteration 170, p_obj::5481.88036, d_obj::5481.76034, gap::1.20e-01
-    elapsed time: 8.007085 
+    elapsed time: 7.008637 
     Iteration 180, p_obj::5481.88036, d_obj::5481.76962, gap::1.11e-01
-    elapsed time: 8.421168 
+    elapsed time: 7.363082 
     Iteration 190, p_obj::5481.88036, d_obj::5481.77815, gap::1.02e-01
-    elapsed time: 8.798059 
+    elapsed time: 7.716878 
     Iteration 200, p_obj::5481.88036, d_obj::5481.78601, gap::9.43e-02
-    elapsed time: 9.236001 
+    elapsed time: 8.106527 
     Iteration 210, p_obj::5481.88036, d_obj::5481.79326, gap::8.71e-02
-    elapsed time: 9.662927 
+    elapsed time: 8.464756 
     Iteration 220, p_obj::5481.88036, d_obj::5481.79996, gap::8.04e-02
-    elapsed time: 10.089844 
+    elapsed time: 8.829785 
     Iteration 230, p_obj::5481.88036, d_obj::5481.80613, gap::7.42e-02
-    elapsed time: 10.495066 
+    elapsed time: 9.215130 
     Iteration 240, p_obj::5481.88036, d_obj::5481.87522, gap::5.13e-03
-    elapsed time: 10.900763 
+    elapsed time: 9.565736 
     Iteration 250, p_obj::5481.88036, d_obj::5481.87981, gap::5.49e-04
-    elapsed time: 11.291487 
+    elapsed time: 9.919094 
     Iteration 260, p_obj::5481.88036, d_obj::5481.87994, gap::4.21e-04
-    elapsed time: 11.708334 
+    elapsed time: 10.308540 
     Iteration 270, p_obj::5481.88036, d_obj::5481.88009, gap::2.66e-04
-    elapsed time: 12.124109 
+    elapsed time: 10.669531 
     Iteration 280, p_obj::5481.88036, d_obj::5481.88011, gap::2.46e-04
-    elapsed time: 12.560577 
+    elapsed time: 11.104659 
     Iteration 290, p_obj::5481.88036, d_obj::5481.88021, gap::1.44e-04
-    elapsed time: 12.994864 
+    elapsed time: 11.498352 
     Iteration 300, p_obj::5481.88036, d_obj::5481.88022, gap::1.33e-04
-    elapsed time: 13.366497 
+    elapsed time: 11.866077 
     Iteration 310, p_obj::5481.88036, d_obj::5481.88031, gap::4.11e-05
-    elapsed time: 13.889706 
+    elapsed time: 12.309560 
     Iteration 320, p_obj::5481.88036, d_obj::5481.88032, gap::3.77e-05
-    elapsed time: 14.316779 
+    elapsed time: 12.694414 
     Iteration 330, p_obj::5481.88036, d_obj::5481.88032, gap::3.47e-05
-    elapsed time: 14.751091 
+    elapsed time: 13.066165 
     Iteration 340, p_obj::5481.88036, d_obj::5481.88032, gap::3.21e-05
-    elapsed time: 15.181774 
+    elapsed time: 13.419726 
     Iteration 350, p_obj::5481.88036, d_obj::5481.88035, gap::6.12e-06
-    elapsed time: 15.604305 
+    elapsed time: 13.812060 
     Iteration 360, p_obj::5481.88036, d_obj::5481.88035, gap::5.66e-06
-    elapsed time: 15.995418 
+    elapsed time: 14.241656 
     Iteration 370, p_obj::5481.88036, d_obj::5481.88035, gap::5.22e-06
-    elapsed time: 16.389901 
+    elapsed time: 14.628314 
     Iteration 380, p_obj::5481.88036, d_obj::5481.88035, gap::4.82e-06
-    elapsed time: 16.797650 
+    elapsed time: 15.031256 
     Iteration 390, p_obj::5481.88036, d_obj::5481.88036, gap::6.61e-07
-    elapsed time: 17.200050 
+    elapsed time: 15.366358 
     Iteration 400, p_obj::5481.88036, d_obj::5481.88036, gap::6.17e-07
-    elapsed time: 17.600783 
+    elapsed time: 15.810577 
     Iteration 410, p_obj::5481.88036, d_obj::5481.88036, gap::5.73e-07
-    elapsed time: 18.037489 
+    elapsed time: 16.189472 
     Iteration 420, p_obj::5481.88036, d_obj::5481.88036, gap::5.30e-07
-    elapsed time: 18.433877 
+    elapsed time: 16.571676 
     Iteration 430, p_obj::5481.88036, d_obj::5481.88036, gap::4.89e-07
-    elapsed time: 18.883474 
+    elapsed time: 16.924645 
     Iteration 440, p_obj::5481.88036, d_obj::5481.88036, gap::4.52e-07
-    elapsed time: 19.303032 
+    elapsed time: 17.308624 
     Iteration 450, p_obj::5481.88036, d_obj::5481.88036, gap::5.36e-08
-    elapsed time: 19.733146 
+    elapsed time: 17.664451 
     Iteration 460, p_obj::5481.88036, d_obj::5481.88036, gap::4.91e-08
-    elapsed time: 20.187805 
+    elapsed time: 18.034189 
     Iteration 470, p_obj::5481.88036, d_obj::5481.88036, gap::4.53e-08
-    elapsed time: 20.626578 
+    elapsed time: 18.422687 
     Iteration 480, p_obj::5481.88036, d_obj::5481.88036, gap::3.27e-08
-    elapsed time: 21.073587 
+    elapsed time: 18.806609 
     Iteration 490, p_obj::5481.88036, d_obj::5481.88036, gap::3.02e-08
-    elapsed time: 21.567180 
+    elapsed time: 19.216681 
     Iteration 500, p_obj::5481.88036, d_obj::5481.88036, gap::2.79e-08
-    elapsed time: 21.995857 
+    elapsed time: 19.610103 
     Iteration 510, p_obj::5481.88036, d_obj::5481.88036, gap::2.57e-08
-    elapsed time: 22.380578 
+    elapsed time: 19.964999 
     Iteration 520, p_obj::5481.88036, d_obj::5481.88036, gap::2.38e-08
-    elapsed time: 22.786946 
+    elapsed time: 20.413370 
     Iteration 530, p_obj::5481.88036, d_obj::5481.88036, gap::2.20e-08
-    elapsed time: 23.212348 
+    elapsed time: 20.803636 
     Iteration 540, p_obj::5481.88036, d_obj::5481.88036, gap::2.02e-08
-    elapsed time: 23.645599 
+    elapsed time: 21.166753 
     Iteration 550, p_obj::5481.88036, d_obj::5481.88036, gap::1.87e-08
-    elapsed time: 24.076838 
+    elapsed time: 21.524665 
     Iteration 560, p_obj::5481.88036, d_obj::5481.88036, gap::1.73e-08
-    elapsed time: 24.498833 
+    elapsed time: 21.910339 
     Iteration 570, p_obj::5481.88036, d_obj::5481.88036, gap::1.59e-08
-    elapsed time: 24.890838 
+    elapsed time: 22.268366 
     Iteration 580, p_obj::5481.88036, d_obj::5481.88036, gap::1.48e-08
-    elapsed time: 25.301442 
+    elapsed time: 22.710730 
     Iteration 590, p_obj::5481.88036, d_obj::5481.88036, gap::1.36e-08
-    elapsed time: 0.000539 
+    elapsed time: 0.045760 
     Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-    elapsed time: 0.435603 
+    elapsed time: 0.422007 
     Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-    elapsed time: 0.907140 
+    elapsed time: 0.861999 
     Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-    elapsed time: 1.306868 
+    elapsed time: 1.260118 
     Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-    elapsed time: 1.726615 
+    elapsed time: 1.618479 
     Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-    elapsed time: 2.122959 
+    elapsed time: 2.069467 
     Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-    elapsed time: 2.531184 
+    elapsed time: 2.472538 
     Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-    elapsed time: 2.948068 
+    elapsed time: 2.823161 
     Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-    elapsed time: 3.395234 
+    elapsed time: 3.262395 
     Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-    elapsed time: 3.882533 
+    elapsed time: 3.659728 
     Iteration 90, p_obj::5481.88058, d_obj::5479.26401, gap::2.62e+00
-    elapsed time: 4.356773 
+    elapsed time: 4.057513 
     Iteration 100, p_obj::5481.88046, d_obj::5480.08555, gap::1.79e+00
-    elapsed time: 4.793671 
+    elapsed time: 4.463962 
     Iteration 110, p_obj::5481.88039, d_obj::5480.89304, gap::9.87e-01
-    elapsed time: 5.216461 
+    elapsed time: 4.846062 
     Iteration 120, p_obj::5481.88037, d_obj::5481.17553, gap::7.05e-01
-    elapsed time: 5.623723 
+    elapsed time: 5.217046 
     Iteration 130, p_obj::5481.88037, d_obj::5481.22775, gap::6.53e-01
-    elapsed time: 6.011565 
+    elapsed time: 5.566128 
     Iteration 140, p_obj::5481.88036, d_obj::5481.77750, gap::1.03e-01
-    elapsed time: 6.433857 
+    elapsed time: 5.952393 
     Iteration 150, p_obj::5481.88036, d_obj::5481.81956, gap::6.08e-02
-    elapsed time: 6.802332 
+    elapsed time: 6.317691 
     Iteration 160, p_obj::5481.88036, d_obj::5481.82410, gap::5.63e-02
-    elapsed time: 7.221009 
+    elapsed time: 6.783951 
     Iteration 170, p_obj::5481.88036, d_obj::5481.87352, gap::6.84e-03
-    elapsed time: 7.634112 
+    elapsed time: 7.170236 
     Iteration 180, p_obj::5481.88036, d_obj::5481.87651, gap::3.84e-03
-    elapsed time: 8.044986 
+    elapsed time: 7.518548 
     Iteration 190, p_obj::5481.88036, d_obj::5481.87740, gap::2.95e-03
-    elapsed time: 8.499243 
+    elapsed time: 7.960386 
     Iteration 200, p_obj::5481.88036, d_obj::5481.87865, gap::1.70e-03
-    elapsed time: 8.911031 
+    elapsed time: 8.350971 
     Iteration 210, p_obj::5481.88036, d_obj::5481.87935, gap::1.00e-03
-    elapsed time: 9.306729 
+    elapsed time: 8.713596 
     Iteration 220, p_obj::5481.88036, d_obj::5481.87966, gap::6.93e-04
-    elapsed time: 9.709868 
+    elapsed time: 9.151981 
     Iteration 230, p_obj::5481.88036, d_obj::5481.87995, gap::4.03e-04
-    elapsed time: 10.147504 
+    elapsed time: 9.544640 
     Iteration 240, p_obj::5481.88036, d_obj::5481.88013, gap::2.27e-04
-    elapsed time: 10.584244 
+    elapsed time: 9.916803 
     Iteration 250, p_obj::5481.88036, d_obj::5481.88019, gap::1.70e-04
-    elapsed time: 11.005665 
+    elapsed time: 10.282061 
     Iteration 260, p_obj::5481.88036, d_obj::5481.88025, gap::1.01e-04
-    elapsed time: 11.431171 
+    elapsed time: 10.687268 
     Iteration 270, p_obj::5481.88036, d_obj::5481.88032, gap::3.94e-05
-    elapsed time: 11.809921 
+    elapsed time: 11.020606 
     Iteration 280, p_obj::5481.88036, d_obj::5481.88032, gap::3.64e-05
-    elapsed time: 12.199659 
+    elapsed time: 11.460933 
     Iteration 290, p_obj::5481.88036, d_obj::5481.88032, gap::3.36e-05
-    elapsed time: 12.629128 
+    elapsed time: 11.861802 
     Iteration 300, p_obj::5481.88036, d_obj::5481.88035, gap::2.22e-06
-    elapsed time: 13.019390 
+    elapsed time: 12.212290 
     Iteration 310, p_obj::5481.88036, d_obj::5481.88035, gap::1.97e-06
-    elapsed time: 13.486885 
+    elapsed time: 12.569566 
     Iteration 320, p_obj::5481.88036, d_obj::5481.88035, gap::1.61e-06
-    elapsed time: 13.910949 
+    elapsed time: 12.977735 
     Iteration 330, p_obj::5481.88036, d_obj::5481.88036, gap::2.36e-07
-    elapsed time: 14.326336 
+    elapsed time: 13.362121 
     Iteration 340, p_obj::5481.88036, d_obj::5481.88036, gap::2.18e-07
-    elapsed time: 14.777685 
+    elapsed time: 13.759062 
     Iteration 350, p_obj::5481.88036, d_obj::5481.88036, gap::2.01e-07
-    elapsed time: 15.258524 
+    elapsed time: 14.172402 
     Iteration 360, p_obj::5481.88036, d_obj::5481.88036, gap::2.00e-09
-    elapsed time: 15.653759 
+    elapsed time: 14.553580 
     Iteration 370, p_obj::5481.88036, d_obj::5481.88036, gap::4.69e-10
-    elapsed time: 16.101238 
+    elapsed time: 14.971135 
     Iteration 380, p_obj::5481.88036, d_obj::5481.88036, gap::2.07e-10
-    elapsed time: 16.551743 
+    elapsed time: 15.375931 
     Iteration 390, p_obj::5481.88036, d_obj::5481.88036, gap::1.77e-10
-    elapsed time: 16.967504 
+    elapsed time: 15.719093 
     Iteration 400, p_obj::5481.88036, d_obj::5481.88036, gap::1.60e-10
-    elapsed time: 17.397851 
+    elapsed time: 16.158610 
     Iteration 410, p_obj::5481.88036, d_obj::5481.88036, gap::1.49e-10
-    elapsed time: 17.804230 
+    elapsed time: 16.540165 
     Iteration 420, p_obj::5481.88036, d_obj::5481.88036, gap::1.36e-10
-    elapsed time: 18.231267 
+    elapsed time: 16.923344 
     Iteration 430, p_obj::5481.88036, d_obj::5481.88036, gap::1.22e-10
-    elapsed time: 18.618835 
+    elapsed time: 17.264406 
     Iteration 440, p_obj::5481.88036, d_obj::5481.88036, gap::1.06e-10
-    elapsed time: 19.038246 
+    elapsed time: 17.654418 
     Iteration 450, p_obj::5481.88036, d_obj::5481.88036, gap::9.46e-11
     Early exit
-    elapsed time: 0.000530 
+    elapsed time: 0.000329 
     Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-    elapsed time: 0.430988 
+    elapsed time: 0.355134 
     Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-    elapsed time: 0.894979 
+    elapsed time: 0.793613 
     Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-    elapsed time: 1.331280 
+    elapsed time: 1.175480 
     Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-    elapsed time: 1.745166 
+    elapsed time: 1.554221 
     Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-    elapsed time: 2.191737 
+    elapsed time: 1.904223 
     Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-    elapsed time: 2.622567 
+    elapsed time: 2.298583 
     Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-    elapsed time: 3.031197 
+    elapsed time: 2.653692 
     Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-    elapsed time: 3.409220 
+    elapsed time: 3.027253 
     Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-    elapsed time: 3.818365 
+    elapsed time: 3.412483 
     Iteration 90, p_obj::5481.88043, d_obj::5480.32633, gap::1.55e+00
-    elapsed time: 4.206342 
+    elapsed time: 3.754113 
     Iteration 100, p_obj::5481.88040, d_obj::5480.74348, gap::1.14e+00
-    elapsed time: 4.598004 
+    elapsed time: 4.120449 
     Iteration 110, p_obj::5481.88039, d_obj::5480.82974, gap::1.05e+00
-    elapsed time: 5.006919 
+    elapsed time: 4.518166 
     Iteration 120, p_obj::5481.88039, d_obj::5480.91039, gap::9.70e-01
-    elapsed time: 5.357451 
+    elapsed time: 4.853364 
     Iteration 130, p_obj::5481.88038, d_obj::5480.98538, gap::8.95e-01
-    elapsed time: 5.792218 
+    elapsed time: 5.298700 
     Iteration 140, p_obj::5481.88038, d_obj::5481.05473, gap::8.26e-01
-    elapsed time: 6.201866 
+    elapsed time: 5.681462 
     Iteration 150, p_obj::5481.88037, d_obj::5481.11872, gap::7.62e-01
-    elapsed time: 6.585809 
+    elapsed time: 6.053175 
     Iteration 160, p_obj::5481.88037, d_obj::5481.17772, gap::7.03e-01
-    elapsed time: 6.996272 
+    elapsed time: 6.404376 
     Iteration 170, p_obj::5481.88036, d_obj::5481.87790, gap::2.46e-03
-    elapsed time: 7.405322 
+    elapsed time: 6.795440 
     Iteration 180, p_obj::5481.88036, d_obj::5481.87983, gap::5.25e-04
-    elapsed time: 7.750407 
+    elapsed time: 7.155874 
     Iteration 190, p_obj::5481.88036, d_obj::5481.87961, gap::7.41e-04
-    elapsed time: 8.213035 
+    elapsed time: 7.512198 
     Iteration 200, p_obj::5481.88036, d_obj::5481.88005, gap::3.03e-04
-    elapsed time: 8.610059 
+    elapsed time: 7.903997 
     Iteration 210, p_obj::5481.88036, d_obj::5481.88022, gap::1.38e-04
-    elapsed time: 8.953223 
+    elapsed time: 8.260187 
     Iteration 220, p_obj::5481.88036, d_obj::5481.88023, gap::1.27e-04
-    elapsed time: 9.401214 
+    elapsed time: 8.619948 
     Iteration 230, p_obj::5481.88036, d_obj::5481.88035, gap::1.74e-06
-    elapsed time: 9.807269 
+    elapsed time: 9.008502 
     Iteration 240, p_obj::5481.88036, d_obj::5481.88035, gap::1.63e-06
-    elapsed time: 10.152041 
+    elapsed time: 9.357206 
     Iteration 250, p_obj::5481.88036, d_obj::5481.88035, gap::1.51e-06
-    elapsed time: 10.620731 
+    elapsed time: 9.799032 
     Iteration 260, p_obj::5481.88036, d_obj::5481.88036, gap::2.24e-07
-    elapsed time: 11.020378 
+    elapsed time: 10.199752 
     Iteration 270, p_obj::5481.88036, d_obj::5481.88036, gap::2.07e-07
-    elapsed time: 11.431645 
+    elapsed time: 10.559616 
     Iteration 280, p_obj::5481.88036, d_obj::5481.88036, gap::1.91e-07
-    elapsed time: 11.819434 
+    elapsed time: 10.921029 
     Iteration 290, p_obj::5481.88036, d_obj::5481.88036, gap::7.68e-08
-    elapsed time: 12.238910 
+    elapsed time: 11.311249 
     Iteration 300, p_obj::5481.88036, d_obj::5481.88036, gap::7.11e-08
-    elapsed time: 12.651887 
+    elapsed time: 11.661341 
     Iteration 310, p_obj::5481.88036, d_obj::5481.88036, gap::6.57e-08
-    elapsed time: 13.102116 
+    elapsed time: 12.101140 
     Iteration 320, p_obj::5481.88036, d_obj::5481.88036, gap::5.16e-09
-    elapsed time: 13.534403 
+    elapsed time: 12.514301 
     Iteration 330, p_obj::5481.88036, d_obj::5481.88036, gap::2.59e-09
-    elapsed time: 13.952154 
+    elapsed time: 12.860803 
     Iteration 340, p_obj::5481.88036, d_obj::5481.88036, gap::1.55e-09
-    elapsed time: 14.395012 
+    elapsed time: 13.301687 
     Iteration 350, p_obj::5481.88036, d_obj::5481.88036, gap::1.43e-09
-    elapsed time: 14.835691 
+    elapsed time: 13.712899 
     Iteration 360, p_obj::5481.88036, d_obj::5481.88036, gap::1.33e-09
-    elapsed time: 15.243654 
+    elapsed time: 14.127445 
     Iteration 370, p_obj::5481.88036, d_obj::5481.88036, gap::1.22e-09
-    elapsed time: 15.617594 
+    elapsed time: 14.626343 
     Iteration 380, p_obj::5481.88036, d_obj::5481.88036, gap::7.37e-10
-    elapsed time: 16.022724 
+    elapsed time: 15.062679 
     Iteration 390, p_obj::5481.88036, d_obj::5481.88036, gap::5.71e-10
-    elapsed time: 16.426759 
+    elapsed time: 15.543197 
     Iteration 400, p_obj::5481.88036, d_obj::5481.88036, gap::3.87e-10
-    elapsed time: 16.808673 
+    elapsed time: 16.024430 
     Iteration 410, p_obj::5481.88036, d_obj::5481.88036, gap::2.81e-10
-    elapsed time: 17.228220 
+    elapsed time: 16.458086 
     Iteration 420, p_obj::5481.88036, d_obj::5481.88036, gap::2.57e-10
-    elapsed time: 17.621594 
+    elapsed time: 16.944449 
     Iteration 430, p_obj::5481.88036, d_obj::5481.88036, gap::2.40e-10
-    elapsed time: 18.005327 
+    elapsed time: 17.433995 
     Iteration 440, p_obj::5481.88036, d_obj::5481.88036, gap::2.24e-10
-    elapsed time: 18.414718 
+    elapsed time: 17.863511 
     Iteration 450, p_obj::5481.88036, d_obj::5481.88036, gap::2.03e-10
-    elapsed time: 18.751809 
+    elapsed time: 18.325194 
     Iteration 460, p_obj::5481.88036, d_obj::5481.88036, gap::1.78e-10
-    elapsed time: 19.199745 
+    elapsed time: 18.817071 
     Iteration 470, p_obj::5481.88036, d_obj::5481.88036, gap::1.64e-10
-    elapsed time: 19.627345 
+    elapsed time: 19.253764 
     Iteration 480, p_obj::5481.88036, d_obj::5481.88036, gap::1.52e-10
-    elapsed time: 20.031922 
+    elapsed time: 19.737798 
     Iteration 490, p_obj::5481.88036, d_obj::5481.88036, gap::1.38e-10
-    elapsed time: 20.490914 
+    elapsed time: 20.216231 
     Iteration 500, p_obj::5481.88036, d_obj::5481.88036, gap::1.25e-10
-    elapsed time: 20.885722 
+    elapsed time: 20.660282 
     Iteration 510, p_obj::5481.88036, d_obj::5481.88036, gap::1.11e-10
-    elapsed time: 21.253474 
+    elapsed time: 21.129889 
     Iteration 520, p_obj::5481.88036, d_obj::5481.88036, gap::1.01e-10
-    elapsed time: 21.699647 
+    elapsed time: 21.610725 
     Iteration 530, p_obj::5481.88036, d_obj::5481.88036, gap::9.09e-11
     Early exit
-    elapsed time: 0.000311 
+    elapsed time: 0.000559 
     Iteration 0, p_obj::14030.68523, d_obj::1715.83490, gap::1.23e+04
-    elapsed time: 0.340853 
+    elapsed time: 0.424080 
     Iteration 10, p_obj::5550.02831, d_obj::3751.58299, gap::1.80e+03
-    elapsed time: 0.700320 
+    elapsed time: 0.786490 
     Iteration 20, p_obj::5496.84558, d_obj::4239.49319, gap::1.26e+03
-    elapsed time: 1.037364 
+    elapsed time: 1.195378 
     Iteration 30, p_obj::5485.42342, d_obj::4685.19260, gap::8.00e+02
-    elapsed time: 1.403309 
+    elapsed time: 1.608345 
     Iteration 40, p_obj::5482.83215, d_obj::5052.41927, gap::4.30e+02
-    elapsed time: 1.716650 
+    elapsed time: 1.984076 
     Iteration 50, p_obj::5482.16424, d_obj::5242.03090, gap::2.40e+02
-    elapsed time: 2.080842 
+    elapsed time: 2.390600 
     Iteration 60, p_obj::5481.97081, d_obj::5345.26298, gap::1.37e+02
-    elapsed time: 2.468729 
+    elapsed time: 2.810535 
     Iteration 70, p_obj::5481.91037, d_obj::5403.21807, gap::7.87e+01
-    elapsed time: 2.828395 
+    elapsed time: 3.186475 
     Iteration 80, p_obj::5481.89070, d_obj::5436.44275, gap::4.54e+01
-    elapsed time: 3.181110 
+    elapsed time: 3.594239 
     Iteration 90, p_obj::5481.88417, d_obj::5455.60141, gap::2.63e+01
-    elapsed time: 3.517419 
+    elapsed time: 4.002235 
     Iteration 100, p_obj::5481.88194, d_obj::5466.64271, gap::1.52e+01
-    elapsed time: 3.854048 
+    elapsed time: 4.394479 
     Iteration 110, p_obj::5481.88114, d_obj::5473.03586, gap::8.85e+00
-    elapsed time: 4.221791 
+    elapsed time: 4.812622 
     Iteration 120, p_obj::5481.88083, d_obj::5476.74770, gap::5.13e+00
-    elapsed time: 4.580733 
+    elapsed time: 5.187042 
     Iteration 130, p_obj::5481.88070, d_obj::5478.88339, gap::3.00e+00
-    elapsed time: 4.931806 
+    elapsed time: 5.593195 
     Iteration 140, p_obj::5481.88062, d_obj::5479.08771, gap::2.79e+00
-    elapsed time: 5.300392 
+    elapsed time: 6.003041 
     Iteration 150, p_obj::5481.88058, d_obj::5479.28944, gap::2.59e+00
-    elapsed time: 5.645396 
+    elapsed time: 6.402400 
     Iteration 160, p_obj::5481.88054, d_obj::5479.48296, gap::2.40e+00
-    elapsed time: 6.017911 
+    elapsed time: 6.797136 
     Iteration 170, p_obj::5481.88051, d_obj::5479.66557, gap::2.21e+00
-    elapsed time: 6.371876 
+    elapsed time: 7.196929 
     Iteration 180, p_obj::5481.88049, d_obj::5479.83621, gap::2.04e+00
-    elapsed time: 6.729602 
+    elapsed time: 7.588100 
     Iteration 190, p_obj::5481.88047, d_obj::5479.99473, gap::1.89e+00
-    elapsed time: 7.088929 
+    elapsed time: 8.007710 
     Iteration 200, p_obj::5481.88045, d_obj::5480.14147, gap::1.74e+00
-    elapsed time: 7.425167 
+    elapsed time: 8.502496 
     Iteration 210, p_obj::5481.88044, d_obj::5480.27702, gap::1.60e+00
-    elapsed time: 7.801761 
+    elapsed time: 8.964460 
     Iteration 220, p_obj::5481.88042, d_obj::5480.40207, gap::1.48e+00
-    elapsed time: 8.125874 
+    elapsed time: 9.382217 
     Iteration 230, p_obj::5481.88041, d_obj::5480.51735, gap::1.36e+00
-    elapsed time: 8.494154 
+    elapsed time: 9.788819 
     Iteration 240, p_obj::5481.88041, d_obj::5480.62358, gap::1.26e+00
-    elapsed time: 8.840539 
+    elapsed time: 10.214156 
     Iteration 250, p_obj::5481.88040, d_obj::5480.72147, gap::1.16e+00
-    elapsed time: 9.200970 
+    elapsed time: 10.588535 
     Iteration 260, p_obj::5481.88039, d_obj::5480.81165, gap::1.07e+00
-    elapsed time: 9.516510 
+    elapsed time: 10.995769 
     Iteration 270, p_obj::5481.88039, d_obj::5480.89475, gap::9.86e-01
-    elapsed time: 9.886571 
+    elapsed time: 11.386319 
     Iteration 280, p_obj::5481.88038, d_obj::5480.97131, gap::9.09e-01
-    elapsed time: 10.221028 
+    elapsed time: 11.804723 
     Iteration 290, p_obj::5481.88038, d_obj::5481.04187, gap::8.39e-01
-    elapsed time: 10.574783 
+    elapsed time: 12.197908 
     Iteration 300, p_obj::5481.88037, d_obj::5481.10690, gap::7.73e-01
-    elapsed time: 10.948882 
+    elapsed time: 12.597849 
     Iteration 310, p_obj::5481.88037, d_obj::5481.16684, gap::7.14e-01
-    elapsed time: 11.365183 
+    elapsed time: 13.011131 
     Iteration 320, p_obj::5481.88037, d_obj::5481.22210, gap::6.58e-01
-    elapsed time: 11.715072 
+    elapsed time: 13.390802 
     Iteration 330, p_obj::5481.88037, d_obj::5481.27304, gap::6.07e-01
-    elapsed time: 12.082949 
+    elapsed time: 13.806437 
     Iteration 340, p_obj::5481.88037, d_obj::5481.32002, gap::5.60e-01
-    elapsed time: 12.457003 
+    elapsed time: 14.202017 
     Iteration 350, p_obj::5481.88036, d_obj::5481.36333, gap::5.17e-01
-    elapsed time: 12.823993 
+    elapsed time: 14.598734 
     Iteration 360, p_obj::5481.88036, d_obj::5481.40328, gap::4.77e-01
-    elapsed time: 13.184268 
+    elapsed time: 15.058919 
     Iteration 370, p_obj::5481.88036, d_obj::5481.44012, gap::4.40e-01
-    elapsed time: 13.516095 
+    elapsed time: 15.518175 
     Iteration 380, p_obj::5481.88036, d_obj::5481.47410, gap::4.06e-01
-    elapsed time: 13.857636 
+    elapsed time: 15.896894 
     Iteration 390, p_obj::5481.88036, d_obj::5481.50544, gap::3.75e-01
-    elapsed time: 14.217077 
+    elapsed time: 16.288710 
     Iteration 400, p_obj::5481.88036, d_obj::5481.53436, gap::3.46e-01
-    elapsed time: 14.559252 
+    elapsed time: 16.699385 
     Iteration 410, p_obj::5481.88036, d_obj::5481.56103, gap::3.19e-01
-    elapsed time: 14.942122 
+    elapsed time: 17.150365 
     Iteration 420, p_obj::5481.88036, d_obj::5481.58564, gap::2.95e-01
-    elapsed time: 15.299313 
+    elapsed time: 17.615545 
     Iteration 430, p_obj::5481.88036, d_obj::5481.60835, gap::2.72e-01
-    elapsed time: 15.620496 
+    elapsed time: 17.944264 
     Iteration 440, p_obj::5481.88036, d_obj::5481.62930, gap::2.51e-01
-    elapsed time: 15.974823 
+    elapsed time: 18.299736 
     Iteration 450, p_obj::5481.88036, d_obj::5481.64864, gap::2.32e-01
-    elapsed time: 16.313140 
+    elapsed time: 18.632638 
     Iteration 460, p_obj::5481.88036, d_obj::5481.66648, gap::2.14e-01
-    elapsed time: 16.686154 
+    elapsed time: 18.989051 
     Iteration 470, p_obj::5481.88036, d_obj::5481.68294, gap::1.97e-01
-    elapsed time: 17.054568 
+    elapsed time: 19.405137 
     Iteration 480, p_obj::5481.88036, d_obj::5481.69813, gap::1.82e-01
-    elapsed time: 17.415359 
+    elapsed time: 19.788885 
     Iteration 490, p_obj::5481.88036, d_obj::5481.71215, gap::1.68e-01
-    elapsed time: 17.767063 
+    elapsed time: 20.198130 
     Iteration 500, p_obj::5481.88036, d_obj::5481.72509, gap::1.55e-01
-    elapsed time: 18.116797 
+    elapsed time: 20.603271 
     Iteration 510, p_obj::5481.88036, d_obj::5481.73703, gap::1.43e-01
-    elapsed time: 18.473574 
+    elapsed time: 20.992254 
     Iteration 520, p_obj::5481.88036, d_obj::5481.74806, gap::1.32e-01
-    elapsed time: 18.820472 
+    elapsed time: 21.400038 
     Iteration 530, p_obj::5481.88036, d_obj::5481.75823, gap::1.22e-01
-    elapsed time: 19.253705 
+    elapsed time: 21.813829 
     Iteration 540, p_obj::5481.88036, d_obj::5481.76762, gap::1.13e-01
-    elapsed time: 19.666023 
+    elapsed time: 22.189095 
     Iteration 550, p_obj::5481.88036, d_obj::5481.77629, gap::1.04e-01
-    elapsed time: 20.059799 
+    elapsed time: 22.596545 
     Iteration 560, p_obj::5481.88036, d_obj::5481.78429, gap::9.61e-02
-    elapsed time: 20.421857 
+    elapsed time: 22.995969 
     Iteration 570, p_obj::5481.88036, d_obj::5481.79167, gap::8.87e-02
-    elapsed time: 20.815626 
+    elapsed time: 23.401657 
     Iteration 580, p_obj::5481.88036, d_obj::5481.79849, gap::8.19e-02
-    elapsed time: 21.197159 
+    elapsed time: 23.792660 
     Iteration 590, p_obj::5481.88036, d_obj::5481.80478, gap::7.56e-02
 
 
@@ -917,7 +917,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  21.676 seconds)
+   **Total running time of the script:** ( 2 minutes  14.168 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_influ_reg.py:

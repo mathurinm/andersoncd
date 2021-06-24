@@ -18,7 +18,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="andersoncd.WeightedLasso" href="generated/andersoncd.WeightedLasso.html" />
+    <link rel="next" title="andersoncd.ElasticNet" href="generated/andersoncd.ElasticNet.html" />
     <link rel="prev" title="andersoncd" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -78,7 +78,9 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">API Documentation</a><ul>
 <li><a class="reference internal" href="#scikit-learn-like-estimators">Scikit-learn like estimators</a></li>
-<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#penalties">Penalties</a></li>
+<li><a class="reference internal" href="#datasets-fetchers">Datasets fetchers</a></li>
+<li><a class="reference internal" href="#solvers">Solvers</a></li>
 </ul>
 </li>
 </ul>
@@ -126,14 +128,58 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/andersoncd.ElasticNet.html#andersoncd.ElasticNet" title="andersoncd.ElasticNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticNet</span></code></a>([alpha, l1_ratio, max_iter, …])</p></td>
+<td><p>Elastic net estimator based on Celer solver and primal extrapolation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/andersoncd.MCP.html#andersoncd.MCP" title="andersoncd.MCP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MCP</span></code></a>([alpha, gamma, max_iter, max_epochs, …])</p></td>
+<td><p>MCP estimator based on Celer solver and primal extrapolation.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/andersoncd.WeightedLasso.html#andersoncd.WeightedLasso" title="andersoncd.WeightedLasso"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WeightedLasso</span></code></a>([alpha, max_iter, max_epochs, …])</p></td>
 <td><p>WeightedLasso estimator based on Celer solver and primal extrapolation.</p></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<section id="penalties">
+<h2>Penalties<a class="headerlink" href="#penalties" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/andersoncd.penalties.L1.html#andersoncd.penalties.L1" title="andersoncd.penalties.L1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">L1</span></code></a>(*args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/andersoncd.penalties.L1_plus_L2.html#andersoncd.penalties.L1_plus_L2" title="andersoncd.penalties.L1_plus_L2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">L1_plus_L2</span></code></a>(*args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/andersoncd.penalties.WeightedL1.html#andersoncd.penalties.WeightedL1" title="andersoncd.penalties.WeightedL1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WeightedL1</span></code></a>(*args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/andersoncd.penalties.MCP_pen.html#andersoncd.penalties.MCP_pen" title="andersoncd.penalties.MCP_pen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MCP_pen</span></code></a>(*args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datasets-fetchers">
+<h2>Datasets fetchers<a class="headerlink" href="#datasets-fetchers" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="#module-andersoncd.data" title="andersoncd.data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">andersoncd.data</span></code></a>:</p>
+<span class="target" id="module-andersoncd.data"></span><table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/andersoncd.data.make_correlated_data.html#andersoncd.data.make_correlated_data" title="andersoncd.data.make_correlated_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_correlated_data</span></code></a>([n_samples, …])</p></td>
+<td><p>Generate correlated design matrix with decaying correlation rho**|i-j|.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solvers">
+<h2>Solvers<a class="headerlink" href="#solvers" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />

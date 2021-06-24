@@ -1,0 +1,32 @@
+﻿andersoncd.penalties.MCP\_pen
+=============================
+
+.. currentmodule:: andersoncd.penalties
+
+.. autoclass:: MCP_pen
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MCP_pen.__init__
+      ~MCP_pen.is_penalized
+      ~MCP_pen.prox_1d
+      ~MCP_pen.subdiff_distance
+      ~MCP_pen.value
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MCP_pen.class_type
+   
+   

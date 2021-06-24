@@ -5,20 +5,20 @@
 
 Computation times
 =================
-**05:41.881** total execution time for **auto_examples** files:
+**05:25.236** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_influ_reg.py` (``plot_influ_reg.py``)                   | 02:21.676 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_influ_reg.py` (``plot_influ_reg.py``)                   | 02:14.168 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_cd_sym.py` (``plot_cd_sym.py``)                         | 02:12.631 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_cd_sym.py` (``plot_cd_sym.py``)                         | 02:11.906 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_influ_K.py` (``plot_influ_K.py``)                       | 00:23.702 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_intro_ols.py` (``plot_intro_ols.py``)                   | 00:19.749 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_intro_ols.py` (``plot_intro_ols.py``)                   | 00:20.618 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_group.py` (``plot_group.py``)                           | 00:18.285 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_group.py` (``plot_group.py``)                           | 00:18.345 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_influ_K.py` (``plot_influ_K.py``)                       | 00:16.790 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_pen_prox.py` (``plot_pen_prox.py``)                     | 00:03.538 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_pen_prox.py` (``plot_pen_prox.py``)                     | 00:03.188 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_zero_weights_lasso.py` (``plot_zero_weights_lasso.py``) | 00:01.371 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_zero_weights_lasso.py` (``plot_zero_weights_lasso.py``) | 00:01.150 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+

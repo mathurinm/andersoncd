@@ -26,7 +26,7 @@ This example demonstrates how to use a weighted lasso with some vanishing
 weights. The fast Celer solver is adapted to use primal Anderson acceleration,
 allowing it to not compute the dual and handle 0 weights.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-56
+.. GENERATED FROM PYTHON SOURCE LINES 10-57
 
 
 
@@ -69,17 +69,13 @@ allowing it to not compute the dual and handle 0 weights.
     #########################
     ##### Computing alpha 1/1
     #########################
-    KKT max violation: 4.24e+00
+    KKT max violation: 1.44e+00
     Iteration 1, 20 feats in subpb.
-    KKT max violation: 1.31e+00
-    Iteration 2, 28 feats in subpb.
-    KKT max violation: 6.94e-01
-    Iteration 3, 38 feats in subpb.
-    KKT max violation: 1.24e-01
-    Iteration 4, 56 feats in subpb.
-    KKT max violation: 7.57e-03
-    Iteration 5, 62 feats in subpb.
-    KKT max violation: 4.78e-12
+    KKT max violation: 6.17e-01
+    Iteration 2, 26 feats in subpb.
+    KKT max violation: 1.58e-01
+    Iteration 3, 32 feats in subpb.
+    KKT max violation: 7.94e-13
 
 
 
@@ -99,7 +95,7 @@ allowing it to not compute the dual and handle 0 weights.
 
     from andersoncd import WeightedLasso
     from andersoncd.plot_utils import configure_plt
-    from andersoncd.data.synthetic import simu_linreg
+    from andersoncd.data import make_correlated_data
 
     configure_plt(fontsize=14, poster=False)
 
@@ -107,7 +103,8 @@ allowing it to not compute the dual and handle 0 weights.
 
     if dataset == "simu":
         n_features = 100
-        X, y = simu_linreg(n_samples=100, n_features=n_features, corr=0.7)
+        X, y, _ = make_correlated_data(
+            n_samples=100, n_features=n_features, corr=0.7)
     else:
         X, y = fetch_openml("leukemia", return_X_y=True)
         X, y = X.to_numpy(), y.to_numpy()
@@ -140,7 +137,7 @@ allowing it to not compute the dual and handle 0 weights.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.371 seconds)
+   **Total running time of the script:** ( 0 minutes  1.150 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_zero_weights_lasso.py:
