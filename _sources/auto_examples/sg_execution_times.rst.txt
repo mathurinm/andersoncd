@@ -5,20 +5,10 @@
 
 Computation times
 =================
-**05:58.098** total execution time for **auto_examples** files:
+**00:04.505** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_influ_reg.py` (``plot_influ_reg.py``)                   | 02:28.042 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_pen_prox.py` (``plot_pen_prox.py``)                     | 00:03.257 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_cd_sym.py` (``plot_cd_sym.py``)                         | 02:12.703 | 0.0 MB |
-+-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_influ_K.py` (``plot_influ_K.py``)                       | 00:27.124 | 0.0 MB |
-+-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_intro_ols.py` (``plot_intro_ols.py``)                   | 00:22.962 | 0.0 MB |
-+-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_group.py` (``plot_group.py``)                           | 00:21.941 | 0.0 MB |
-+-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_pen_prox.py` (``plot_pen_prox.py``)                     | 00:03.901 | 0.0 MB |
-+-------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_zero_weights_lasso.py` (``plot_zero_weights_lasso.py``) | 00:01.425 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_zero_weights_lasso.py` (``plot_zero_weights_lasso.py``) | 00:01.248 | 0.0 MB |
 +-------------------------------------------------------------------------------------------+-----------+--------+
