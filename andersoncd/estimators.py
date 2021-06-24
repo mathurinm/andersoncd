@@ -21,9 +21,6 @@ class Lasso(Lasso_sklearn):
     ----------
     alpha : float, optional
         Penalty strength.
-        ``alpha = 0`` is equivalent to an ordinary least square.
-        For numerical reasons, using ``alpha = 0`` with the
-        ``Lasso`` object is not advised.
 
     max_iter : int, optional
         The maximum number of iterations (subproblem definitions)
