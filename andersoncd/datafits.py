@@ -1,3 +1,4 @@
+import numpy as np
 from numba.experimental import jitclass
 
 
@@ -6,14 +7,17 @@ class Quadratic():
     def __init__():
         pass
 
-    @staticmethod
-    def objective(R):
-        return R @ R / (2 * len(R))
+    def initialize(self, X, y):
+        self.Xty = X.T @ y  # TODO handle centering
+        self.lipschitz = (X ** 2).sum(axis=0)  # TODO beware of n_samples
 
-    @staticmethod
-    def gradient(X, y, w, R):
-        return - X.T @ R
+    def objective(self, X, y, w, Xw):
+        return np.sum((y - Xw) ** 2) / (2 * len(Xw))
 
-    @staticmethod
-    def gradient_scalar(X, y, w, R, j):
-        return - X[:, j] @ R
+    # @staticmethod
+    def gradient(self, X, y, w, Xw):
+        return X.T @ (Xw - y)
+
+    # @staticmethod
+    def gradient_scalar(self, X, y, w, Xw, j):
+        return X[:, j] @ Xw - self.Xty[j]

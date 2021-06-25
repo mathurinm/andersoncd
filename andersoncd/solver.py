@@ -93,6 +93,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
     y = check_array(y, 'csc', dtype=X.dtype.type, order='F', copy=False,
                     ensure_2d=False)
 
+    datafit.initialize(X, y)
     n_samples, n_features = X.shape
 
     # if X_offset is not None:
@@ -118,8 +119,6 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
     if return_n_iter:
         n_iters = np.zeros(n_alphas, dtype=int)
 
-    norms_X_col = norm(X, axis=0)
-
     for t in range(n_alphas):
         alpha = alphas[t]
         penalty.alpha = alpha  # TODO this feels unnatural
@@ -135,13 +134,13 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
             if coef_init is not None:
                 w = coef_init.copy()
                 p0 = max((w != 0.).sum(), p0)
-                R = y - X @ w  # TODO Xw should be used instead
+                Xw = X @ w  # TODO Xw should be used instead
             else:
                 w = np.zeros(n_features, dtype=X.dtype)
-                R = y.copy()
+                Xw = np.zeros_like(y)
 
         sol = solver(
-            X, y, penalty, w, R, norms_X_col,
+            X, y, penalty, w, Xw,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
             verbose=verbose)
 
@@ -159,7 +158,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
 
 def solver(
-        X, y, datafit, penalty, w, R, norms_X_col, max_iter=50,
+        X, y, datafit, penalty, w, Xw, max_iter=50,
         max_epochs=50_000, p0=10, tol=1e-4, use_acc=True, K=5, verbose=0):
     """
     datafit : instance of Datafit
@@ -171,7 +170,7 @@ def solver(
     unpen = ~pen
     n_unpen = unpen.sum()
     obj_out = []
-    lc = norms_X_col ** 2
+    lc = datafit.lipschitz
 
     for t in range(max_iter):
 
@@ -215,23 +214,22 @@ def solver(
                         w_acc = w.copy()
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
-                        datafit = (R ** 2).sum() / (2 * n_samples)
-                        p_obj = datafit + penalty.value(w)
-                        R_acc = y - X @ w_acc
-                        datafit_acc = (R_acc ** 2).sum() / (2 * n_samples)
-                        p_obj_acc = datafit_acc + penalty.value(w_acc)
+                        p_obj = datafit.value(w, Xw, y) + penalty.value(w)
+                        Xw_acc = y - X @ w_acc
+                        p_obj_acc = datafit.value(
+                            w_acc, Xw_acc, y) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
-                            R[:] = R_acc
+                            Xw[:] = Xw_acc
                     except np.linalg.LinAlgError:
                         if max(verbose - 1, 0):
                             print("----------Linalg error")
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws
-                p_obj = (R ** 2).sum() / (2 * n_samples) + penalty.value(w)
+                p_obj = datafit.value(w, Xw, y) + penalty.value(w)
 
-                kkt_ws = _kkt_violation(w, X, R, penalty, ws)
+                kkt_ws = _kkt_violation(w, X, Xw, penalty, ws)
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
                     print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
@@ -245,21 +243,22 @@ def solver(
 
 
 @njit
-def _kkt_violation(w, X, R, penalty, ws):
+def _kkt_violation(w, X, Xw, datafit, penalty, ws):
     n_samples = X.shape[0]
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        grad[idx] = X[:, j] @ R / n_samples
+        grad[idx] = datafit.grad_j(w, Xw)  # TODO
     return penalty.subdiff_distance(w, grad, ws)
 
 
 @njit
-def _cd_epoch(X, w, R, penalty, lc, feats):
-    n_samples = R.shape[0]
+def _cd_epoch(X, w, Xw, penalty, lc, feats):
+    n_samples = Xw.shape[0]
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j + Xj @ R / lc[j], n_samples / lc[j], j)
+            old_w_j + datafit.grad_j() / lc[j], n_samples / lc[j], j)
+        # TODO use datafit.grad_j and datafit.lipschitz
         if w[j] != old_w_j:
-            R += (old_w_j - w[j]) * Xj
+            Xw += (old_w_j - w[j]) * Xj
