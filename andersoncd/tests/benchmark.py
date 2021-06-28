@@ -1,20 +1,32 @@
-import numpy as np
 import time
-from sklearn.linear_model import Lasso
+import numpy as np
+from numpy.linalg import norm
+from sklearn.linear_model import Lasso as Lasso_sk
+from celer import Lasso as Lasso_cr
 
-from andersoncd import WeightedLasso
+from andersoncd import Lasso
 from andersoncd.data import make_correlated_data
+from andersoncd.solver import _kkt_violation
+
+X, y, _ = make_correlated_data(n_samples=2000, n_features=10000, density=0.01)
 
 
-X, y, _ = make_correlated_data(n_samples=1000, n_features=2000)
+alpha = norm(X.T @ y, np.inf) / len(y) / 50
 
 
-weights = np.ones(X.shape[1])
-alpha = np.max(np.abs(X.T @ y)) / len(y) / 50
+sk = Lasso_sk(alpha=alpha, fit_intercept=False)
 
-us = WeightedLasso(alpha=alpha, weights=weights, fit_intercept=False,
-                   max_epochs=20, max_iter=1, verbose=2,
-                   warm_start=False).fit(X, y)
+t0 = time.time()
+sk.fit(X, y)
+t_sk = time.time() - t0
+
+us = Lasso(alpha=alpha, fit_intercept=False,
+           max_epochs=20, max_iter=1, verbose=2,
+           warm_start=False).fit(X, y)
+
+kkt_sk = np.max(np.abs(_kkt_violation(sk.coef_, X, y - X @ sk.coef_,
+                                      us.penalty, np.arange(X.shape[1]))))
+us.tol = kkt_sk
 
 us.max_epochs = 10000
 us.max_iter = 20
@@ -22,13 +34,24 @@ us.max_iter = 20
 t0 = time.time()
 us.fit(X, y)
 t_us = time.time() - t0
+kkt_us = norm(_kkt_violation(us.coef_, X, y - X @ us.coef_,
+                             us.penalty, np.arange(X.shape[1])), np.inf)
 
 
-sk = Lasso(alpha=alpha, fit_intercept=False)
+cr = Lasso_cr(alpha=alpha, fit_intercept=False, tol=sk.tol)
 
 t0 = time.time()
-sk.fit(X, y)
-t_sk = time.time() - t0
+cr.fit(X, y)
+t_cr = time.time() - t0
+kkt_cr = norm(_kkt_violation(cr.coef_, X, y - X @ cr.coef_,
+                             us.penalty, np.arange(X.shape[1])), np.inf)
 
-print(f'Us: {t_us:.4f} s')
-print(f'sk: {t_sk:.4f} s')
+obj_us = np.mean((y - X @ us.coef_) ** 2) / 2. + us.alpha * norm(us.coef_, 1)
+obj_sk = np.mean((y - X @ sk.coef_) ** 2) / 2. + sk.alpha * norm(sk.coef_, 1)
+obj_cr = np.mean((y - X @ cr.coef_) ** 2) / 2. + cr.alpha * norm(cr.coef_, 1)
+
+print("#" * 80)
+
+print(f'us: {t_us:.4f} s, kkt: {kkt_us:.2e}, obj: {obj_us:.10f}')
+print(f'sk: {t_sk:.4f} s, kkt: {kkt_sk:.2e}, obj: {obj_sk:.10f}')
+print(f'cr: {t_cr:.4f} s, kkt: {kkt_cr:.2e}, obj: {obj_cr:.10f}')
