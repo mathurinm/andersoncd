@@ -17,7 +17,7 @@ alpha_div = 100
 alpha = norm(X.T @ y, np.inf) / len(y) / alpha_div
 
 
-sk = Lasso_sk(alpha=alpha, fit_intercept=False)
+sk = Lasso_sk(alpha=alpha, fit_intercept=False, max_iter=10**6, tol=1e-5)
 
 t0 = time.time()
 sk.fit(X, y)
@@ -32,7 +32,7 @@ kkt_sk = np.max(np.abs(_kkt_violation(sk.coef_, X, y - X @ sk.coef_,
 us.tol = kkt_sk
 
 us.max_epochs = 10000
-us.max_iter = 20
+us.max_iter = 50
 
 t0 = time.time()
 us.fit(X, y)
