@@ -32,7 +32,7 @@ kkt_sk = np.max(np.abs(_kkt_violation(sk.coef_, X, y - X @ sk.coef_,
 us.tol = kkt_sk
 
 us.max_epochs = 10000
-us.max_iter = 20
+us.max_iter = 50
 
 t0 = time.time()
 us.fit(X, y)
