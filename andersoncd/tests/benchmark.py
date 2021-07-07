@@ -17,7 +17,7 @@ alpha_div = 100
 alpha = norm(X.T @ y, np.inf) / len(y) / alpha_div
 
 
-sk = Lasso_sk(alpha=alpha, fit_intercept=False)
+sk = Lasso_sk(alpha=alpha, fit_intercept=False, max_iter=10**6, tol=1e-5)
 
 t0 = time.time()
 sk.fit(X, y)
