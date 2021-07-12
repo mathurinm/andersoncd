@@ -130,7 +130,7 @@ spec_WeightedL1 = [
 class WeightedL1(Penalty):
     def __init__(self, alpha, weights):
         self.alpha = alpha
-        self.weights = weights
+        self.weights = weights.astype(np.float64)
 
     def value(self, w):
         """ alpha * ||weights * w||_1
