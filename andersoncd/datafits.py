@@ -19,12 +19,11 @@ class Quadratic():
 
     def initialize_sparse(
             self, data, indptr, indices, y, n_features):
-        self.Xty = np.empty(n_features)
+        self.Xty = np.zeros(n_features)
         self.lipschitz = np.empty(n_features)
         for j in range(n_features):
             Xj = data[indptr[j]:indptr[j+1]]
             idx_nz = indices[indptr[j]:indptr[j+1]]
-            self.Xty[j] = 0
             for i, idx_i in enumerate(idx_nz):
                 self.Xty[j] += Xj[i] * y[idx_i]
             self.lipschitz[j] = (Xj ** 2).sum() / len(y)
