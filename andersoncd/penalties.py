@@ -65,7 +65,7 @@ class L1(Penalty):
                 res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
             else:
                 # distance of - grad_j to alpha * sign(w[j])
-                res[idx] = np.abs(grad[idx] - np.sign(w[j]) * self.alpha)
+                res[idx] = np.abs(- grad[idx] - np.sign(w[j]) * self.alpha)
         return res
 
     def is_penalized(self, n_features):
