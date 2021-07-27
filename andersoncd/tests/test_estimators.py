@@ -21,7 +21,7 @@ dict_estimators_ours = {}
 dict_estimators_sk["Lasso"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_ours["Lasso"] = Lasso(
-    alpha=alpha, fit_intercept=False, tol=tol)
+    alpha=alpha, fit_intercept=False, tol=tol, verbose=True, max_iter=10)
 
 dict_estimators_sk["wLasso"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)

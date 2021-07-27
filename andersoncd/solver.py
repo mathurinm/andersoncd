@@ -141,7 +141,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 Xw = np.zeros_like(y)
 
         sol = solver(
-            X, y, penalty, w, Xw,
+            X, y, datafit, penalty, w, Xw,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
             verbose=verbose)
 
@@ -175,7 +175,7 @@ def solver(
 
     for t in range(max_iter):
 
-        kkt = _kkt_violation(w, X, R, datafit, penalty, np.arange(n_features))
+        kkt = _kkt_violation(w, X, Xw, datafit, penalty, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
@@ -198,7 +198,7 @@ def solver(
 
         # 2) do iterations on smaller problem
         for epoch in range(max_epochs):
-            _cd_epoch(X, w, R, penalty, lc, ws)
+            _cd_epoch(X, w, Xw, datafit, penalty, lc, ws)
 
             # TODO optimize computation using ws
             if use_acc:
@@ -215,10 +215,10 @@ def solver(
                         w_acc = w.copy()
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
-                        p_obj = datafit.value(w, Xw, y) + penalty.value(w)
+                        p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
                         Xw_acc = y - X @ w_acc
                         p_obj_acc = datafit.value(
-                            w_acc, Xw_acc, y) + penalty.value(w_acc)
+                            X, y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
                             Xw[:] = Xw_acc
@@ -228,9 +228,9 @@ def solver(
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws
-                p_obj = datafit.value(w, Xw, y) + penalty.value(w)
+                p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
 
-                kkt_ws = _kkt_violation(w, X, Xw, penalty, ws)
+                kkt_ws = _kkt_violation(w, X, Xw, datafit, penalty, ws)
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
                     print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
@@ -245,21 +245,21 @@ def solver(
 
 @njit
 def _kkt_violation(w, X, Xw, datafit, penalty, ws):
-    n_samples = X.shape[0]
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        grad[idx] = datafit.grad_j(w, Xw)  # TODO
+        grad[idx] = datafit.gradient_scalar(X, w, Xw, j)  # TODO
     return penalty.subdiff_distance(w, grad, ws)
 
 
 @njit
-def _cd_epoch(X, w, Xw, penalty, lc, feats):
+def _cd_epoch(X, w, Xw, datafit, penalty, lc, feats):
     n_samples = Xw.shape[0]
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j + datafit.grad_j() / lc[j], n_samples / lc[j], j)
+            old_w_j + datafit.gradient_scalar(
+                X, w, Xw, j) / lc[j], n_samples / lc[j], j)
         # TODO use datafit.grad_j and datafit.lipschitz
         if w[j] != old_w_j:
-            Xw += (old_w_j - w[j]) * Xj
+            Xw -= (old_w_j - w[j]) * Xj
