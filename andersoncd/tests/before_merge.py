@@ -1,12 +1,9 @@
 import time
 import numpy as np
 from numpy.linalg import norm
-from sklearn.linear_model import Lasso as Lasso_sk
-from celer import Lasso as Lasso_cr
 
 from andersoncd import Lasso
 from andersoncd.data import make_correlated_data
-from andersoncd.solver import _kkt_violation
 
 
 X, y, w_true = make_correlated_data(
