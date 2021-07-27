@@ -26,7 +26,7 @@ jobs:
       - name: Store benchmark result
         uses: rhysd/github-action-benchmark@v1
         with:
-          name: Python Benchmark with pytest-benchmark
+          name: Solver benchmark over commits
           tool: 'pytest'
           output-file-path: andersoncd/tests/output.json
           # Use personal access token instead of GITHUB_TOKEN due to https://github.community/t5/GitHub-Actions/Github-action-not-triggering-gh-pages-upon-push/td-p/26869/highlight/false
