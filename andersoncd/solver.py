@@ -258,7 +258,7 @@ def _cd_epoch(X, w, Xw, datafit, penalty, lc, feats):
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j + datafit.gradient_scalar(
+            old_w_j - datafit.gradient_scalar(
                 X, w, Xw, j) / lc[j], n_samples / lc[j], j)
         # TODO use datafit.grad_j and datafit.lipschitz
         if w[j] != old_w_j:
