@@ -17,15 +17,22 @@ class Quadratic():
         self.Xty = X.T @ y
         self.lipschitz = (X ** 2).sum(axis=0) / len(y)
 
-    def value(self, X, y, w, Xw):
-        return np.sum((y - Xw) ** 2) / (2 * len(Xw))
+    def initialize_sparse(
+            self, data, indptr, indices, y, n_features):
+        self.Xty = np.empty(n_features)
+        self.lipschitz = np.empty(n_features)
+        for j in range(n_features):
+            Xj = data[indptr[j]:indptr[j+1]]
+            idx_nz = indices[indptr[j]:indptr[j+1]]
+            self.Xty[j] = Xj @ y[idx_nz]
+            self.lipschitz[j] = (Xj ** 2).sum() / len(y)
 
-    def gradient(self, X, y, w, Xw):
-        return (X.T @ Xw - self.Xty) / len(Xw)
+    def value(self, y, w, Xw):
+        return np.sum((y - Xw) ** 2) / (2 * len(Xw))
 
     def gradient_scalar(self, X, w, Xw, j):
         # TODO remove w unused in argument
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
 
-    def gradient_scalar_sparse(self, Xj, idx_nz, Xw, y):
-        return (Xj @ (Xw[idx_nz] - y[idx_nz])) / len(Xw)
+    def gradient_scalar_sparse(self, Xj, idx_nz, Xw, j):
+        return (Xj @ Xw[idx_nz] - self.Xty[j]) / len(Xw)

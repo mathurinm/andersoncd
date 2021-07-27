@@ -85,15 +85,15 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
         Maximum violation of KKT along the path.
     """
 
-    # if sparse.issparse(X):
-    #     raise ValueError("Spare design matrices are not supported yet.")
-
     X = check_array(X, 'csc', dtype=[np.float64, np.float32],
                     order='F', copy=False, accept_large_sparse=False)
     y = check_array(y, 'csc', dtype=X.dtype.type, order='F', copy=False,
                     ensure_2d=False)
 
-    datafit.initialize(X, y)
+    if sparse.issparse(X):
+        datafit.initialize_sparse(X.data, X.indptr, X.indices, y, X.shape[1])
+    else:
+        datafit.initialize(X, y)
     n_features = X.shape[1]
 
     # if X_offset is not None:
@@ -172,8 +172,16 @@ def solver(
     n_unpen = unpen.sum()
     obj_out = []
 
+    is_sparse = sparse.issparse(X)
     for t in range(max_iter):
-        kkt = _kkt_violation(w, X, Xw, datafit, penalty, np.arange(n_features))
+
+        if is_sparse:
+            kkt = _kkt_violation_sparse(
+                w, X.data, X.indptr, X.indices, Xw, datafit, penalty,
+                np.arange(n_features))
+        else:
+            kkt = _kkt_violation(
+                w, X, Xw, datafit, penalty, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
@@ -219,10 +227,10 @@ def solver(
                         w_acc = w.copy()
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
-                        p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
+                        p_obj = datafit.value(y, w, Xw) + penalty.value(w)
                         Xw_acc = X @ w_acc
                         p_obj_acc = datafit.value(
-                            X, y, w_acc, Xw_acc) + penalty.value(w_acc)
+                            y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
                             Xw[:] = Xw_acc
@@ -232,9 +240,16 @@ def solver(
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws
-                p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
+                p_obj = datafit.value(y, w, Xw) + penalty.value(w)
 
-                kkt_ws = _kkt_violation(w, X, Xw, datafit, penalty, ws)
+                if is_sparse:
+                    kkt_ws = _kkt_violation_sparse(
+                        w, X.data, X.indptr, X.indices, Xw, datafit, penalty,
+                        ws)
+                else:
+                    kkt_ws = _kkt_violation(
+                        w, X, Xw, datafit, penalty, ws)
+
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
                     print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
@@ -252,6 +267,16 @@ def _kkt_violation(w, X, Xw, datafit, penalty, ws):
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
         grad[idx] = datafit.gradient_scalar(X, w, Xw, j)
+    return penalty.subdiff_distance(w, grad, ws)
+
+
+@njit
+def _kkt_violation_sparse(w, data, indptr, indices, Xw, datafit, penalty, ws):
+    grad = np.zeros(ws.shape[0])
+    for idx, j in enumerate(ws):
+        Xj = data[indptr[j]:indptr[j+1]]
+        idx_nz = indices[indptr[j]:indptr[j+1]]
+        grad[idx] = datafit.gradient_scalar_sparse(Xj, idx_nz, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
 
@@ -277,8 +302,9 @@ def _cd_epoch_sparse(
         idx_nz = indices[indptr[j]:indptr[j+1]]
 
         old_w_j = w[j]
+        gradj = datafit.gradient_scalar_sparse(
+                Xj, idx_nz, Xw, j)
         w[j] = penalty.prox_1d(
-            old_w_j - datafit.gradient_scalar_sparse(
-                Xj, idx_nz, Xw, y) / lc[j], 1 / lc[j], j)
+            old_w_j - gradj / lc[j], 1 / lc[j], j)
         if w[j] != old_w_j:
             Xw[idx_nz] += (w[j] - old_w_j) * Xj
