@@ -31,7 +31,6 @@ kkt_sk = np.max(np.abs(_kkt_violation(sk.coef_, X, X @ sk.coef_,
                                       us.datafit,
                                       us.penalty, np.arange(X.shape[1]))))
 us.tol = kkt_sk
-
 us.max_epochs = 10000
 us.max_iter = 50
 

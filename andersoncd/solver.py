@@ -173,7 +173,6 @@ def solver(
     obj_out = []
 
     for t in range(max_iter):
-
         kkt = _kkt_violation(w, X, Xw, datafit, penalty, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
@@ -215,7 +214,7 @@ def solver(
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
                         p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
-                        Xw_acc = y - X @ w_acc
+                        Xw_acc = X @ w_acc
                         p_obj_acc = datafit.value(
                             X, y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
