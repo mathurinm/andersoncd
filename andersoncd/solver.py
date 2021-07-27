@@ -1,22 +1,17 @@
 import numpy as np
 from numba import njit
 from scipy import sparse
-from numpy.linalg import norm
 from sklearn.utils import check_array
 
 
-def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
+def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 coef_init=None, max_iter=20, max_epochs=50_000,
                 p0=10, tol=1e-4, prune=0,
                 return_n_iter=False, verbose=0,):
     r"""Compute optimization path with Celer primal as inner solver.
 
-    With `n = len(y)` and `p = len(w)` the number of samples and features,
-    the loss is:
-
-    .. math::
-
-        \frac{||y - X w||_2^2}{2 n} + \alpha \sum_1^p penalty(|w_j|)
+    The loss is customized by passing various choices of datafit and penalty:
+    loss = datafit.value() + penalty.value()
 
 
     Parameters
@@ -26,6 +21,9 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
     y : ndarray, shape (n_samples,)
         Target values.
+
+    datafit: instance of Datafit class
+        Datafitting term.
 
     penalty : instance of Penalty class
         Penalty used in the model.
@@ -95,7 +93,8 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
     y = check_array(y, 'csc', dtype=X.dtype.type, order='F', copy=False,
                     ensure_2d=False)
 
-    n_samples, n_features = X.shape
+    datafit.initialize(X, y)
+    n_features = X.shape[1]
 
     # if X_offset is not None:
     #     X_sparse_scaling = X_offset / X_scale
@@ -106,6 +105,7 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
     # X_dense, X_data, X_indices, X_indptr = _sparse_and_dense(X)
 
     if alphas is None:
+        # TODO pass datafit.gradient at 0
         alpha_max = penalty.alpha_max(X, y)
         alphas = alpha_max * np.geomspace(1, eps, n_alphas, dtype=X.dtype)
     else:
@@ -118,8 +118,6 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
     if return_n_iter:
         n_iters = np.zeros(n_alphas, dtype=int)
-
-    norms_X_col = norm(X, axis=0)
 
     for t in range(n_alphas):
 
@@ -137,13 +135,13 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
             if coef_init is not None:
                 w = coef_init.copy()
                 p0 = max((w != 0.).sum(), p0)
-                R = y - X @ w
+                Xw = X @ w
             else:
                 w = np.zeros(n_features, dtype=X.dtype)
-                R = y.copy()
+                Xw = np.zeros_like(y)
 
         sol = solver(
-            X, y, penalty, w, R, norms_X_col,
+            X, y, datafit, penalty, w, Xw,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
             verbose=verbose)
 
@@ -161,22 +159,21 @@ def solver_path(X, y, penalty, eps=1e-3, n_alphas=100, alphas=None,
 
 
 def solver(
-        X, y, penalty, w, R, norms_X_col, max_iter=50,
+        X, y, datafit, penalty, w, Xw, max_iter=50,
         max_epochs=50_000, p0=10, tol=1e-4, use_acc=True, K=5, verbose=0):
     """
-    penalty: Penalty object
+    datafit : instance of Datafit
+    penalty: instance of Penalty
     p0: first size of working set.
     """
-    n_samples, n_features = X.shape
+    n_features = X.shape[1]
     pen = penalty.is_penalized(n_features)
     unpen = ~pen
     n_unpen = unpen.sum()
     obj_out = []
-    lc = norms_X_col ** 2
 
     for t in range(max_iter):
-
-        kkt = _kkt_violation(w, X, R, penalty, np.arange(n_features))
+        kkt = _kkt_violation(w, X, Xw, datafit, penalty, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
@@ -199,7 +196,7 @@ def solver(
 
         # 2) do iterations on smaller problem
         for epoch in range(max_epochs):
-            _cd_epoch(X, w, R, penalty, lc, ws)
+            _cd_epoch(X, w, Xw, datafit, penalty, ws)
 
             # TODO optimize computation using ws
             if use_acc:
@@ -216,23 +213,22 @@ def solver(
                         w_acc = w.copy()
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
-                        datafit = (R ** 2).sum() / (2 * n_samples)
-                        p_obj = datafit + penalty.value(w)
-                        R_acc = y - X @ w_acc
-                        datafit_acc = (R_acc ** 2).sum() / (2 * n_samples)
-                        p_obj_acc = datafit_acc + penalty.value(w_acc)
+                        p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
+                        Xw_acc = X @ w_acc
+                        p_obj_acc = datafit.value(
+                            X, y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
-                            R[:] = R_acc
+                            Xw[:] = Xw_acc
                     except np.linalg.LinAlgError:
                         if max(verbose - 1, 0):
                             print("----------Linalg error")
 
             if epoch % 10 == 0:
                 # todo maybe we can improve here by restricting to ws
-                p_obj = (R ** 2).sum() / (2 * n_samples) + penalty.value(w)
+                p_obj = datafit.value(X, y, w, Xw) + penalty.value(w)
 
-                kkt_ws = _kkt_violation(w, X, R, penalty, ws)
+                kkt_ws = _kkt_violation(w, X, Xw, datafit, penalty, ws)
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
                     print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
@@ -246,21 +242,21 @@ def solver(
 
 
 @njit
-def _kkt_violation(w, X, R, penalty, ws):
-    n_samples = X.shape[0]
+def _kkt_violation(w, X, Xw, datafit, penalty, ws):
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        grad[idx] = - X[:, j] @ R / n_samples
+        grad[idx] = datafit.gradient_scalar(X, w, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
 
 @njit
-def _cd_epoch(X, w, R, penalty, lc, feats):
-    n_samples = R.shape[0]
+def _cd_epoch(X, w, Xw, datafit, penalty, feats):
+    lc = datafit.lipschitz
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j + Xj @ R / lc[j], n_samples / lc[j], j)
+            old_w_j - datafit.gradient_scalar(X, w, Xw, j) / lc[j],
+            1 / lc[j], j)
         if w[j] != old_w_j:
-            R += (old_w_j - w[j]) * Xj
+            Xw += (w[j] - old_w_j) * Xj

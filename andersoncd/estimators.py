@@ -6,6 +6,7 @@ from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 
 from andersoncd.penalties import L1, WeightedL1, L1_plus_L2, MCP_pen
+from andersoncd.datafits import Quadratic
 from andersoncd.solver import solver_path
 
 
@@ -99,15 +100,16 @@ class Lasso(Lasso_sklearn):
         self.max_epochs = max_epochs
         self.p0 = p0
         self.prune = prune
+        self.datafit = Quadratic()
         self.penalty = L1(alpha)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute Lasso path with Celer + primal extrapolation."""
         return solver_path(
-            X, y, self.penalty, alphas=alphas, coef_init=coef_init,
-            max_iter=self.max_iter, return_n_iter=return_n_iter,
-            max_epochs=self.max_epochs, p0=self.p0, tol=self.tol,
-            prune=self.prune, verbose=self.verbose,)
+            X, y, self.datafit, self.penalty, alphas=alphas,
+            coef_init=coef_init, max_iter=self.max_iter,
+            return_n_iter=return_n_iter, max_epochs=self.max_epochs,
+            p0=self.p0, tol=self.tol, prune=self.prune, verbose=self.verbose)
 
 
 class WeightedLasso(Lasso_sklearn):
@@ -205,12 +207,14 @@ class WeightedLasso(Lasso_sklearn):
         self.max_epochs = max_epochs
         self.p0 = p0
         self.prune = prune
+        self.datafit = Quadratic()
         self.penalty = WeightedL1(alpha, weights)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute weighted Lasso path with Celer + primal extrapolation."""
         return solver_path(
-            X, y, self.penalty, alphas=alphas, coef_init=coef_init,
+            X, y, self.datafit, self.penalty, alphas=alphas,
+            coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
             max_epochs=self.max_epochs, p0=self.p0, tol=self.tol,
             prune=self.prune, verbose=self.verbose,)
@@ -313,12 +317,14 @@ class ElasticNet(ElasticNet_sklearn):
         self.max_epochs = max_epochs
         self.p0 = p0
         self.prune = prune
+        self.datafit = Quadratic()
         self.penalty = L1_plus_L2(alpha, l1_ratio)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute Elastic Net path with Celer + primal extrapolation."""
         return solver_path(
-            X, y, self.penalty, alphas=alphas, coef_init=coef_init,
+            X, y, self.datafit, self.penalty, alphas=alphas,
+            coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
             max_epochs=self.max_epochs, p0=self.p0, tol=self.tol,
             prune=self.prune, verbose=self.verbose)
@@ -428,12 +434,14 @@ class MCP(Lasso_sklearn):
         self.p0 = p0
         self.prune = prune
         self.gamma = gamma
+        self.datafit = Quadratic()
         self.penalty = MCP_pen(alpha, gamma)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute MCP path with Celer + primal extrapolation."""
         return solver_path(
-            X, y, self.penalty, alphas=alphas, coef_init=coef_init,
+            X, y, self.datafit, self.penalty, alphas=alphas,
+            coef_init=coef_init,
             max_iter=self.max_iter, return_n_iter=return_n_iter,
             max_epochs=self.max_epochs, p0=self.p0, tol=self.tol,
             prune=self.prune, verbose=self.verbose)
