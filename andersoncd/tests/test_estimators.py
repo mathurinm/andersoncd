@@ -21,25 +21,23 @@ dict_estimators_ours = {}
 dict_estimators_sk["Lasso"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_ours["Lasso"] = Lasso(
-    alpha=alpha, fit_intercept=False, tol=tol, verbose=True, max_iter=10)
+    alpha=alpha, fit_intercept=False, tol=tol)
 
 dict_estimators_sk["wLasso"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_ours["wLasso"] = WeightedLasso(
-    alpha=alpha, fit_intercept=False, tol=tol, weights=np.ones(n_features),
-    verbose=True, max_iter=10)
+    alpha=alpha, fit_intercept=False, tol=tol, weights=np.ones(n_features))
 
 dict_estimators_sk["ElasticNet"] = ElasticNet_sklearn(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
 dict_estimators_ours["ElasticNet"] = ElasticNet(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol,
-    verbose=True, max_iter=10)
+    verbose=True, max_iter=10)  # KKT of the enet seem broken
 
 dict_estimators_sk["MCP"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_ours["MCP"] = MCP(
-    alpha=alpha, gamma=np.inf, fit_intercept=False, tol=tol,
-    verbose=True, max_iter=10)
+    alpha=alpha, gamma=np.inf, fit_intercept=False, tol=tol)
 
 
 @pytest.mark.parametrize(
@@ -58,4 +56,4 @@ def test_estimator(estimator_name):
 
 
 if __name__ == '__main__':
-    test_estimator("Lasso")
+    test_estimator("ElasticNet")

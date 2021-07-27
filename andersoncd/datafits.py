@@ -22,7 +22,7 @@ class Quadratic():
 
     # @staticmethod
     def gradient(self, X, y, w, Xw):
-        return X.T @ (Xw - y)
+        return X.T @ Xw - self.Xty
 
     # @staticmethod
     def gradient_scalar(self, X, w, Xw, j):

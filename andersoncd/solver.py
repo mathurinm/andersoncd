@@ -245,9 +245,10 @@ def solver(
 
 @njit
 def _kkt_violation(w, X, Xw, datafit, penalty, ws):
+    n_samples = X.shape[0]
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        grad[idx] = datafit.gradient_scalar(X, w, Xw, j)  # TODO
+        grad[idx] = datafit.gradient_scalar(X, w, Xw, j) / n_samples  # TODO
     return penalty.subdiff_distance(w, grad, ws)
 
 
