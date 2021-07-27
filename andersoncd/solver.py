@@ -170,7 +170,6 @@ def solver(
     unpen = ~pen
     n_unpen = unpen.sum()
     obj_out = []
-    lc = datafit.lipschitz
 
     for t in range(max_iter):
 
@@ -197,7 +196,7 @@ def solver(
 
         # 2) do iterations on smaller problem
         for epoch in range(max_epochs):
-            _cd_epoch(X, w, Xw, datafit, penalty, lc, ws)
+            _cd_epoch(X, w, Xw, datafit, penalty, ws)
 
             # TODO optimize computation using ws
             if use_acc:
@@ -252,14 +251,14 @@ def _kkt_violation(w, X, Xw, datafit, penalty, ws):
 
 
 @njit
-def _cd_epoch(X, w, Xw, datafit, penalty, lc, feats):
+def _cd_epoch(X, w, Xw, datafit, penalty, feats):
     n_samples = Xw.shape[0]
+    lc = datafit.lipschitz
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
             old_w_j - datafit.gradient_scalar(
                 X, w, Xw, j) / lc[j], n_samples / lc[j], j)
-        # TODO use datafit.grad_j and datafit.lipschitz
         if w[j] != old_w_j:
             Xw -= (old_w_j - w[j]) * Xj
