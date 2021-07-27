@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1627398339387,
+  "lastUpdate": 1627398798203,
   "repoUrl": "https://github.com/mathurinm/andersoncd",
   "entries": {
     "Solver benchmark over commits": [
@@ -68,6 +68,40 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.003933305410909813",
             "extra": "mean: 330.53433420000147 msec\nrounds: 5"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "mathurinm",
+            "username": "mathurinm"
+          },
+          "committer": {
+            "name": "mathurinm",
+            "username": "mathurinm"
+          },
+          "id": "1978c4b768250b9846d6650e11d4f789689bcac4",
+          "message": "WIP ENH: add automated benchmark speed",
+          "timestamp": "2021-07-27T12:43:44Z",
+          "url": "https://github.com/mathurinm/andersoncd/pull/53/commits/1978c4b768250b9846d6650e11d4f789689bcac4"
+        },
+        "date": 1627398796341,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "andersoncd/tests/bench_speed.py::test_Lasso[10]",
+            "value": 5.768292561991991,
+            "unit": "iter/sec",
+            "range": "stddev: 0.002714102223510887",
+            "extra": "mean: 173.3615258333335 msec\nrounds: 6"
+          },
+          {
+            "name": "andersoncd/tests/bench_speed.py::test_Lasso[50]",
+            "value": 2.984066247636286,
+            "unit": "iter/sec",
+            "range": "stddev: 0.005826125984731732",
+            "extra": "mean: 335.11320359999104 msec\nrounds: 5"
           }
         ]
       }
