@@ -6,3 +6,4 @@ andersoncd.egg-info/*
 doc/_build/
 doc/auto_examples/
 doc/gen_modules/
+/doc/generated/**.rst

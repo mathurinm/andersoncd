@@ -120,6 +120,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
         n_iters = np.zeros(n_alphas, dtype=int)
 
     for t in range(n_alphas):
+
         alpha = alphas[t]
         penalty.alpha = alpha  # TODO this feels unnatural
         if verbose:
@@ -234,7 +235,7 @@ def solver(
                 if max(verbose - 1, 0):
                     print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
                           f"kkt {kkt_ws_max:.2e}")
-                if kkt_ws_max < tol:
+                if kkt_ws_max < 0.3 * kkt_max:
                     if max(verbose - 1, 0):
                         print("    Early exit")
                     break
