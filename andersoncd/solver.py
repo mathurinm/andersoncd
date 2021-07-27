@@ -10,7 +10,8 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 return_n_iter=False, verbose=0,):
     r"""Compute optimization path with Celer primal as inner solver.
 
-    The loss is customised by passing various choices of datafit and penalty.
+    The loss is customized by passing various choices of datafit and penalty:
+    loss = datafit.value() + penalty.value()
 
 
     Parameters
@@ -21,7 +22,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
     y : ndarray, shape (n_samples,)
         Target values.
 
-    datafit : instance of Datafit class
+    datafit: instance of Datafit class
         Datafitting term.
 
     penalty : instance of Penalty class
@@ -134,7 +135,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
             if coef_init is not None:
                 w = coef_init.copy()
                 p0 = max((w != 0.).sum(), p0)
-                Xw = X @ w  # TODO Xw should be used instead
+                Xw = X @ w
             else:
                 w = np.zeros(n_features, dtype=X.dtype)
                 Xw = np.zeros_like(y)
