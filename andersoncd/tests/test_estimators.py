@@ -8,7 +8,9 @@ from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 from andersoncd.data import make_correlated_data
 from andersoncd.estimators import Lasso, WeightedLasso, ElasticNet, MCP
 
-X, y, _ = make_correlated_data(n_samples=30, n_features=40)
+X, y, _ = make_correlated_data(
+    n_samples=500, n_features=1000, density=0.1, random_state=0)
+
 n_samples, n_features = X.shape
 alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
 alpha = 0.05 * alpha_max
@@ -55,4 +57,4 @@ def test_estimator(estimator_name):
 
 
 if __name__ == '__main__':
-    test_estimator("Lasso")
+    test_estimator("ElasticNet")
