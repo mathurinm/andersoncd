@@ -25,5 +25,5 @@ def test_speed(benchmark):
     @benchmark
     def fit():
         for _ in range(1):
-            time.sleep(0.1)
+            time.sleep(0.2)
         # us.fit(X, y)
