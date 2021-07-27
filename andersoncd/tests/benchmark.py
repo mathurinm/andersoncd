@@ -10,7 +10,7 @@ from andersoncd.solver import _kkt_violation
 
 
 X, y, w_true = make_correlated_data(
-    n_samples=2000, n_features=10000, density=0.1)
+    n_samples=20, n_features=100, density=0.1)
 
 
 alpha_div = 100
@@ -28,6 +28,7 @@ us = Lasso(alpha=alpha, fit_intercept=False,
            warm_start=False).fit(X, y)
 
 kkt_sk = np.max(np.abs(_kkt_violation(sk.coef_, X, y - X @ sk.coef_,
+                                      us.datafit,
                                       us.penalty, np.arange(X.shape[1]))))
 us.tol = kkt_sk
 
@@ -37,7 +38,7 @@ us.max_iter = 50
 t0 = time.time()
 us.fit(X, y)
 t_us = time.time() - t0
-kkt_us = norm(_kkt_violation(us.coef_, X, y - X @ us.coef_,
+kkt_us = norm(_kkt_violation(us.coef_, X, y - X @ us.coef_, us.datafit,
                              us.penalty, np.arange(X.shape[1])), np.inf)
 
 
@@ -46,7 +47,7 @@ cr = Lasso_cr(alpha=alpha, fit_intercept=False, tol=sk.tol)
 t0 = time.time()
 cr.fit(X, y)
 t_cr = time.time() - t0
-kkt_cr = norm(_kkt_violation(cr.coef_, X, y - X @ cr.coef_,
+kkt_cr = norm(_kkt_violation(cr.coef_, X, y - X @ cr.coef_, us.datafit,
                              us.penalty, np.arange(X.shape[1])), np.inf)
 
 obj_us = np.mean((y - X @ us.coef_) ** 2) / 2. + us.alpha * norm(us.coef_, 1)
