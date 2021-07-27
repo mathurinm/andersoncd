@@ -26,17 +26,20 @@ dict_estimators_ours["Lasso"] = Lasso(
 dict_estimators_sk["wLasso"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_ours["wLasso"] = WeightedLasso(
-    alpha=alpha, fit_intercept=False, tol=tol, weights=np.ones(n_features))
+    alpha=alpha, fit_intercept=False, tol=tol, weights=np.ones(n_features),
+    verbose=True, max_iter=10)
 
 dict_estimators_sk["ElasticNet"] = ElasticNet_sklearn(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
 dict_estimators_ours["ElasticNet"] = ElasticNet(
-    alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
+    alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol,
+    verbose=True, max_iter=10)
 
 dict_estimators_sk["MCP"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
 dict_estimators_ours["MCP"] = MCP(
-    alpha=alpha, gamma=np.inf, fit_intercept=False, tol=tol)
+    alpha=alpha, gamma=np.inf, fit_intercept=False, tol=tol,
+    verbose=True, max_iter=10)
 
 
 @pytest.mark.parametrize(
