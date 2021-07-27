@@ -5,11 +5,15 @@ from numpy.linalg import norm
 from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
 
+from scipy.sparse import csc_matrix
+
 from andersoncd.data import make_correlated_data
 from andersoncd.estimators import Lasso, WeightedLasso, ElasticNet, MCP
 
 X, y, _ = make_correlated_data(
     n_samples=500, n_features=1000, density=0.1, random_state=0)
+
+X_sparse = csc_matrix(X)
 
 n_samples, n_features = X.shape
 alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
@@ -43,7 +47,8 @@ dict_estimators_ours["MCP"] = MCP(
 
 @pytest.mark.parametrize(
     "estimator_name", ["Lasso", "wLasso", "ElasticNet", "MCP"])
-def test_estimator(estimator_name):
+@pytest.mark.parametrize('X', [X, X_sparse])
+def test_estimator(estimator_name, X):
     # lasso from sklearn
     estimator_sk = dict_estimators_sk[estimator_name]
     estimator_sk.fit(X, y)
@@ -57,4 +62,4 @@ def test_estimator(estimator_name):
 
 
 if __name__ == '__main__':
-    test_estimator("ElasticNet")
+    test_estimator("ElasticNet", X_sparse)
