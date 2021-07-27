@@ -13,7 +13,8 @@ from andersoncd.estimators import Lasso, WeightedLasso, ElasticNet, MCP
 X, y, _ = make_correlated_data(
     n_samples=500, n_features=1000, density=0.1, random_state=0)
 
-X_sparse = csc_matrix(X)
+np.random.seed(0)
+X_sparse = csc_matrix(X * np.random.binomial(1, 0.1, X.shape))
 
 n_samples, n_features = X.shape
 alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
@@ -62,4 +63,5 @@ def test_estimator(estimator_name, X):
 
 
 if __name__ == '__main__':
-    test_estimator("ElasticNet", X_sparse)
+    # test_estimator("ElasticNet", X)
+    test_estimator("Lasso", X_sparse)
