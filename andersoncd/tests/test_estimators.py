@@ -14,7 +14,7 @@ X, y, _ = make_correlated_data(
     n_samples=500, n_features=1000, density=0.1, random_state=0)
 
 np.random.seed(0)
-X_sparse = csc_matrix(X * np.random.binomial(1, 0.01, X.shape))
+X_sparse = csc_matrix(X * np.random.binomial(1, 0.1, X.shape))
 
 n_samples, n_features = X.shape
 alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
