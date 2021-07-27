@@ -24,7 +24,9 @@ class Quadratic():
         for j in range(n_features):
             Xj = data[indptr[j]:indptr[j+1]]
             idx_nz = indices[indptr[j]:indptr[j+1]]
-            self.Xty[j] = Xj @ y[idx_nz]
+            self.Xty[j] = 0
+            for i, idx_i in enumerate(idx_nz):
+                self.Xty[j] += Xj[i] * y[idx_i]
             self.lipschitz[j] = (Xj ** 2).sum() / len(y)
 
     def value(self, y, w, Xw):
@@ -34,4 +36,7 @@ class Quadratic():
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
 
     def gradient_scalar_sparse(self, Xj, idx_nz, Xw, j):
-        return (Xj @ Xw[idx_nz] - self.Xty[j]) / len(Xw)
+        XjTXw = 0
+        for i, idx_i in enumerate(idx_nz):
+            XjTXw += Xj[i] * Xw[idx_i]
+        return (XjTXw - self.Xty[j]) / len(Xw)
