@@ -31,8 +31,7 @@ dict_estimators_ours["wLasso"] = WeightedLasso(
 dict_estimators_sk["ElasticNet"] = ElasticNet_sklearn(
     alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
 dict_estimators_ours["ElasticNet"] = ElasticNet(
-    alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol,
-    verbose=True, max_iter=10)  # KKT of the enet seem broken
+    alpha=alpha, l1_ratio=l1_ratio, fit_intercept=False, tol=tol)
 
 dict_estimators_sk["MCP"] = Lasso_sklearn(
     alpha=alpha, fit_intercept=False, tol=tol)
