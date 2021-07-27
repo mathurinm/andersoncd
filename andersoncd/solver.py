@@ -93,7 +93,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                     ensure_2d=False)
 
     datafit.initialize(X, y)
-    n_samples, n_features = X.shape
+    n_features = X.shape[1]
 
     # if X_offset is not None:
     #     X_sparse_scaling = X_offset / X_scale
@@ -165,7 +165,7 @@ def solver(
     penalty: instance of Penalty
     p0: first size of working set.
     """
-    n_samples, n_features = X.shape
+    n_features = X.shape[1]
     pen = penalty.is_penalized(n_features)
     unpen = ~pen
     n_unpen = unpen.sum()
@@ -243,22 +243,20 @@ def solver(
 
 @njit
 def _kkt_violation(w, X, Xw, datafit, penalty, ws):
-    n_samples = X.shape[0]
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        grad[idx] = datafit.gradient_scalar(X, w, Xw, j) / n_samples  # TODO
+        grad[idx] = datafit.gradient_scalar(X, w, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
 
 @njit
 def _cd_epoch(X, w, Xw, datafit, penalty, feats):
-    n_samples = Xw.shape[0]
     lc = datafit.lipschitz
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j - datafit.gradient_scalar(
-                X, w, Xw, j) / lc[j], n_samples / lc[j], j)
+            old_w_j - datafit.gradient_scalar(X, w, Xw, j) / lc[j],
+            1 / lc[j], j)
         if w[j] != old_w_j:
-            Xw -= (old_w_j - w[j]) * Xj
+            Xw += (w[j] - old_w_j) * Xj
