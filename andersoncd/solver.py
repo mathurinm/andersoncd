@@ -1,7 +1,6 @@
 import numpy as np
 from numba import njit
 from scipy import sparse
-from numpy.linalg import norm
 from sklearn.utils import check_array
 
 
