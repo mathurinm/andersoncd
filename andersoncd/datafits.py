@@ -24,4 +24,8 @@ class Quadratic():
         return (X.T @ Xw - self.Xty) / len(Xw)
 
     def gradient_scalar(self, X, w, Xw, j):
+        # TODO remove w unused in argument
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
+
+    def gradient_scalar_sparse(self, Xj, idx_nz, Xw, y):
+        return (Xj @ (Xw[idx_nz] - y[idx_nz])) / len(Xw)

@@ -85,8 +85,8 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
         Maximum violation of KKT along the path.
     """
 
-    if sparse.issparse(X):
-        raise ValueError("Spare design matrices are not supported yet.")
+    # if sparse.issparse(X):
+    #     raise ValueError("Spare design matrices are not supported yet.")
 
     X = check_array(X, 'csc', dtype=[np.float64, np.float32],
                     order='F', copy=False, accept_large_sparse=False)
@@ -195,8 +195,14 @@ def solver(
             print(f'Iteration {t + 1}, {ws_size} feats in subpb.')
 
         # 2) do iterations on smaller problem
+        is_sparse = sparse.issparse(X)
         for epoch in range(max_epochs):
-            _cd_epoch(X, w, Xw, datafit, penalty, ws)
+            if is_sparse:
+                _cd_epoch_sparse(
+                    X.data, X.indptr, X.indices, w, Xw, y, datafit, penalty,
+                    ws)
+            else:
+                _cd_epoch(X, w, Xw, datafit, penalty, ws)
 
             # TODO optimize computation using ws
             if use_acc:
@@ -260,3 +266,19 @@ def _cd_epoch(X, w, Xw, datafit, penalty, feats):
             1 / lc[j], j)
         if w[j] != old_w_j:
             Xw += (w[j] - old_w_j) * Xj
+
+
+@njit
+def _cd_epoch_sparse(
+        data, indptr, indices, w, Xw, y, datafit, penalty, feats):
+    lc = datafit.lipschitz
+    for j in feats:
+        Xj = data[indptr[j]:indptr[j+1]]
+        idx_nz = indices[indptr[j]:indptr[j+1]]
+
+        old_w_j = w[j]
+        w[j] = penalty.prox_1d(
+            old_w_j - datafit.gradient_scalar_sparse(
+                Xj, idx_nz, Xw, y) / lc[j], 1 / lc[j], j)
+        if w[j] != old_w_j:
+            Xw[idx_nz] += (w[j] - old_w_j) * Xj
