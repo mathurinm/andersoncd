@@ -56,16 +56,16 @@ class L1(Penalty):
     def prox_1d(self, value, stepsize, j):
         return ST(value, self.alpha * stepsize)
 
-    def subdiff_distance(self, w, neg_grad, ws):
-        res = np.zeros_like(neg_grad)
+    def subdiff_distance(self, w, grad, ws):
+        res = np.zeros_like(grad)
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
                 # distance of - grad_j to  [-alpha, alpha]
-                res[idx] = max(0, np.abs(neg_grad[idx]) - self.alpha)
+                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
             else:
                 # distance of - grad_j to alpha * sign(w[j])
-                res[idx] = np.abs(neg_grad[idx] - np.sign(w[j]) * self.alpha)
+                res[idx] = np.abs(grad[idx] - np.sign(w[j]) * self.alpha)
         return res
 
     def is_penalized(self, n_features):
@@ -96,19 +96,19 @@ class L1_plus_L2(Penalty):
         res /= (1 + stepsize * (1 - self.l1_ratio) * self.alpha)
         return res
 
-    def subdiff_distance(self, w, neg_grad, ws):
-        res = np.zeros_like(neg_grad)
+    def subdiff_distance(self, w, grad, ws):
+        res = np.zeros_like(grad)
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
                 # distance of - grad_j to alpha * l1_ratio * [-1, 1]
-                res[idx] = max(0, np.abs(neg_grad[idx]) -
+                res[idx] = max(0, np.abs(grad[idx]) -
                                self.alpha * self.l1_ratio)
             else:
                 # distance of - grad_j to alpha * l_1 ratio * sign(w[j]) +
                 # alpha * (1 - l1_ratio) * w[j]
                 res[idx] = np.abs(
-                    neg_grad[idx] -
+                    - grad[idx] -
                     self.alpha * (self.l1_ratio *
                                   np.sign(w[j]) + (1 - self.l1_ratio) * w[j]))
         return res
@@ -142,13 +142,13 @@ class WeightedL1(Penalty):
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
-                # distance of grad to alpha * weights[j] * [-1, 1]
+                # distance of - grad_j to alpha * weights[j] * [-1, 1]
                 res[idx] = max(0, np.abs(grad[idx]) -
                                self.alpha * self.weights[j])
             else:
-                # distance of grad_j to alpha * weights[j] * sign(w[j])
-                res[idx] = np.abs(np.abs(grad[idx]) -
-                                  self.alpha * self.weights[j])
+                # distance of - grad_j to alpha * weights[j] * sign(w[j])
+                res[idx] = np.abs(- grad[idx] - self.alpha *
+                                  self.weights[j] * np.sign(w[j]))
         return res
 
     def is_penalized(self, n_features):
