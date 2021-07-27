@@ -101,19 +101,16 @@ class L1_plus_L2(Penalty):
         for idx in range(ws.shape[0]):
             j = ws[idx]
             if w[j] == 0:
-                # distance of grad_j to alpha * [-1, 1]
-                tmp = neg_grad[idx]
-                tmp -= (1 - self.l1_ratio) * self.alpha * w[j]
-                tmp = np.abs(tmp)
-                tmp -= self.l1_ratio * self.alpha
-                res[idx] = max(0, tmp)
+                # distance of - grad_j to alpha * l1_ratio * [-1, 1]
+                res[idx] = max(0, np.abs(neg_grad[idx]) -
+                               self.alpha * self.l1_ratio)
             else:
-                # distance of grad_j to alpha  * sign(w[j])
-                tmp = neg_grad[idx]
-                tmp -= (1 - self.l1_ratio) * self.alpha * w[j]
-                tmp = np.abs(tmp)
-                tmp -= self.l1_ratio * self.alpha
-                res[idx] = np.abs(tmp)
+                # distance of - grad_j to alpha * l_1 ratio * sign(w[j]) +
+                # alpha * (1 - l1_ratio) * w[j]
+                res[idx] = np.abs(
+                    np.abs(neg_grad[idx]) -
+                    self.alpha * (self.l1_ratio *
+                                  np.sign(w[j]) + (1 - self.l1_ratio) * w[j]))
         return res
 
     def is_penalized(self, n_features):
