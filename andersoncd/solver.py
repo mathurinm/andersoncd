@@ -91,7 +91,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                     ensure_2d=False)
 
     if sparse.issparse(X):
-        datafit.initialize_sparse(X.data, X.indptr, X.indices, y, X.shape[1])
+        datafit.initialize_sparse(X.data, X.indptr, X.indices, y)
     else:
         datafit.initialize(X, y)
     n_features = X.shape[1]
@@ -303,7 +303,7 @@ def _cd_epoch_sparse(
 
         old_w_j = w[j]
         gradj = datafit.gradient_scalar_sparse(
-                Xj, idx_nz, Xw, j)
+            Xj, idx_nz, Xw, j)
         w[j] = penalty.prox_1d(
             old_w_j - gradj / lc[j], 1 / lc[j], j)
         if w[j] != old_w_j:
