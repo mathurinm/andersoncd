@@ -19,7 +19,7 @@ class Quadratic():
 
     def initialize_sparse(
             self, X_data, X_indptr, X_indices, y):
-        n_features = len(X_indptr - 1)
+        n_features = len(X_indptr) - 1
         self.Xty = np.zeros(n_features)
         self.lipschitz = np.empty(n_features)
         for j in range(n_features):
