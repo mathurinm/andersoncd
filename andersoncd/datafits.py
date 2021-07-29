@@ -1,6 +1,12 @@
+# Author: Quentin Bertrand <quentin.bertrand@inria.fr>
+#         Mathurin Massias <mathurin.massias@gmail.com>
+# License: BSD 3 clause
+
+from abc import abstractmethod
+
 import numpy as np
-from numba.experimental import jitclass
 from numba import float64
+from numba.experimental import jitclass
 
 spec_quadratic = [
     ('Xty', float64[:]),
@@ -8,8 +14,31 @@ spec_quadratic = [
 ]
 
 
+class BaseDatafit():
+    @abstractmethod
+    def initialize(self, X, y):
+        """Computations before fitting on new data X and y."""
+
+    @abstractmethod
+    def initialize_sparse(
+            self, X_data, X_indptr, X_indices, y):
+        """Computations before fitting on new data X and y, with sparse X."""
+
+    @abstractmethod
+    def value(self, y, w, Xw):
+        """Value of datafit at vector w."""
+
+    @abstractmethod
+    def gradient_scalar(self, X, w, Xw, j):
+        """Gradient with respect to j-th coordinate of w."""
+
+    @abstractmethod
+    def gradient_scalar_sparse(self, Xj, idx_nz, Xw, j):
+        """Gradient with respect to j-th coordinate of w when X is sparse."""
+
+
 @jitclass(spec_quadratic)
-class Quadratic():
+class Quadratic(BaseDatafit):
     def __init__(self):
         pass
 

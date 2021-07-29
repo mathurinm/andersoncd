@@ -3,16 +3,17 @@
 #         Salim Benchelabi
 # License: BSD 3 clause
 
+from abc import abstractmethod
+
 import numpy as np
 from numba import float64
-from abc import abstractmethod
 from numba.experimental import jitclass
 from numba.types import bool_
 
 from andersoncd.utils import ST
 
 
-class Penalty():
+class BasePenalty():
     @abstractmethod
     def value(self, w):
         """Value of penalty at vector w."""
@@ -22,13 +23,13 @@ class Penalty():
         """Proximal operator of penalty for feature j."""
 
     @abstractmethod
-    def subdiff_distance(self, w, neg_grad, ws):
+    def subdiff_distance(self, w, grad, ws):
         """Distance of gradient to subdifferential of penalty for feature j.
 
         w : array, shape (n_features,)
             Coefficient vector.
-        neg_grad: array, shape (n_features,)
-            Minus the value of the gradient of the datafit at w.
+        grad: array, shape (n_features,)
+            Gradient of the datafit at w.
         ws: array
             Features in the working set.
         """
@@ -44,7 +45,7 @@ spec_L1 = [
 
 
 @jitclass(spec_L1)
-class L1(Penalty):
+class L1(BasePenalty):
     def __init__(self, alpha):
         self.alpha = alpha
 
@@ -79,7 +80,7 @@ spec_L1_plus_L2 = [
 
 
 @jitclass(spec_L1_plus_L2)
-class L1_plus_L2(Penalty):
+class L1_plus_L2(BasePenalty):
     def __init__(self, alpha, l1_ratio):
         self.alpha = alpha
         self.l1_ratio = l1_ratio
@@ -124,7 +125,7 @@ spec_WeightedL1 = [
 
 
 @jitclass(spec_WeightedL1)
-class WeightedL1(Penalty):
+class WeightedL1(BasePenalty):
     def __init__(self, alpha, weights):
         self.alpha = alpha
         self.weights = weights.astype(np.float64)
@@ -162,7 +163,7 @@ spec_MCP = [
 
 
 @jitclass(spec_MCP)
-class MCP_pen(Penalty):
+class MCP_pen(BasePenalty):
     def __init__(self, alpha, gamma):
         self.alpha = alpha
         self.gamma = gamma

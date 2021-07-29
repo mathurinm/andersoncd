@@ -140,6 +140,7 @@ html_theme_options = {
     'navbar_links': [
         ("Examples", "auto_examples/index"),
         ("API", "api"),
+        ("Add custom penalty and datafit", "add"),
         ("GitHub", "https://github.com/mathurinm/andersoncd", True)
     ],
     'bootswatch_theme': "united"
