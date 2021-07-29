@@ -110,7 +110,7 @@ class Lasso(Lasso_sklearn):
         self.p0 = p0
         self.prune = prune
         self.datafit = Quadratic()
-        self.penalty = L1(alpha)
+        self.penalty = L1()
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute Lasso path with Celer + primal extrapolation."""
@@ -217,7 +217,7 @@ class WeightedLasso(Lasso_sklearn):
         self.p0 = p0
         self.prune = prune
         self.datafit = Quadratic()
-        self.penalty = WeightedL1(alpha, weights)
+        self.penalty = WeightedL1(1, weights)
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute weighted Lasso path with Celer + primal extrapolation."""
@@ -444,7 +444,8 @@ class MCP(Lasso_sklearn):
         self.prune = prune
         self.gamma = gamma
         self.datafit = Quadratic()
-        self.penalty = MCP_pen(alpha, gamma)
+        self.penalty = MCP_pen(gamma=gamma)
+        # TODO pen_params ?
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute MCP path with Celer + primal extrapolation."""
@@ -568,8 +569,7 @@ class LogisticRegression(LogReg_sklearn):
         self.fit_intercept = fit_intercept
         self.solver = solver
         self.datafit = Logistic()
-        self.penalty_ours = L1(1 / C)  # what about the n_samples ?
-        # how can we fix this ?
+        self.penalty_ours = L1()
         # # + penalty attr is already taken for sparselogreg
 
     def fit(self, X, y):

@@ -54,7 +54,7 @@ spec_L1 = [
 
 @jitclass(spec_L1)
 class L1(BasePenalty):
-    def __init__(self, alpha):
+    def __init__(self, alpha=1.):
         self.alpha = alpha
 
     def value(self, w):
@@ -89,7 +89,7 @@ spec_L1_plus_L2 = [
 
 @jitclass(spec_L1_plus_L2)
 class L1_plus_L2(BasePenalty):
-    def __init__(self, alpha, l1_ratio):
+    def __init__(self, alpha=1., l1_ratio=0.9):
         self.alpha = alpha
         self.l1_ratio = l1_ratio
 
@@ -133,7 +133,7 @@ spec_WeightedL1 = [
 
 @jitclass(spec_WeightedL1)
 class WeightedL1(BasePenalty):
-    def __init__(self, alpha, weights):
+    def __init__(self, alpha=1., weights=np.ones(1.)):
         self.alpha = alpha
         self.weights = weights.astype(np.float64)
 
@@ -170,7 +170,7 @@ spec_MCP = [
 
 @jitclass(spec_MCP)
 class MCP_pen(BasePenalty):
-    def __init__(self, alpha, gamma):
+    def __init__(self, alpha=1., gamma=3.):
         self.alpha = alpha
         self.gamma = gamma
 
