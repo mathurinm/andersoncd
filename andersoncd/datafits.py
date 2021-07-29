@@ -8,11 +8,6 @@ import numpy as np
 from numba import float64
 from numba.experimental import jitclass
 
-spec_quadratic = [
-    ('Xty', float64[:]),
-    ('lipschitz', float64[:]),
-]
-
 
 class BaseDatafit():
     @abstractmethod
@@ -35,6 +30,12 @@ class BaseDatafit():
     @abstractmethod
     def gradient_scalar_sparse(self, Xj, idx_nz, Xw, j):
         """Gradient with respect to j-th coordinate of w when X is sparse."""
+
+
+spec_quadratic = [
+    ('Xty', float64[:]),
+    ('lipschitz', float64[:]),
+]
 
 
 @jitclass(spec_quadratic)

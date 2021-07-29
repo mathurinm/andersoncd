@@ -1,6 +1,6 @@
 .. _how:
 
-With andersoncd, you can solve any custom Generalized Linear Model with an arbitrary proximable penalty, by defining two classes: a ``Penalty`` and a ``Datafit``.
+With andersoncd, you can solve any custom Generalized Linear Model with arbitrary smooth datafit and arbitrary proximable penalty, by defining two classes: a ``Penalty`` and a ``Datafit``.
 
 
 How to add a custom penalty
