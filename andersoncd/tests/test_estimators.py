@@ -72,6 +72,8 @@ def test_estimator(estimator_name, X):
     coef_sk = estimator_sk.coef_
     coef_ours = estimator_ours.coef_
 
+    # assert that something was fitted:
+    np.testing.assert_array_less(1e-5, norm(coef_ours))
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
 
