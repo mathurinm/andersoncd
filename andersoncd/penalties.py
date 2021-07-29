@@ -24,16 +24,22 @@ class BasePenalty():
 
     @abstractmethod
     def subdiff_distance(self, w, grad, ws):
-        """Distance of gradient to subdifferential of penalty for all features
+        """Distance of gradient to subdifferential of penalty for features
         in the working set ws.
-        Returns an array of shape shape (len(ws),).
 
-        w : array, shape (n_features,)
+        Parameters
+        ----------
+        w: array, shape (n_features,)
             Coefficient vector.
-        grad: array, shape (size of the working set,)
+        grad: array, shape (ws.shape[0],)
             Gradient of the datafit at w.
         ws: array
-            Features in the working set.
+            Indices of features in the working set.
+
+        Returns
+        -------
+        distances: array, shape (ws.shape[0],).
+
         """
 
     @abstractmethod
