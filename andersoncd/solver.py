@@ -177,11 +177,11 @@ def solver(
 
         if is_sparse:
             kkt = _kkt_violation_sparse(
-                w, X.data, X.indptr, X.indices, Xw, datafit, penalty,
+                w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
                 np.arange(n_features))
         else:
             kkt = _kkt_violation(
-                w, X, Xw, datafit, penalty, np.arange(n_features))
+                w, X, y, Xw, datafit, penalty, np.arange(n_features))
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
@@ -207,10 +207,10 @@ def solver(
         for epoch in range(max_epochs):
             if is_sparse:
                 _cd_epoch_sparse(
-                    X.data, X.indptr, X.indices, w, Xw, y, datafit, penalty,
+                    X.data, X.indptr, X.indices, y, w, Xw, datafit, penalty,
                     ws)
             else:
-                _cd_epoch(X, w, Xw, datafit, penalty, ws)
+                _cd_epoch(X, y, w, Xw, datafit, penalty, ws)
 
             # TODO optimize computation using ws
             if use_acc:
@@ -244,11 +244,11 @@ def solver(
 
                 if is_sparse:
                     kkt_ws = _kkt_violation_sparse(
-                        w, X.data, X.indptr, X.indices, Xw, datafit, penalty,
-                        ws)
+                        w, X.data, X.indptr, X.indices, y, Xw, datafit,
+                        penalty, ws)
                 else:
                     kkt_ws = _kkt_violation(
-                        w, X, Xw, datafit, penalty, ws)
+                        w, X, y, Xw, datafit, penalty, ws)
 
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
@@ -263,31 +263,32 @@ def solver(
 
 
 @njit
-def _kkt_violation(w, X, Xw, datafit, penalty, ws):
+def _kkt_violation(w, X, y, Xw, datafit, penalty, ws):
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        grad[idx] = datafit.gradient_scalar(X, w, Xw, j)
+        grad[idx] = datafit.gradient_scalar(X, y, w, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
 
 @njit
-def _kkt_violation_sparse(w, data, indptr, indices, Xw, datafit, penalty, ws):
+def _kkt_violation_sparse(
+        w, data, indptr, indices, y, Xw, datafit, penalty, ws):
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
         Xj = data[indptr[j]:indptr[j+1]]
         idx_nz = indices[indptr[j]:indptr[j+1]]
-        grad[idx] = datafit.gradient_scalar_sparse(Xj, idx_nz, Xw, j)
+        grad[idx] = datafit.gradient_scalar_sparse(Xj, y, idx_nz, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
 
 @njit
-def _cd_epoch(X, w, Xw, datafit, penalty, feats):
+def _cd_epoch(X, y, w, Xw, datafit, penalty, feats):
     lc = datafit.lipschitz
     for j in feats:
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
-            old_w_j - datafit.gradient_scalar(X, w, Xw, j) / lc[j],
+            old_w_j - datafit.gradient_scalar(X, y, w, Xw, j) / lc[j],
             1 / lc[j], j)
         if w[j] != old_w_j:
             Xw += (w[j] - old_w_j) * Xj
@@ -295,7 +296,7 @@ def _cd_epoch(X, w, Xw, datafit, penalty, feats):
 
 @njit
 def _cd_epoch_sparse(
-        data, indptr, indices, w, Xw, y, datafit, penalty, feats):
+        data, indptr, indices, y, w, Xw, datafit, penalty, feats):
     lc = datafit.lipschitz
     for j in feats:
         Xj = data[indptr[j]:indptr[j+1]]
@@ -303,7 +304,7 @@ def _cd_epoch_sparse(
 
         old_w_j = w[j]
         gradj = datafit.gradient_scalar_sparse(
-            Xj, idx_nz, Xw, j)
+            Xj, y, idx_nz, Xw, j)
         w[j] = penalty.prox_1d(
             old_w_j - gradj / lc[j], 1 / lc[j], j)
         if w[j] != old_w_j:

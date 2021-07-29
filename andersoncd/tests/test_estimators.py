@@ -4,6 +4,7 @@ from numpy.linalg import norm
 
 from sklearn.linear_model import Lasso as Lasso_sklearn
 from sklearn.linear_model import ElasticNet as ElasticNet_sklearn
+from sklearn.linear_model import LogisticRegression as LogReg_sklearn
 
 from scipy.sparse import csc_matrix
 
@@ -62,6 +63,38 @@ def test_estimator(estimator_name, X):
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
 
+def test_logreg():
+    """To be removed and merge with test estimator when API is done"""
+    from andersoncd.datafits import Logistic
+    from andersoncd.penalties import L1
+    from andersoncd.solver import solver
+
+    X, y, _ = make_correlated_data(
+        n_samples=500, n_features=1000, density=0.1, random_state=0)
+
+    y = np.sign(y)
+    alpha_max = norm(X.T @ y, ord=np.inf) / n_samples / 4
+    alpha = 0.05 * alpha_max
+    datafit = Logistic()
+    datafit.initialize(X, y)
+    penalty = L1(alpha)
+    w = np.zeros(n_features)
+    Xw = np.zeros(n_samples)
+
+    coef_ours, _, _ = solver(
+        X, y, datafit, penalty, w, Xw, max_iter=50,
+        max_epochs=50_000, p0=10, tol=tol, use_acc=True, K=5, verbose=True)
+
+    clf_sk = LogReg_sklearn(
+        C=1/(alpha * n_samples), fit_intercept=False, tol=tol, penalty='l1',
+        solver='liblinear', max_iter=100)
+    clf_sk.fit(X, y)
+
+    coef_sk = clf_sk.coef_[0, :]
+
+    np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
+
+
 if __name__ == '__main__':
-    # test_estimator("ElasticNet", X)
-    test_estimator("Lasso", X_sparse)
+    # test_estimator("Lasso", X_sparse)
+    test_logreg()

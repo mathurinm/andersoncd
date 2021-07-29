@@ -65,8 +65,52 @@ class Quadratic(BaseDatafit):
     def gradient_scalar(self, X, w, Xw, j):
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
 
-    def gradient_scalar_sparse(self, Xj, idx_nz, Xw, j):
+    def gradient_scalar_sparse(self, Xj, y, idx_nz, Xw, j):
         XjTXw = 0
         for i, idx_i in enumerate(idx_nz):
             XjTXw += Xj[i] * Xw[idx_i]
         return (XjTXw - self.Xty[j]) / len(Xw)
+
+
+from numba import njit
+@njit
+def sigmoid(x):
+    """Vectorwise sigmoid."""
+    return 1. / (1. + np.exp(- x))
+
+
+@jitclass(spec_quadratic)
+class Logistic(BaseDatafit):
+    def __init__(self):
+        pass
+
+    def initialize(self, X, y):
+        self.Xty = X.T @ y
+        self.lipschitz = (X ** 2).sum(axis=0) / len(y) / 4
+
+    def initialize_sparse(
+            self, X_data, X_indptr, X_indices, y):
+        # TODO rm Xty ?
+        n_features = len(X_indptr) - 1
+        self.Xty = np.zeros(n_features)
+        self.lipschitz = np.empty(n_features)
+        for j in range(n_features):
+            Xj = X_data[X_indptr[j]:X_indptr[j+1]]
+            idx_nz = X_indices[X_indptr[j]:X_indptr[j+1]]
+            for i, idx_i in enumerate(idx_nz):
+                self.Xty[j] += Xj[i] * y[idx_i]
+            self.lipschitz[j] = (Xj ** 2).sum() / len(y) / 4
+
+    def value(self, y, w, Xw):
+        return - np.log(sigmoid(y * Xw)).sum() / len(y)
+
+    def gradient_scalar(self, X, y, w, Xw, j):
+        return (X[:, j] @ (y * (sigmoid(y * Xw) - 1))) / len(y)
+
+    def gradient_scalar_sparse(self, Xj, y, idx_nz, Xw, j):
+        """TODO"""
+        pass
+        # XjTXw = 0
+        # for i, idx_i in enumerate(idx_nz):
+        #     XjTXw += Xj[i] * Xw[idx_i]
+        # return (XjTXw - self.Xty[j]) / len(Xw)
