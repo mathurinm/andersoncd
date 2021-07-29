@@ -66,7 +66,8 @@ class Quadratic(BaseDatafit):
     def gradient_scalar(self, X, y, w, Xw, j):
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
 
-    def gradient_scalar_sparse(self, Xj, y, idx_nz, Xw, j):
+    def gradient_scalar_sparse(self, Xj, idx_nz, y, Xw, j):
+        # TODO j is not needed since we pass Xj
         XjTXw = 0
         for i, idx_i in enumerate(idx_nz):
             XjTXw += Xj[i] * Xw[idx_i]
@@ -98,12 +99,10 @@ class Logistic(BaseDatafit):
         return np.log(1. + np.exp(- y * Xw)).sum() / len(y)
 
     def gradient_scalar(self, X, y, w, Xw, j):
-        return (X[:, j] @ (y * (sigmoid(y * Xw) - 1))) / len(y)
+        return (- X[:, j] @ (y * sigmoid(- y * Xw))) / len(y)
 
-    def gradient_scalar_sparse(self, Xj, y, idx_nz, Xw, j):
-        """TODO"""
-        pass
-        # XjTXw = 0
-        # for i, idx_i in enumerate(idx_nz):
-        #     XjTXw += Xj[i] * Xw[idx_i]
-        # return (XjTXw - self.Xty[j]) / len(Xw)
+    def gradient_scalar_sparse(self, Xj, idx_nz, y, Xw, j):
+        grad = 0.
+        for i, idx_i in enumerate(idx_nz):
+            grad -= Xj[i] * y[idx_i] * sigmoid(- y[idx_i] * Xw[idx_i])
+        return grad / len(Xw)

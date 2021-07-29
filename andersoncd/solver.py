@@ -278,7 +278,7 @@ def _kkt_violation_sparse(
     for idx, j in enumerate(ws):
         Xj = data[indptr[j]:indptr[j+1]]
         idx_nz = indices[indptr[j]:indptr[j+1]]
-        grad[idx] = datafit.gradient_scalar_sparse(Xj, y, idx_nz, Xw, j)
+        grad[idx] = datafit.gradient_scalar_sparse(Xj, idx_nz, y, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
 
@@ -305,7 +305,7 @@ def _cd_epoch_sparse(
 
         old_w_j = w[j]
         gradj = datafit.gradient_scalar_sparse(
-            Xj, y, idx_nz, Xw, j)
+            Xj, idx_nz, y, Xw, j)
         w[j] = penalty.prox_1d(
             old_w_j - gradj / lc[j], 1 / lc[j], j)
         if w[j] != old_w_j:

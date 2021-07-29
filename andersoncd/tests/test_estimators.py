@@ -13,7 +13,7 @@ from andersoncd.estimators import (
     Lasso, WeightedLasso, ElasticNet, MCP, LogisticRegression)
 
 X, y, _ = make_correlated_data(
-    n_samples=500, n_features=1000, density=0.1, random_state=0)
+    n_samples=200, n_features=500, density=0.1, random_state=0)
 
 np.random.seed(0)
 X_sparse = csc_matrix(X * np.random.binomial(1, 0.1, X.shape))
