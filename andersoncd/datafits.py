@@ -62,7 +62,7 @@ class Quadratic(BaseDatafit):
     def value(self, y, w, Xw):
         return np.sum((y - Xw) ** 2) / (2 * len(Xw))
 
-    def gradient_scalar(self, X, w, Xw, j):
+    def gradient_scalar(self, X, y, w, Xw, j):
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
 
     def gradient_scalar_sparse(self, Xj, y, idx_nz, Xw, j):

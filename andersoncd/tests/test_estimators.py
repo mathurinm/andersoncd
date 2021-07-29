@@ -9,7 +9,8 @@ from sklearn.linear_model import LogisticRegression as LogReg_sklearn
 from scipy.sparse import csc_matrix
 
 from andersoncd.data import make_correlated_data
-from andersoncd.estimators import Lasso, WeightedLasso, ElasticNet, MCP
+from andersoncd.estimators import (
+    Lasso, WeightedLasso, ElasticNet, MCP, LogisticRegression)
 
 X, y, _ = make_correlated_data(
     n_samples=500, n_features=1000, density=0.1, random_state=0)
@@ -46,55 +47,33 @@ dict_estimators_sk["MCP"] = Lasso_sklearn(
 dict_estimators_ours["MCP"] = MCP(
     alpha=alpha, gamma=np.inf, fit_intercept=False, tol=tol)
 
+dict_estimators_sk["LogisticRegression"] = LogReg_sklearn(
+    C=1/(alpha * n_samples), fit_intercept=False, tol=tol, penalty='l1',
+    solver='liblinear', max_iter=100)
+dict_estimators_ours["LogisticRegression"] = LogisticRegression(
+    C=1/(alpha * n_samples), fit_intercept=False, tol=tol,
+    penalty='l1', verbose=True)
+
 
 @pytest.mark.parametrize(
-    "estimator_name", ["Lasso", "wLasso", "ElasticNet", "MCP"])
+    "estimator_name",
+    ["Lasso", "wLasso", "ElasticNet", "MCP", "LogisticRegression"])
 @pytest.mark.parametrize('X', [X, X_sparse])
 def test_estimator(estimator_name, X):
     # lasso from sklearn
     estimator_sk = dict_estimators_sk[estimator_name]
-    estimator_sk.fit(X, y)
-    coef_sk = estimator_sk.coef_
-
     estimator_ours = dict_estimators_ours[estimator_name]
-    estimator_ours.fit(X, y)
+    if estimator_name == "LogisticRegression":
+        estimator_sk.fit(X, np.sign(y))
+        estimator_ours.fit(X, np.sign(y))
+    else:
+        estimator_sk.fit(X, y)
+        estimator_ours.fit(X, y)
+    coef_sk = estimator_sk.coef_
     coef_ours = estimator_ours.coef_
 
     np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
 
 
-def test_logreg():
-    """To be removed and merge with test estimator when API is done"""
-    from andersoncd.datafits import Logistic
-    from andersoncd.penalties import L1
-    from andersoncd.solver import solver
-
-    X, y, _ = make_correlated_data(
-        n_samples=500, n_features=1000, density=0.1, random_state=0)
-
-    y = np.sign(y)
-    alpha_max = norm(X.T @ y, ord=np.inf) / n_samples / 4
-    alpha = 0.05 * alpha_max
-    datafit = Logistic()
-    datafit.initialize(X, y)
-    penalty = L1(alpha)
-    w = np.zeros(n_features)
-    Xw = np.zeros(n_samples)
-
-    coef_ours, _, _ = solver(
-        X, y, datafit, penalty, w, Xw, max_iter=50,
-        max_epochs=50_000, p0=10, tol=tol, use_acc=True, K=5, verbose=True)
-
-    clf_sk = LogReg_sklearn(
-        C=1/(alpha * n_samples), fit_intercept=False, tol=tol, penalty='l1',
-        solver='liblinear', max_iter=100)
-    clf_sk.fit(X, y)
-
-    coef_sk = clf_sk.coef_[0, :]
-
-    np.testing.assert_allclose(coef_ours, coef_sk, atol=1e-6)
-
-
 if __name__ == '__main__':
-    # test_estimator("Lasso", X_sparse)
-    test_logreg()
+    test_estimator("LogisticRegression", X)
