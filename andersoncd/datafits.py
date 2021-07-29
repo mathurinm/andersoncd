@@ -86,7 +86,7 @@ class Logistic(BaseDatafit):
         pass
 
     def initialize(self, X, y):
-        self.lipschitz = (X ** 2).sum(axis=0) / len(y) / 4
+        self.lipschitz = (X ** 2).sum(axis=0) / (len(y) * 4)
 
     def initialize_sparse(self, X_data, X_indptr, X_indices, y):
         n_features = len(X_indptr) - 1
