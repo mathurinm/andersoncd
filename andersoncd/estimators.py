@@ -462,7 +462,7 @@ class LogisticRegression(LogReg_sklearn):
 
     The optimization objective for sparse Logistic regression is::
 
-    log(1 + e^{-y_i x_i^T w}) + 1. / C * ||w||_1
+    mean(log(1 + e^{-y_i x_i^T w})) + 1. / C * ||w||_1
 
     The solvers use a working set strategy. To solve problems restricted to a
     subset of features.
@@ -646,6 +646,8 @@ class LogisticRegression(LogReg_sklearn):
             Initial value of the coefficients.
         """
         return solver_path(
+            # TODO the choice of parametrization in the class is different
+            # from the one in the penalty, this could be confusing
             X, y, self.datafit, self.penalty_ours, alphas=1 / (Cs * len(y)),
             coef_init=coef_init, max_iter=self.max_iter,
             return_n_iter=return_n_iter, max_epochs=self.max_epochs,

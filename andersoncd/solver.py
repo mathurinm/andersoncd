@@ -122,7 +122,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
     for t in range(n_alphas):
 
         alpha = alphas[t]
-        penalty.alpha = alpha  # TODO this feels unnatural
+        penalty.alpha = alpha  # TODO this feels it will break sklearn compat
         if verbose:
             to_print = "##### Computing alpha %d/%d" % (t + 1, n_alphas)
             print("#" * len(to_print))
@@ -171,6 +171,7 @@ def solver(
     unpen = ~pen
     n_unpen = unpen.sum()
     obj_out = []
+    all_feats = np.arange(n_features)
 
     is_sparse = sparse.issparse(X)
     for t in range(max_iter):
@@ -178,10 +179,10 @@ def solver(
         if is_sparse:
             kkt = _kkt_violation_sparse(
                 w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
-                np.arange(n_features))
+                all_feats)
         else:
             kkt = _kkt_violation(
-                w, X, y, Xw, datafit, penalty, np.arange(n_features))
+                w, X, y, Xw, datafit, penalty, all_feats)
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")

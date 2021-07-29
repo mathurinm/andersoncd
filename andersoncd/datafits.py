@@ -2,6 +2,7 @@
 #         Mathurin Massias <mathurin.massias@gmail.com>
 # License: BSD 3 clause
 
+from numba import njit
 from abc import abstractmethod
 
 import numpy as np
@@ -24,11 +25,11 @@ class BaseDatafit():
         """Value of datafit at vector w."""
 
     @abstractmethod
-    def gradient_scalar(self, X, w, Xw, j):
+    def gradient_scalar(self, X, y, w, Xw, j):
         """Gradient with respect to j-th coordinate of w."""
 
     @abstractmethod
-    def gradient_scalar_sparse(self, Xj, idx_nz, Xw, j):
+    def gradient_scalar_sparse(self, Xj, idx_nz, y, Xw, j):
         """Gradient with respect to j-th coordinate of w when X is sparse."""
 
 
@@ -72,7 +73,6 @@ class Quadratic(BaseDatafit):
         return (XjTXw - self.Xty[j]) / len(Xw)
 
 
-from numba import njit
 @njit
 def sigmoid(x):
     """Vectorwise sigmoid."""
@@ -85,24 +85,17 @@ class Logistic(BaseDatafit):
         pass
 
     def initialize(self, X, y):
-        self.Xty = X.T @ y
         self.lipschitz = (X ** 2).sum(axis=0) / len(y) / 4
 
-    def initialize_sparse(
-            self, X_data, X_indptr, X_indices, y):
-        # TODO rm Xty ?
+    def initialize_sparse(self, X_data, X_indptr, X_indices, y):
         n_features = len(X_indptr) - 1
-        self.Xty = np.zeros(n_features)
-        self.lipschitz = np.empty(n_features)
+        self.lipschitz = np.zeros(n_features)
         for j in range(n_features):
             Xj = X_data[X_indptr[j]:X_indptr[j+1]]
-            idx_nz = X_indices[X_indptr[j]:X_indptr[j+1]]
-            for i, idx_i in enumerate(idx_nz):
-                self.Xty[j] += Xj[i] * y[idx_i]
             self.lipschitz[j] = (Xj ** 2).sum() / len(y) / 4
 
     def value(self, y, w, Xw):
-        return - np.log(sigmoid(y * Xw)).sum() / len(y)
+        return np.log(1. + np.exp(- y * Xw)).sum() / len(y)
 
     def gradient_scalar(self, X, y, w, Xw, j):
         return (X[:, j] @ (y * (sigmoid(y * Xw) - 1))) / len(y)

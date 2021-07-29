@@ -19,9 +19,11 @@ np.random.seed(0)
 X_sparse = csc_matrix(X * np.random.binomial(1, 0.1, X.shape))
 
 n_samples, n_features = X.shape
+# Lasso will fit with binary values, but else logreg's alpha_max is wrong:
+y = np.sign(y)
 alpha_max = norm(X.T @ y, ord=np.inf) / n_samples
 alpha = 0.05 * alpha_max
-tol = 1e-14
+tol = 1e-10
 l1_ratio = 0.3
 
 dict_estimators_sk = {}
