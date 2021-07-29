@@ -24,11 +24,13 @@ class BasePenalty():
 
     @abstractmethod
     def subdiff_distance(self, w, grad, ws):
-        """Distance of gradient to subdifferential of penalty for feature j.
+        """Distance of gradient to subdifferential of penalty for all features
+        in the working set ws.
+        Returns an array of shape shape (len(ws),).
 
         w : array, shape (n_features,)
             Coefficient vector.
-        grad: array, shape (n_features,)
+        grad: array, shape (size of the working set,)
             Gradient of the datafit at w.
         ws: array
             Features in the working set.
@@ -58,16 +60,16 @@ class L1(BasePenalty):
         return ST(value, self.alpha * stepsize)
 
     def subdiff_distance(self, w, grad, ws):
-        res = np.zeros_like(grad)
-        for idx in range(ws.shape[0]):
-            j = ws[idx]
+        subdiff_dist = np.zeros_like(grad)
+        for idx, j in enumerate(ws):
             if w[j] == 0:
                 # distance of - grad_j to  [-alpha, alpha]
-                res[idx] = max(0, np.abs(grad[idx]) - self.alpha)
+                subdiff_dist[idx] = max(0, np.abs(grad[idx]) - self.alpha)
             else:
                 # distance of - grad_j to alpha * sign(w[j])
-                res[idx] = np.abs(- grad[idx] - np.sign(w[j]) * self.alpha)
-        return res
+                subdiff_dist[idx] = np.abs(
+                    - grad[idx] - np.sign(w[j]) * self.alpha)
+        return subdiff_dist
 
     def is_penalized(self, n_features):
         return np.ones(n_features).astype(bool_)
