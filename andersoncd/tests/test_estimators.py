@@ -51,7 +51,7 @@ dict_estimators_ours["MCP"] = MCP(
 
 dict_estimators_sk["LogisticRegression"] = LogReg_sklearn(
     C=1/(alpha * n_samples), fit_intercept=False, tol=tol, penalty='l1',
-    solver='liblinear', max_iter=100)
+    solver='liblinear')
 dict_estimators_ours["LogisticRegression"] = LogisticRegression(
     C=1/(alpha * n_samples), fit_intercept=False, tol=tol,
     penalty='l1', verbose=True)
@@ -62,15 +62,11 @@ dict_estimators_ours["LogisticRegression"] = LogisticRegression(
     ["Lasso", "wLasso", "ElasticNet", "MCP", "LogisticRegression"])
 @pytest.mark.parametrize('X', [X, X_sparse])
 def test_estimator(estimator_name, X):
-    # lasso from sklearn
     estimator_sk = dict_estimators_sk[estimator_name]
     estimator_ours = dict_estimators_ours[estimator_name]
-    if estimator_name == "LogisticRegression":
-        estimator_sk.fit(X, np.sign(y))
-        estimator_ours.fit(X, np.sign(y))
-    else:
-        estimator_sk.fit(X, y)
-        estimator_ours.fit(X, y)
+
+    estimator_sk.fit(X, y)
+    estimator_ours.fit(X, y)
     coef_sk = estimator_sk.coef_
     coef_ours = estimator_ours.coef_
 

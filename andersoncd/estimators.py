@@ -464,7 +464,7 @@ class LogisticRegression(LogReg_sklearn):
 
     mean(log(1 + e^{-y_i x_i^T w})) + 1. / C * ||w||_1
 
-    The solvers use a working set strategy. To solve problems restricted to a
+    The solvers use a working set strategy to solve problems restricted to a
     subset of features.
 
     Parameters
@@ -519,22 +519,7 @@ class LogisticRegression(LogReg_sklearn):
         constant term in decision function. Not handled yet.
 
     n_iter_ : int
-        Number of subproblems solved by Celer to reach the specified tolerance.
-
-    Examples
-    --------
-    >>> from andersoncd import LogisticRegression
-    >>> clf = LogisticRegression(C=1.)
-    >>> clf.fit([[0, 0], [1, 1], [2, 2]], [0, 1, 1])
-    LogisticRegression(C=1.0, penalty='l1', tol=0.0001, fit_intercept=False,
-    max_iter=50, verbose=False, max_epochs=50000, p0=10, warm_start=False)
-
-    >>> print(clf.coef_)
-    [[0.4001237  0.01949392]]
-
-    See also
-    --------
-    celer_path
+        Number of subproblems solved to reach the specified tolerance.
 
     References
     ----------
@@ -542,12 +527,7 @@ class LogisticRegression(LogReg_sklearn):
       "Anderson acceleration of coordinate descent", AISTATS 2021,
       http://proceedings.mlr.press/v130/bertrand21a.html
 
-    .. [2] M. Massias, A. Gramfort, J. Salmon
-      "Celer: a Fast Solver for the Lasso with Dual Extrapolation", ICML 2018,
-      http://proceedings.mlr.press/v80/massias18a.html
-
-
-    .. [3] M. Massias, S. Vaiter, A. Gramfort, J. Salmon
+    .. [2] M. Massias, S. Vaiter, A. Gramfort, J. Salmon
       "Dual extrapolation for sparse GLMs", JMLR 2020,
       https://jmlr.org/papers/v21/19-587.html
     """
