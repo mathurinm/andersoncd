@@ -23,13 +23,16 @@ def kkt(X, y, w, datafit, penalty):
             ord=np.inf)
 
 
-# X, y, w_true = make_correlated_data(
-    # n_samples=1000, n_features=2000, density=0.1)
+dataset = "finance"
+# dataset = "simu"
 
-X, y = fetch_libsvm("rcv1.binary")
-# X, y = fetch_libsvm("finance")
+if dataset == "simu":
+    X, y, w_true = make_correlated_data(
+        n_samples=1000, n_features=2000, density=0.1)
+else:
+    X, y = fetch_libsvm(dataset)
 
-alpha_div = 1000
+alpha_div = 50
 alpha = norm(X.T @ y, np.inf) / len(y) / alpha_div
 
 
@@ -66,13 +69,13 @@ kkt_cl = kkt(X, y, cl.coef_, us.datafit, us.penalty)
 
 obj_us = np.mean((y - X @ us.coef_) ** 2) / 2. + us.alpha * norm(us.coef_, 1)
 obj_sk = np.mean((y - X @ sk.coef_) ** 2) / 2. + sk.alpha * norm(sk.coef_, 1)
-obj_cl = np.mean((y - X @ cr.coef_) ** 2) / 2. + cr.alpha * norm(cr.coef_, 1)
+obj_cl = np.mean((y - X @ cl.coef_) ** 2) / 2. + cl.alpha * norm(cl.coef_, 1)
 
 print("#" * 80)
 print("Setup:")
 print(f'    X: {X.shape}')
 print(f'    alpha_max / {alpha_div}')
-print(f'    nnz in sol: {(cr.coef_ != 0).sum()}')
+print(f'    nnz in sol: {(cl.coef_ != 0).sum()}')
 # print(f'    nnz in tru: {(w_true != 0).sum()}')
 
 print(f'us: {t_us:.4f} s, kkt: {kkt_us:.2e}, obj: {obj_us:.10f}')
