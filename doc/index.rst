@@ -12,7 +12,7 @@ Installation
 ------------
 First clone the repository available at https://github.com/mathurinm/andersoncd::
 
-    $ git clone https://github.com/andersoncd.git
+    $ git clone https://github.com/mathurinm/andersoncd.git
     $ cd andersoncd/
 
 
