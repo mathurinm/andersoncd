@@ -28,13 +28,29 @@ Illustrate the importance of feature normalization when penalizing.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_lasso_vs_weighted_001.png
-    :alt: True coeffs, Lasso, Weighted Lasso
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_lasso_vs_weighted_001.png
+   :alt: True coeffs, Lasso, Weighted Lasso
+   :srcset: /auto_examples/images/sphx_glr_plot_lasso_vs_weighted_001.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    /home/circleci/.local/lib/python3.8/site-packages/sklearn/linear_model/_base.py:148: FutureWarning: 'normalize' was deprecated in version 1.0 and will be removed in 1.2. Please leave the normalize parameter to its default value to silence this warning. The default behavior of this estimator is to not do any normalization. If normalization is needed please use sklearn.preprocessing.StandardScaler instead.
+      warnings.warn(
+    /home/circleci/.local/lib/python3.8/site-packages/sklearn/linear_model/_base.py:148: FutureWarning: 'normalize' was deprecated in version 1.0 and will be removed in 1.2. Please leave the normalize parameter to its default value to silence this warning. The default behavior of this estimator is to not do any normalization. If normalization is needed please use sklearn.preprocessing.StandardScaler instead.
+      warnings.warn(
 
 
 
 
+
+
+|
 
 .. code-block:: default
 
@@ -83,7 +99,7 @@ Illustrate the importance of feature normalization when penalizing.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.262 seconds)
+   **Total running time of the script:** ( 0 minutes  9.018 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_lasso_vs_weighted.py:

@@ -28,9 +28,10 @@ Illustrate the value and proximal operators of some sparse penalties.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_pen_prox_001.png
-    :alt: Penalty value, Proximal operator of penalty
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_pen_prox_001.png
+   :alt: Penalty value, Proximal operator of penalty
+   :srcset: /auto_examples/images/sphx_glr_plot_pen_prox_001.png
+   :class: sphx-glr-single-img
 
 
 
@@ -74,7 +75,7 @@ Illustrate the value and proximal operators of some sparse penalties.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.265 seconds)
+   **Total running time of the script:** ( 0 minutes  6.663 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_pen_prox.py:
