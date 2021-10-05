@@ -23,8 +23,8 @@ def kkt(X, y, w, datafit, penalty):
             ord=np.inf)
 
 
-dataset = "real-sim"
-# dataset = "rcv1.binary"
+# dataset = "real-sim"
+dataset = "rcv1.binary"
 # dataset = "finance"
 # dataset = "simu"
 
