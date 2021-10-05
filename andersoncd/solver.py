@@ -286,6 +286,8 @@ def _kkt_violation_sparse(
 def _cd_epoch(X, y, w, Xw, datafit, penalty, feats):
     lc = datafit.lipschitz
     for j in feats:
+        if lc[j] == 0.:
+            continue
         Xj = X[:, j]
         old_w_j = w[j]
         w[j] = penalty.prox_1d(
@@ -300,6 +302,8 @@ def _cd_epoch_sparse(
         data, indptr, indices, y, w, Xw, datafit, penalty, feats):
     lc = datafit.lipschitz
     for j in feats:
+        if lc[j] == 0.:
+            continue
         Xj = data[indptr[j]:indptr[j+1]]
         idx_nz = indices[indptr[j]:indptr[j+1]]
 
