@@ -53,11 +53,6 @@ class Lasso(Lasso_sklearn):
     fit_intercept : bool, optional (default=True)
         Whether or not to fit an intercept.
 
-    normalize : bool, optional (default=False)
-        This parameter is ignored when ``fit_intercept`` is set to False.
-        If True,  the regressors X will be normalized before regression by
-        subtracting the mean and dividing by the l2-norm.
-
     warm_start : bool, optional (default=False)
         When set to True, reuse the solution of the previous call to fit as
         initialization, otherwise, just erase the previous solution.
@@ -100,10 +95,10 @@ class Lasso(Lasso_sklearn):
 
     def __init__(self, alpha=1., max_iter=100, max_epochs=50_000, p0=10,
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
-                 normalize=False, warm_start=False):
+                 warm_start=False):
         super(Lasso, self).__init__(
             alpha=alpha, tol=tol, max_iter=max_iter,
-            fit_intercept=fit_intercept, normalize=normalize,
+            fit_intercept=fit_intercept,
             warm_start=warm_start)
         self.verbose = verbose
         self.max_epochs = max_epochs
@@ -160,11 +155,6 @@ class WeightedLasso(Lasso_sklearn):
         Positive weights used in the L1 penalty part of the Lasso
         objective. If None, weights equal to 1 are used.
 
-    normalize : bool, optional (default=False)
-        This parameter is ignored when ``fit_intercept`` is set to False.
-        If True,  the regressors X will be normalized before regression by
-        subtracting the mean and dividing by the l2-norm.
-
     warm_start : bool, optional (default=False)
         When set to True, reuse the solution of the previous call to fit as
         initialization, otherwise, just erase the previous solution.
@@ -207,10 +197,10 @@ class WeightedLasso(Lasso_sklearn):
 
     def __init__(self, alpha=1., max_iter=100, max_epochs=50_000, p0=10,
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
-                 weights=None, normalize=False, warm_start=False):
+                 weights=None, warm_start=False):
         super(WeightedLasso, self).__init__(
             alpha=alpha, tol=tol, max_iter=max_iter,
-            fit_intercept=fit_intercept, normalize=normalize,
+            fit_intercept=fit_intercept,
             warm_start=warm_start)
         self.verbose = verbose
         self.max_epochs = max_epochs
@@ -270,11 +260,6 @@ class ElasticNet(ElasticNet_sklearn):
     fit_intercept : bool, optional (default=True)
         Whether or not to fit an intercept.
 
-    normalize : bool, optional (default=False)
-        This parameter is ignored when ``fit_intercept`` is set to False.
-        If True,  the regressors X will be normalized before regression by
-        subtracting the mean and dividing by the l2-norm.
-
     warm_start : bool, optional (default=False)
         When set to True, reuse the solution of the previous call to fit as
         initialization, otherwise, just erase the previous solution.
@@ -317,10 +302,10 @@ class ElasticNet(ElasticNet_sklearn):
     def __init__(self, alpha=1., l1_ratio=0.5, max_iter=100,
                  max_epochs=50_000, p0=10,
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
-                 normalize=False, warm_start=False):
+                 warm_start=False):
         super(ElasticNet, self).__init__(
             alpha=alpha, l1_ratio=l1_ratio, tol=tol, max_iter=max_iter,
-            fit_intercept=fit_intercept, normalize=normalize,
+            fit_intercept=fit_intercept,
             warm_start=warm_start)
         self.verbose = verbose
         self.max_epochs = max_epochs
@@ -386,11 +371,6 @@ class MCP(Lasso_sklearn):
     fit_intercept : bool, optional (default=True)
         Whether or not to fit an intercept.
 
-    normalize : bool, optional (default=False)
-        This parameter is ignored when ``fit_intercept`` is set to False.
-        If True,  the regressors X will be normalized before regression by
-        subtracting the mean and dividing by the l2-norm.
-
     warm_start : bool, optional (default=False)
         When set to True, reuse the solution of the previous call to fit as
         initialization, otherwise, just erase the previous solution.
@@ -433,10 +413,10 @@ class MCP(Lasso_sklearn):
     def __init__(self, alpha=1., gamma=3, max_iter=100,
                  max_epochs=50_000, p0=10,
                  verbose=0, tol=1e-4, prune=True, fit_intercept=True,
-                 normalize=False, warm_start=False):
+                 warm_start=False):
         super(MCP, self).__init__(
             alpha=alpha, tol=tol, max_iter=max_iter,
-            fit_intercept=fit_intercept, normalize=normalize,
+            fit_intercept=fit_intercept,
             warm_start=warm_start)
         self.verbose = verbose
         self.max_epochs = max_epochs
