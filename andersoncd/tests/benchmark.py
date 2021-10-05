@@ -24,9 +24,9 @@ def kkt(X, y, w, datafit, penalty):
 
 
 # dataset = "real-sim"
-dataset = "rcv1.binary"
+# dataset = "rcv1.binary"
 # dataset = "finance"
-# dataset = "simu"
+dataset = "simu"
 
 if dataset == "simu":
     X, y, w_true = make_correlated_data(
@@ -77,7 +77,8 @@ for estimator_name in dict_estimators.keys():
     dict_kkt[estimator_name] = kkt(
         X, y, estimator.coef_, us.datafit, us.penalty)
     dict_obj[estimator_name] = np.mean(
-        (y - X @ estimator.coef_) ** 2) / 2. + us.alpha * norm(us.coef_, 1)
+        (y - X @ estimator.coef_) ** 2) / 2. + estimator.alpha * norm(
+            estimator.coef_, 1)
 
 print(f'sk: {t_sk:.4f} s, kkt: {kkt_sk:.2e}, obj: {obj_sk:.10f}')
 for estimator_name in dict_estimators.keys():
