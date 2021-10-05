@@ -23,7 +23,9 @@ def kkt(X, y, w, datafit, penalty):
             ord=np.inf)
 
 
-dataset = "finance"
+# dataset = "real-sim"
+dataset = "rcv1.binary"
+# dataset = "finance"
 # dataset = "simu"
 
 if dataset == "simu":
@@ -32,52 +34,54 @@ if dataset == "simu":
 else:
     X, y = fetch_libsvm(dataset)
 
-alpha_div = 50
+alpha_div = 1000
 alpha = norm(X.T @ y, np.inf) / len(y) / alpha_div
 
-
-sk = Lasso_sk(alpha=alpha, fit_intercept=False, max_iter=10**6, tol=1e-5)
+# Compute quantites using sklearn
+sk = Lasso_sk(
+    alpha=alpha, fit_intercept=False, max_iter=10**6, tol=1e-5)
 
 t0 = time.time()
 sk.fit(X, y)
 t_sk = time.time() - t0
 
+obj_sk = np.mean((y - X @ sk.coef_) ** 2) / 2. + sk.alpha * norm(sk.coef_, 1)
+
 us = Lasso(alpha=alpha, fit_intercept=False,
            max_epochs=20, max_iter=1, verbose=2,
            warm_start=False).fit(X, y)
-
-
 kkt_sk = kkt(X, y, sk.coef_, us.datafit, us.penalty)
-us.tol = kkt_sk
-us.max_epochs = 10000
-us.max_iter = 50
-
-t0 = time.time()
-us.fit(X, y)
-t_us = time.time() - t0
-
-kkt_us = kkt(X, y, us.coef_, us.datafit, us.penalty)
 
 
-cl = Lasso_cl(alpha=alpha, fit_intercept=False, tol=sk.tol)
+# Time other implementation
+dict_estimators = {}
+dict_estimators["us"] = Lasso(
+    alpha=alpha, fit_intercept=False, tol=sk.tol, max_iter=1)
+dict_estimators["cl"] = Lasso_cl(
+    alpha=alpha, fit_intercept=False, tol=sk.tol, max_iter=1)
 
-t0 = time.time()
-cl.fit(X, y)
-t_cl = time.time() - t0
-kkt_cl = kkt(X, y, cl.coef_, us.datafit, us.penalty)
+dict_times = {}
+dict_kkt = {}
+dict_obj = {}
 
+for estimator_name in dict_estimators.keys():
+    estimator = dict_estimators[estimator_name]
+    estimator.max_iter = 1
+    estimator.fit(X, y)
+    estimator.max_iter = 1000
+    estimator.tol = kkt_sk
+    t0 = time.time()
+    estimator.fit(X, y)
+    t_elapsed = time.time() - t0
+    dict_times[estimator_name] = t_elapsed
+    dict_kkt[estimator_name] = kkt(
+        X, y, estimator.coef_, us.datafit, us.penalty)
+    dict_obj[estimator_name] = np.mean(
+        (y - X @ estimator.coef_) ** 2) / 2. + us.alpha * norm(us.coef_, 1)
 
-obj_us = np.mean((y - X @ us.coef_) ** 2) / 2. + us.alpha * norm(us.coef_, 1)
-obj_sk = np.mean((y - X @ sk.coef_) ** 2) / 2. + sk.alpha * norm(sk.coef_, 1)
-obj_cl = np.mean((y - X @ cl.coef_) ** 2) / 2. + cl.alpha * norm(cl.coef_, 1)
-
-print("#" * 80)
-print("Setup:")
-print(f'    X: {X.shape}')
-print(f'    alpha_max / {alpha_div}')
-print(f'    nnz in sol: {(cl.coef_ != 0).sum()}')
-# print(f'    nnz in tru: {(w_true != 0).sum()}')
-
-print(f'us: {t_us:.4f} s, kkt: {kkt_us:.2e}, obj: {obj_us:.10f}')
 print(f'sk: {t_sk:.4f} s, kkt: {kkt_sk:.2e}, obj: {obj_sk:.10f}')
-print(f'cl: {t_cl:.4f} s, kkt: {kkt_cl:.2e}, obj: {obj_cl:.10f}')
+for estimator_name in dict_estimators.keys():
+    t = dict_times[estimator_name]
+    kkt = dict_kkt[estimator_name]
+    obj = dict_obj[estimator_name]
+    print(f'{estimator_name:s}: {t:.4f} s, kkt: {kkt:.2e}, obj: {obj:.10f}')
