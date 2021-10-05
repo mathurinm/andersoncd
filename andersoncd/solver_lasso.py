@@ -2,7 +2,7 @@
 import numpy as np
 from scipy import sparse
 from numpy.linalg import norm
-from numba import njit, jit
+from numba import njit
 
 
 @njit
@@ -117,7 +117,7 @@ def create_accel_pt(
 
         try:
             anderson = np.linalg.solve(UtU, np.ones(UtU.shape[0]))
-        except:
+        except Exception:
             # np.linalg.LinAlgError
             # Numba only accepts Error/Exception inheriting from the generic
             # Exception class
@@ -156,7 +156,7 @@ def create_accel_primal_pt(epoch, gap_freq, w, out, last_K_w, U, UtU, verbose):
 
         try:
             anderson = np.linalg.solve(UtU, np.ones(UtU.shape[0]))
-        except:
+        except Exception:
             # np.linalg.LinAlgError
             # Numba only accepts Error/Exception inheriting from the generic
             # Exception class
@@ -334,8 +334,8 @@ def numba_celer_primal(
 
         # also test dual point returned by inner solver after 1st iter:
         if is_sparse:
-            scal, XT_theta_in = dnorm_l1_sparse(theta_in, X.data, X.indices,
-                                               X.indptr, screened)
+            scal, XT_theta_in = dnorm_l1_sparse(
+                theta_in, X.data, X.indices, X.indptr, screened)
         else:
             scal, XT_theta_in = dnorm_l1(theta_in, X, screened)
 
@@ -411,6 +411,7 @@ def numba_celer_primal(
                     theta_in /= scal
 
                 d_obj_in = dual_lasso(alpha, norm_y2, theta_in, y)
+                p_obj_in = primal_lasso(alpha, R, w)
 
                 if True:  # also compute accelerated primal point
                     create_accel_primal_pt(epoch, gap_freq, w, wacc, last_K_w,
