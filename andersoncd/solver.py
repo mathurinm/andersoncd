@@ -198,8 +198,8 @@ def solver(
         ws = np.argsort(kkt)[-ws_size:]
 
         if use_acc:
-            last_K_w = np.zeros([K + 1, n_features])
-            U = np.zeros([K, n_features])
+            last_K_w = np.zeros([K + 1, ws_size])
+            U = np.zeros([K, ws_size])
 
         if verbose:
             print(f'Iteration {t + 1}, {ws_size} feats in subpb.')
@@ -216,7 +216,7 @@ def solver(
 
             # TODO optimize computation using ws
             if use_acc:
-                last_K_w[epoch % (K + 1)] = w
+                last_K_w[epoch % (K + 1)] = w[ws]
 
                 if epoch % (K + 1) == K:
                     for k in range(K):
@@ -226,16 +226,16 @@ def solver(
                     try:
                         z = np.linalg.solve(C, np.ones(K))
                         c = z / z.sum()
-                        w_acc = w.copy()
-                        w_acc = np.sum(
+                        w_acc = np.zeros(n_features)
+                        w_acc[ws] = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
                         # TODO create a p_obj function ?
                         # TODO maybe we can improve here by restricting to ws
-                        p_obj = datafit.value(y, w, Xw) + penalty.value(w)
+                        p_obj = datafit.value(y, w, Xw) + penalty.value(w[ws])
                         Xw_acc = X @ w_acc
                         # TODO maybe we can improve here by restricting to ws
                         p_obj_acc = datafit.value(
-                            y, w_acc, Xw_acc) + penalty.value(w_acc)
+                            y, w_acc, Xw_acc) + penalty.value(w_acc[ws])
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
                             Xw[:] = Xw_acc
@@ -258,11 +258,11 @@ def solver(
 
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
-                    print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
+                    print(f"Epoch {epoch}, objective {p_obj:.10f}, "
                           f"kkt {kkt_ws_max:.2e}")
-                if kkt_ws_max < 0.01 * kkt_max:
+                if kkt_ws_max < 0.3 * kkt_max:
                     if max(verbose - 1, 0):
-                        print("    Early exit")
+                        print("Early exit")
                     break
         obj_out.append(p_obj)
     return w, np.array(obj_out), kkt_max
