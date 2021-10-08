@@ -260,7 +260,7 @@ def solver(
                 if max(verbose - 1, 0):
                     print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
                           f"kkt {kkt_ws_max:.2e}")
-                if kkt_ws_max < 0.3 * kkt_max:
+                if kkt_ws_max < 0.01 * kkt_max:
                     if max(verbose - 1, 0):
                         print("    Early exit")
                     break
