@@ -229,8 +229,11 @@ def solver(
                         w_acc = w.copy()
                         w_acc = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
+                        # TODO create a p_obj function ?
+                        # TODO maybe we can improve here by restricting to ws
                         p_obj = datafit.value(y, w, Xw) + penalty.value(w)
                         Xw_acc = X @ w_acc
+                        # TODO maybe we can improve here by restricting to ws
                         p_obj_acc = datafit.value(
                             y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
@@ -241,8 +244,9 @@ def solver(
                             print("----------Linalg error")
 
             if epoch % 10 == 0:
-                # todo maybe we can improve here by restricting to ws
-                p_obj = datafit.value(y, w, Xw) + penalty.value(w)
+                # TODO maybe we can improve here by restricting to ws
+                # TODO adapt for weighted Lasso
+                p_obj = datafit.value(y, w[ws], Xw) + penalty.value(w[ws])
 
                 if is_sparse:
                     kkt_ws = _kkt_violation_sparse(
