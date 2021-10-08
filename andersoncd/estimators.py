@@ -57,6 +57,9 @@ class Lasso(Lasso_sklearn):
         When set to True, reuse the solution of the previous call to fit as
         initialization, otherwise, just erase the previous solution.
 
+    use_acc : bool
+        Whether or not to use Anderson acceleration.
+
     Attributes
     ----------
     coef_ : array, shape (n_features,)
@@ -94,8 +97,8 @@ class Lasso(Lasso_sklearn):
     """
 
     def __init__(self, alpha=1., max_iter=100, max_epochs=50_000, p0=10,
-                 verbose=0, tol=1e-4, prune=True, fit_intercept=True,
-                 warm_start=False):
+                 verbose=0, tol=1e-4, prune=True,
+                 fit_intercept=True, warm_start=False, use_acc=True):
         super(Lasso, self).__init__(
             alpha=alpha, tol=tol, max_iter=max_iter,
             fit_intercept=fit_intercept,
@@ -106,6 +109,7 @@ class Lasso(Lasso_sklearn):
         self.prune = prune
         self.datafit = Quadratic()
         self.penalty = L1(alpha)
+        self.use_acc = use_acc
 
     def path(self, X, y, alphas, coef_init=None, return_n_iter=True, **kwargs):
         """Compute Lasso path with Celer + primal extrapolation."""
@@ -113,7 +117,8 @@ class Lasso(Lasso_sklearn):
             X, y, self.datafit, self.penalty, alphas=alphas,
             coef_init=coef_init, max_iter=self.max_iter,
             return_n_iter=return_n_iter, max_epochs=self.max_epochs,
-            p0=self.p0, tol=self.tol, prune=self.prune, verbose=self.verbose)
+            p0=self.p0, tol=self.tol, use_acc=self.use_acc, prune=self.prune,
+            verbose=self.verbose)
 
 
 class WeightedLasso(Lasso_sklearn):

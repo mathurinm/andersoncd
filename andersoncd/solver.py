@@ -6,7 +6,7 @@ from sklearn.utils import check_array
 
 def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 coef_init=None, max_iter=20, max_epochs=50_000,
-                p0=10, tol=1e-4, prune=0,
+                p0=10, tol=1e-4, use_acc=True, prune=0,
                 return_n_iter=False, verbose=0,):
     r"""Compute optimization path with Celer primal as inner solver.
 
@@ -143,7 +143,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
         sol = solver(
             X, y, datafit, penalty, w, Xw,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            verbose=verbose)
+            use_acc=use_acc, verbose=verbose)
 
         coefs[:, t] = w.copy()
         kkt_maxs[t] = sol[-1]
@@ -191,6 +191,7 @@ def solver(
         # 1) select features : all unpenalized, + 2 * (nnz and penalized)
         ws_size = max(p0 + n_unpen,
                       min(2 * (w != 0).sum() - n_unpen, n_features))
+        # ws_size = n_features
 
         kkt[unpen] = np.inf  # always include unpenalized features
         kkt[w != 0] = np.inf  # TODO check
