@@ -232,7 +232,7 @@ def solver(
                         # TODO create a p_obj function ?
                         # TODO maybe we can improve here by restricting to ws
                         p_obj = datafit.value(y, w, Xw) + penalty.value(w[ws])
-                        Xw_acc = X @ w_acc
+                        Xw_acc = X[:, ws] @ w_acc[ws]
                         # TODO maybe we can improve here by restricting to ws
                         p_obj_acc = datafit.value(
                             y, w_acc, Xw_acc) + penalty.value(w_acc[ws])
