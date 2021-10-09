@@ -78,7 +78,7 @@ class L1(BasePenalty):
         return subdiff_dist
 
     def is_penalized(self, n_features):
-        return np.ones(n_features).astype(bool_)
+        return np.ones(n_features, bool_)
 
 
 spec_L1_plus_L2 = [
@@ -215,4 +215,4 @@ class MCP_pen(BasePenalty):
         return subdiff_dist
 
     def is_penalized(self, n_features):
-        return np.ones(n_features).astype(bool_)
+        return np.ones(n_features, bool_)
