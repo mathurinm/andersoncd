@@ -195,7 +195,10 @@ def solver(
 
         kkt[unpen] = np.inf  # always include unpenalized features
         kkt[w != 0] = np.inf  # TODO check
-        ws = np.argsort(kkt)[-ws_size:]
+        # here I used topk instead of sorting the full array
+        # ie the following line
+        ws = np.argpartition(kkt, -ws_size)[-ws_size:]
+        # is equivalent to ws = np.argsort(kkt)[-ws_size:]
 
         if use_acc:
             last_K_w = np.zeros([K + 1, ws_size])
