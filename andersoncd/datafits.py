@@ -6,6 +6,7 @@ from numba import njit
 from abc import abstractmethod
 
 import numpy as np
+from numpy.linalg import norm
 from numba import float64
 from numba.experimental import jitclass
 
@@ -46,7 +47,12 @@ class Quadratic(BaseDatafit):
 
     def initialize(self, X, y):
         self.Xty = X.T @ y
-        self.lipschitz = (X ** 2).sum(axis=0) / len(y)
+        n_samples, n_features = X.shape
+        self.lipschitz = np.zeros(n_features)
+        for j in range(n_features):
+            self.lipschitz[j] = norm(X[:, j]) ** 2 / len(y)
+            # for i in range(n_samples):
+            #     self.lipschitz[j] += X[i, j] ** 2 / len(y)
 
     def initialize_sparse(
             self, X_data, X_indptr, X_indices, y):
@@ -64,6 +70,15 @@ class Quadratic(BaseDatafit):
         return np.sum((y - Xw) ** 2) / (2 * len(Xw))
 
     def gradient_scalar(self, X, y, w, Xw, j):
+        # res = 0
+        # n_samples = len(Xw)
+        # for i in range(n_samples):
+        #     if X[i, j] != 0 and Xw[i] != 0:
+        #         res += X[i, j] * Xw[i]
+        # res -= self.Xty[j]
+        # res /= len(Xw)
+        # return res
+        # Remark: the following lin is faster than expanding the computation
         return (X[:, j] @ Xw - self.Xty[j]) / len(Xw)
 
     def gradient_scalar_sparse(self, Xj, idx_nz, y, Xw, j):

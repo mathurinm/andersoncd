@@ -158,6 +158,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
     return results
 
 
+# @profile
 def solver(
         X, y, datafit, penalty, w, Xw, max_iter=50,
         max_epochs=50_000, p0=10, tol=1e-4, use_acc=True, K=5, verbose=0):
@@ -181,8 +182,10 @@ def solver(
                 w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
                 all_feats)
         else:
-            kkt = _kkt_violation(
-                w, X, y, Xw, datafit, penalty, all_feats)
+            grad = construct_grad(X, y, w, Xw, datafit, all_feats)
+            kkt = penalty.subdiff_distance(w, grad, all_feats)
+            # kkt = _kkt_violation(
+            #     w, X, y, Xw, datafit, penalty, all_feats)
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
@@ -273,10 +276,19 @@ def solver(
 
 @njit
 def _kkt_violation(w, X, y, Xw, datafit, penalty, ws):
+    grad = construct_grad(X, y, w, Xw, datafit, ws)
+    kkt = penalty.subdiff_distance(w, grad, ws)
+    return kkt
+
+
+@njit
+def construct_grad(X, y, w, Xw, datafit, ws):
+    """I created this function for profiling purposes.
+    """
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
         grad[idx] = datafit.gradient_scalar(X, y, w, Xw, j)
-    return penalty.subdiff_distance(w, grad, ws)
+    return grad
 
 
 @njit
