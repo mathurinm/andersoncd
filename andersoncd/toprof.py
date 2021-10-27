@@ -1,11 +1,12 @@
 from andersoncd.datafits import Quadratic
 from andersoncd.penalties import L1
-from andersoncd.solver import solver, solver_path
-from andersoncd.celer_numba import numba_celer_primal
+from andersoncd.solver import solver
+# from andersoncd.solver import solver, solver_path
 import numpy as np
 # from kernprof import profile
 from celer.datasets import make_correlated_data
-from scipy.sparse import csc_matrix, issparse
+from scipy.sparse import issparse
+# from scipy.sparse import csc_matrix, issparse
 from libsvmdata import fetch_libsvm
 
 
@@ -39,8 +40,9 @@ else:
 w = np.zeros(X.shape[1])
 solver(X, y, datafit, pen, w, np.zeros_like(y), verbose=2, tol=1e-2)
 w = np.zeros(X.shape[1])
-profile(solver)(
-    X, y, datafit, pen, w, np.zeros(X.shape[0]), verbose=2, tol=1e-2)
+# profile(solver)(
+#     X, y, datafit, pen, w, np.zeros(X.shape[0]), verbose=2, tol=1e-2)
+
 
 # solver_path(X, y, datafit, pen, alphas=[alpha], tol=1e-2)
 # profile(solver_path)(X, y, datafit, pen, alphas=[alpha], tol=1e-2)
