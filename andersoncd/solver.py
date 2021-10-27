@@ -6,7 +6,7 @@ from sklearn.utils import check_array
 
 def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
                 coef_init=None, max_iter=20, max_epochs=50_000,
-                p0=10, tol=1e-4, prune=0,
+                p0=10, tol=1e-4, use_acc=True, prune=0,
                 return_n_iter=False, verbose=0,):
     r"""Compute optimization path with Celer primal as inner solver.
 
@@ -143,7 +143,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
         sol = solver(
             X, y, datafit, penalty, w, Xw,
             max_iter=max_iter, max_epochs=max_epochs, p0=p0, tol=tol,
-            verbose=verbose)
+            use_acc=use_acc, verbose=verbose)
 
         coefs[:, t] = w.copy()
         kkt_maxs[t] = sol[-1]
@@ -158,6 +158,7 @@ def solver_path(X, y, datafit, penalty, eps=1e-3, n_alphas=100, alphas=None,
     return results
 
 
+# @profile
 def solver(
         X, y, datafit, penalty, w, Xw, max_iter=50,
         max_epochs=50_000, p0=10, tol=1e-4, use_acc=True, K=5, verbose=0):
@@ -177,12 +178,20 @@ def solver(
     for t in range(max_iter):
 
         if is_sparse:
-            kkt = _kkt_violation_sparse(
-                w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
-                all_feats)
+            # I separated the computation of the gradient from the kkt
+            # computations to see what was the bottelneck
+            grad = construct_grad_sparse(
+                X.data, X.indptr, X.indices, y, Xw, datafit, n_features)
+            kkt = penalty.subdiff_distance(w, grad, all_feats)
+            # kkt = _kkt_violation_sparse(
+            #     w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
+            #     all_feats)
         else:
-            kkt = _kkt_violation(
-                w, X, y, Xw, datafit, penalty, all_feats)
+            # I separated the computation of the gradient from the kkt
+            grad = construct_grad(X, y, w, Xw, datafit, all_feats)
+            kkt = penalty.subdiff_distance(w, grad, all_feats)
+            # kkt = _kkt_violation(
+            #     w, X, y, Xw, datafit, penalty, all_feats)
         kkt_max = np.max(kkt)
         if verbose:
             print(f"KKT max violation: {kkt_max:.2e}")
@@ -191,14 +200,18 @@ def solver(
         # 1) select features : all unpenalized, + 2 * (nnz and penalized)
         ws_size = max(p0 + n_unpen,
                       min(2 * (w != 0).sum() - n_unpen, n_features))
+        # ws_size = n_features
 
         kkt[unpen] = np.inf  # always include unpenalized features
         kkt[w != 0] = np.inf  # TODO check
-        ws = np.argsort(kkt)[-ws_size:]
+        # here I used topk instead of sorting the full array
+        # ie the following line
+        ws = np.argpartition(kkt, -ws_size)[-ws_size:]
+        # is equivalent to ws = np.argsort(kkt)[-ws_size:]
 
         if use_acc:
-            last_K_w = np.zeros([K + 1, n_features])
-            U = np.zeros([K, n_features])
+            last_K_w = np.zeros([K + 1, ws_size])
+            U = np.zeros([K, ws_size])
 
         if verbose:
             print(f'Iteration {t + 1}, {ws_size} feats in subpb.')
@@ -215,7 +228,7 @@ def solver(
 
             # TODO optimize computation using ws
             if use_acc:
-                last_K_w[epoch % (K + 1)] = w
+                last_K_w[epoch % (K + 1)] = w[ws]
 
                 if epoch % (K + 1) == K:
                     for k in range(K):
@@ -225,11 +238,15 @@ def solver(
                     try:
                         z = np.linalg.solve(C, np.ones(K))
                         c = z / z.sum()
-                        w_acc = w.copy()
-                        w_acc = np.sum(
+                        w_acc = np.zeros(n_features)
+                        w_acc[ws] = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
+                        # TODO create a p_obj function ?
+                        # TODO : managed penalty.value(w[ws])
                         p_obj = datafit.value(y, w, Xw) + penalty.value(w)
-                        Xw_acc = X @ w_acc
+                        # p_obj = datafit.value(y, w, Xw) +penalty.value(w[ws])
+                        Xw_acc = X[:, ws] @ w_acc[ws]
+                        # TODO : managed penalty.value(w[ws])
                         p_obj_acc = datafit.value(
                             y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
@@ -240,8 +257,10 @@ def solver(
                             print("----------Linalg error")
 
             if epoch % 10 == 0:
-                # todo maybe we can improve here by restricting to ws
-                p_obj = datafit.value(y, w, Xw) + penalty.value(w)
+                # TODO maybe we can improve here by restricting to ws
+                # TODO adapt for weighted Lasso
+                # TODO : managed penalty.value(w[ws])
+                p_obj = datafit.value(y, w[ws], Xw) + penalty.value(w)
 
                 if is_sparse:
                     kkt_ws = _kkt_violation_sparse(
@@ -253,11 +272,11 @@ def solver(
 
                 kkt_ws_max = np.max(kkt_ws)
                 if max(verbose - 1, 0):
-                    print(f"    Epoch {epoch}, objective {p_obj:.10f}, "
+                    print(f"Epoch {epoch}, objective {p_obj:.10f}, "
                           f"kkt {kkt_ws_max:.2e}")
                 if kkt_ws_max < 0.3 * kkt_max:
                     if max(verbose - 1, 0):
-                        print("    Early exit")
+                        print("Early exit")
                     break
         obj_out.append(p_obj)
     return w, np.array(obj_out), kkt_max
@@ -265,10 +284,31 @@ def solver(
 
 @njit
 def _kkt_violation(w, X, y, Xw, datafit, penalty, ws):
+    grad = construct_grad(X, y, w, Xw, datafit, ws)
+    kkt = penalty.subdiff_distance(w, grad, ws)
+    return kkt
+
+
+@njit
+def construct_grad(X, y, w, Xw, datafit, ws):
+    """I created this function for profiling purposes.
+    """
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
         grad[idx] = datafit.gradient_scalar(X, y, w, Xw, j)
-    return penalty.subdiff_distance(w, grad, ws)
+    return grad
+
+
+@njit
+def construct_grad_sparse(data, indptr, indices, y, Xw, datafit, n_features):
+    """I created this function for profiling purposes.
+    """
+    grad = np.zeros(n_features)
+    for j in range(n_features):
+        Xj = data[indptr[j]:indptr[j + 1]]
+        idx_nz = indices[indptr[j]:indptr[j + 1]]
+        grad[j] = datafit.gradient_scalar_sparse(Xj, idx_nz, y, Xw, j)
+    return grad
 
 
 @njit
@@ -276,8 +316,8 @@ def _kkt_violation_sparse(
         w, data, indptr, indices, y, Xw, datafit, penalty, ws):
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        Xj = data[indptr[j]:indptr[j+1]]
-        idx_nz = indices[indptr[j]:indptr[j+1]]
+        Xj = data[indptr[j]:indptr[j + 1]]
+        idx_nz = indices[indptr[j]:indptr[j + 1]]
         grad[idx] = datafit.gradient_scalar_sparse(Xj, idx_nz, y, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
