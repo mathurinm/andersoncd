@@ -70,25 +70,21 @@ allowing it to not compute the dual and handle 0 weights.
     #########################
     ##### Computing alpha 1/1
     #########################
-    KKT max violation: 2.08e+00
+    KKT max violation: 2.42e+00
     Iteration 1, 20 feats in subpb.
-    KKT max violation: 3.82e-01
-    Iteration 2, 22 feats in subpb.
-    KKT max violation: 3.13e-01
-    Iteration 3, 32 feats in subpb.
-    KKT max violation: 4.98e-02
-    Iteration 4, 50 feats in subpb.
-    KKT max violation: 1.77e-03
-    Iteration 5, 54 feats in subpb.
-    KKT max violation: 3.84e-05
-    Iteration 6, 54 feats in subpb.
-    KKT max violation: 1.20e-06
-    Iteration 7, 54 feats in subpb.
-    KKT max violation: 2.53e-08
-    Iteration 8, 54 feats in subpb.
-    KKT max violation: 3.71e-10
-    Iteration 9, 54 feats in subpb.
-    KKT max violation: 9.86e-12
+    KKT max violation: 9.28e-01
+    Iteration 2, 24 feats in subpb.
+    KKT max violation: 2.42e-01
+    Iteration 3, 34 feats in subpb.
+    KKT max violation: 5.07e-03
+    Iteration 4, 48 feats in subpb.
+    KKT max violation: 9.97e-05
+    Iteration 5, 50 feats in subpb.
+    KKT max violation: 9.91e-07
+    Iteration 6, 50 feats in subpb.
+    KKT max violation: 7.51e-09
+    Iteration 7, 50 feats in subpb.
+    KKT max violation: 4.47e-11
 
 
 
@@ -150,7 +146,7 @@ allowing it to not compute the dual and handle 0 weights.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.357 seconds)
+   **Total running time of the script:** ( 0 minutes  0.188 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_zero_weights_lasso.py:
