@@ -58,13 +58,13 @@ class Quadratic(BaseDatafit):
             self, X_data, X_indptr, X_indices, y):
         n_features = len(X_indptr) - 1
         self.Xty = np.zeros(n_features)
-        self.lipschitz = np.empty(n_features)
+        self.lipschitz = np.zeros(n_features)
         for j in range(n_features):
-            Xj = X_data[X_indptr[j]:X_indptr[j+1]]
-            idx_nz = X_indices[X_indptr[j]:X_indptr[j+1]]
+            Xj = X_data[X_indptr[j]:X_indptr[j + 1]]
+            idx_nz = X_indices[X_indptr[j]:X_indptr[j + 1]]
             for i, idx_i in enumerate(idx_nz):
                 self.Xty[j] += Xj[i] * y[idx_i]
-            self.lipschitz[j] = (Xj ** 2).sum() / len(y)
+                self.lipschitz[j] += Xj[i] ** 2 / len(y)
 
     def value(self, y, w, Xw):
         return np.sum((y - Xw) ** 2) / (2 * len(Xw))

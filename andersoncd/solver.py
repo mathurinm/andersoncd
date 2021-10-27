@@ -178,10 +178,16 @@ def solver(
     for t in range(max_iter):
 
         if is_sparse:
-            kkt = _kkt_violation_sparse(
-                w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
-                all_feats)
+            # I separated the computation of the gradient from the kkt
+            # computations to see what was the bottelneck
+            grad = construct_grad_sparse(
+                X.data, X.indptr, X.indices, y, Xw, datafit, n_features)
+            kkt = penalty.subdiff_distance(w, grad, all_feats)
+            # kkt = _kkt_violation_sparse(
+            #     w, X.data, X.indptr, X.indices, y, Xw, datafit, penalty,
+            #     all_feats)
         else:
+            # I separated the computation of the gradient from the kkt
             grad = construct_grad(X, y, w, Xw, datafit, all_feats)
             kkt = penalty.subdiff_distance(w, grad, all_feats)
             # kkt = _kkt_violation(
@@ -292,12 +298,24 @@ def construct_grad(X, y, w, Xw, datafit, ws):
 
 
 @njit
+def construct_grad_sparse(data, indptr, indices, y, Xw, datafit, n_features):
+    """I created this function for profiling purposes.
+    """
+    grad = np.zeros(n_features)
+    for j in range(n_features):
+        Xj = data[indptr[j]:indptr[j + 1]]
+        idx_nz = indices[indptr[j]:indptr[j + 1]]
+        grad[j] = datafit.gradient_scalar_sparse(Xj, idx_nz, y, Xw, j)
+    return grad
+
+
+@njit
 def _kkt_violation_sparse(
         w, data, indptr, indices, y, Xw, datafit, penalty, ws):
     grad = np.zeros(ws.shape[0])
     for idx, j in enumerate(ws):
-        Xj = data[indptr[j]:indptr[j+1]]
-        idx_nz = indices[indptr[j]:indptr[j+1]]
+        Xj = data[indptr[j]:indptr[j + 1]]
+        idx_nz = indices[indptr[j]:indptr[j + 1]]
         grad[idx] = datafit.gradient_scalar_sparse(Xj, idx_nz, y, Xw, j)
     return penalty.subdiff_distance(w, grad, ws)
 
