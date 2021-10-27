@@ -242,12 +242,13 @@ def solver(
                         w_acc[ws] = np.sum(
                             last_K_w[:-1] * c[:, None], axis=0)
                         # TODO create a p_obj function ?
-                        # TODO maybe we can improve here by restricting to ws
-                        p_obj = datafit.value(y, w, Xw) + penalty.value(w[ws])
+                        # TODO : managed penalty.value(w[ws])
+                        p_obj = datafit.value(y, w, Xw) + penalty.value(w)
+                        # p_obj = datafit.value(y, w, Xw) +penalty.value(w[ws])
                         Xw_acc = X[:, ws] @ w_acc[ws]
-                        # TODO maybe we can improve here by restricting to ws
+                        # TODO : managed penalty.value(w[ws])
                         p_obj_acc = datafit.value(
-                            y, w_acc, Xw_acc) + penalty.value(w_acc[ws])
+                            y, w_acc, Xw_acc) + penalty.value(w_acc)
                         if p_obj_acc < p_obj:
                             w[:] = w_acc
                             Xw[:] = Xw_acc
@@ -258,7 +259,8 @@ def solver(
             if epoch % 10 == 0:
                 # TODO maybe we can improve here by restricting to ws
                 # TODO adapt for weighted Lasso
-                p_obj = datafit.value(y, w[ws], Xw) + penalty.value(w[ws])
+                # TODO : managed penalty.value(w[ws])
+                p_obj = datafit.value(y, w[ws], Xw) + penalty.value(w)
 
                 if is_sparse:
                     kkt_ws = _kkt_violation_sparse(
