@@ -173,6 +173,7 @@ def solver(
     n_unpen = unpen.sum()
     obj_out = []
     all_feats = np.arange(n_features)
+    kkt_max = np.inf  # to support max_iter=0
 
     is_sparse = sparse.issparse(X)
     for t in range(max_iter):
