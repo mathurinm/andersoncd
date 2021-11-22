@@ -1,11 +1,9 @@
 name: build
 
 on:
-  create:
+  push:
     branches:
-      - 'master'
-    tags:
-      - '**'
+      - master
   pull_request:
     branches:
       - master
