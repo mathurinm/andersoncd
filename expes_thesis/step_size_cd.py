@@ -28,7 +28,7 @@ algos.insert(0, ('pgd', 1))
 dict_E = {}
 
 for dataset in datasets:
-    X, y = fetch_libsvm(dataset, normalize=True)
+    X, y = fetch_libsvm(dataset, normalize=True, min_nnz=3)
     y -= y.mean()
     y /= norm(y)
     X = X[:, :1000]
