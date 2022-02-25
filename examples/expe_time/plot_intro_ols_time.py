@@ -36,8 +36,8 @@ configure_plt()
 ###############################################################################
 # Load the data:
 
-n_features = 1000
-X, y = fetch_libsvm('rcv1.binary', normalize=True)
+n_features = 5000
+X, y = fetch_libsvm('rcv1.binary', normalize=True, min_nnz=3)
 X = X[:, :n_features]
 
 X.multiply(1 / sparse.linalg.norm(X, axis=0))
@@ -87,7 +87,7 @@ all_algos = [
 dict_Es = {}
 dict_times = {}
 
-tmax = 2
+tmax = 40
 
 for algo in all_algos:
     print("Running ", dict_algo_name[algo])
@@ -161,8 +161,8 @@ ax_times.set_ylim((1e-16, 1))
 ax_times.tick_params(axis='x', labelsize=35)
 ax_times.tick_params(axis='y', labelsize=35)
 
-fig.tight_layout()
-fig_times.tight_layout()
+# fig.tight_layout()
+# fig_times.tight_layout()
 
 if save_fig:
     all_fig_dir = [
@@ -176,5 +176,5 @@ if save_fig:
             ax_times, "%senergies_time_ols_legend.svg" % fig_dir, ncol=3)
 
 
-fig.show()
-fig_times.show()
+plt.show()
+# fig_times.show()
