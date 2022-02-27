@@ -72,22 +72,22 @@ E_cg = np.array(E_cg)
 alpha = 0  # Least Squares
 tol = 1e-13
 max_iter = 100_000
-f_gap = 1
+f_gap = 10
 
 all_algos = [
     ('pgd', False),
-    ('pgd', True),
+    # ('pgd', True),
     ('fista', False),
     ('cd', False),
     ('cd', True),
     ('apcg', False),
-    ('rcd', False)
+    # ('rcd', False)
 ]
 
 dict_Es = {}
 dict_times = {}
 
-tmax = 40
+tmax = 20
 
 for algo in all_algos:
     print("Running ", dict_algo_name[algo])
@@ -111,70 +111,55 @@ for E in dict_Es.values():
 ###############################################################################
 # Plot convergence curves:
 plt.close('all')
-fig, ax = plt.subplots(figsize=(9, 6))
-fig_times, ax_times = plt.subplots(figsize=(9, 4))
+# fig, ax = plt.subplots(figsize=(9, 6))
 
 
-for algo in all_algos:
-    E = dict_Es[algo]
-    times = dict_times[algo]
-    use_acc = algo[1]
-    if use_acc:
-        linestyle = 'dashed'
-    elif algo[0].startswith(('fista', 'apcg')):
-        linestyle = 'dotted'
-    elif algo[0].startswith('rcd'):
-        linestyle = '-'
-    else:
-        linestyle = 'solid'
+for ix, all_algos in enumerate([
+    [('pgd', False), ('cd', False)],
+    [('pgd', False), ('fista', False), ('cd', False)],
+    [('pgd', False), ('fista', False), ('cd', False), ('apcg', False)],
+    [('pgd', False), ('fista', False), ('cd', False), ('apcg', False), ('cd', True)],
+]):
+    fig_times, ax_times = plt.subplots(figsize=(9, 4), constrained_layout=True)
 
-    ax.semilogy(
-        f_gap * np.arange(len(E)), E - p_star,
-        label=dict_algo_name[algo],
-        color=dict_color[algo[0]], linestyle=linestyle)
+    for algo in all_algos:
+        E = dict_Es[algo]
+        times = dict_times[algo]
+        use_acc = algo[1]
+        if use_acc:
+            linestyle = 'dashed'
+        elif algo[0].startswith(('fista', 'apcg')):
+            linestyle = 'dotted'
+        else:
+            linestyle = 'solid'
 
-    ax_times.semilogy(
-        times, E - p_star,
-        label=dict_algo_name[algo],
-        color=dict_color[algo[0]], linestyle=linestyle)
+        ax_times.semilogy(
+            times, E - p_star,
+            label=dict_algo_name[algo],
+            color=dict_color[algo[0]], linestyle=linestyle)
 
-ax.semilogy(
-    np.arange(len(E_cg)), E_cg - p_star, label="Conjugate Gradient",
-    color='black', linestyle='dashdot')
+    ax_times.set_yticks((1e-14, 1e-7, 1e0))
 
-ax_times.semilogy(
-    times_cg, E_cg - p_star, label="Conjugate Gradient",
-    color='black', linestyle='dashdot')
+    fontsize = 25
+    ax_times.set_ylabel(r"Suboptimality", fontsize=fontsize)
+    ax_times.set_xlabel("Time (s)", fontsize=fontsize)
+    ax_times.set_xlim((0, tmax))
+    ax_times.set_ylim((1e-16, 1))
+    ax_times.tick_params(axis='x', labelsize=25)
+    ax_times.tick_params(axis='y', labelsize=25)
 
+    # fig.tight_layout()
+    # fig_times.tight_layout()
 
-ax.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
-ax_times.set_yticks((1e-15, 1e-10, 1e-5, 1e0))
-
-ax.set_title("Convergence on Least Squares")
-
-fontsize = 25
-# ax_times.set_ylabel("OLS \n rcv1", fontsize=fontsize)
-ax_times.set_ylabel(r"Suboptimality", fontsize=fontsize)
-ax_times.set_xlabel("Time (s)", fontsize=fontsize)
-ax_times.set_xlim((0, tmax))
-ax_times.set_ylim((1e-16, 1))
-ax_times.tick_params(axis='x', labelsize=35)
-ax_times.tick_params(axis='y', labelsize=35)
-
-# fig.tight_layout()
-# fig_times.tight_layout()
-
-if save_fig:
-    all_fig_dir = [
-        "",
-        ""
-    ]
-    for fig_dir in all_fig_dir:
+    if True:
+        all_fig_dir = [
+            "",
+            ""
+        ]
+        # for fig_dir in all_fig_dir:
+        fig_times.savefig(f"{ix}.pdf")
         _plot_legend_apart(
-            ax_times, "%senergies_time_ols_legend.pdf" % fig_dir, ncol=3)
-        _plot_legend_apart(
-            ax_times, "%senergies_time_ols_legend.svg" % fig_dir, ncol=3)
+            ax_times, "./legend%d.pdf" % ix, ncol=2 if len(all_algos) == 2 else (len(all_algos) + 1) // 2)
 
-
-plt.show()
+    plt.show(block=False)
 # fig_times.show()
