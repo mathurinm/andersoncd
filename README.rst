@@ -1,3 +1,11 @@
+WARNING
+=======
+This code is no longer maintained. The codebase has been moved to https://github.com/scikit-learn-contrib/skglm.
+This repository only serves to reproduce the results of the AISTATS 2021 paper "Anderson acceleration of coordinate descent" by Quentin Bertrand and Mathurin Massias.
+
+
+
+
 Anderson extrapolation for Coordinate Descent
 =============================================
 
